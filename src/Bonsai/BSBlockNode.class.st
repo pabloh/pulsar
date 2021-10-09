@@ -89,7 +89,7 @@ BSBlockNode >> isBlockNode [
 
 { #category : #printing }
 BSBlockNode >> printArgumentsOn: aStream [
-	self arguments ifNotEmptyDo: [ :args |
+	self arguments ifNotEmpty: [ :args |
 		args do: [ :identifier |
 			aStream 
 				<< ':';

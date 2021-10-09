@@ -25,6 +25,11 @@ BSFlyweightNode class >> cache [
 ]
 
 { #category : #caching }
+BSFlyweightNode class >> cache: aSet [
+	cache :=  aSet
+]
+
+{ #category : #caching }
 BSFlyweightNode class >> initialCacheSize [
 	"Approximation of the size of the caches to avoid to many rehash"
 	^ 20000
@@ -52,8 +57,8 @@ BSFlyweightNode class >> privateLookup: initCollection [
 	[ ((element := array at: index) 
 		ifNil: [ ^ self cache add: (self privateNewInstanceWith: initCollection) ] 
 		ifNotNil: [ 
-			element enclosedSetElement = initCollection ]) 
-				ifTrue: [ ^ element enclosedSetElement ].
+			element enclosedElement  = initCollection ]) 
+				ifTrue: [ ^ element enclosedElement ].
 		(index := index \\ array size + 1) = start ] whileFalse.
 ]
 
@@ -61,7 +66,7 @@ BSFlyweightNode class >> privateLookup: initCollection [
 BSFlyweightNode class >> privateNewInstanceWith: initCollection [
 	| newInstance |
 	self assert: [ initCollection size = self instSize or: [ initCollection size > self instSize and: [ self isVariable ] ] ].
-	newInstance :=	self isVariable
+	newInstance := self isVariable
 		ifTrue: [ super basicNew: initCollection size - self instSize ]
 		ifFalse: [ super basicNew ].
 	initCollection withIndexDo: [ :each :index | newInstance instVarAt: index put: each ].
@@ -70,9 +75,12 @@ BSFlyweightNode class >> privateNewInstanceWith: initCollection [
 
 { #category : #caching }
 BSFlyweightNode class >> resetAllCaches [
-	| cacheIndex |
-	cacheIndex := 15.
-	self allSubclassesDo: [ :subclass | subclass instVarAt: cacheIndex put: nil ]
+	self allSubclassesDo: #resetCache 
+]
+
+{ #category : #cache }
+BSFlyweightNode class >> resetCache [
+	cache := nil
 ]
 
 { #category : #comparing }
