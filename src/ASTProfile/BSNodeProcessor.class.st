@@ -37,7 +37,7 @@ BSNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
 	^ result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 BSNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 
 	self new
@@ -45,13 +45,13 @@ BSNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 		visitNode: aNodeTree.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 BSNodeProcessor class >> forEachNodeThat: aCondition at: aNodeTree do: aBlock [
 
 	self forEachNodeAt: aNodeTree do: [:aNode | (aCondition value: aNode) ifTrue:  [ aBlock cull: aNode ] ].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 BSNodeProcessor class >> iterateOver: aNodeTree with: aBlock [
 
 	self forEachNodeAt: aNodeTree do: aBlock
