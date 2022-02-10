@@ -14,7 +14,7 @@ Class {
 	#instVars : [
 		'block'
 	],
-	#category : #ASTProfile
+	#category : #'Blast-AST-Experiments'
 }
 
 { #category : #'as yet unclassified' }

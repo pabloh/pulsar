@@ -11,7 +11,7 @@ Class {
 		'methodsAsts',
 		'methodsBonsaiAsts'
 	],
-	#category : #ASTProfile
+	#category : #'Blast-AST-Experiments'
 }
 
 { #category : #'classes and traits' }

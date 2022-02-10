@@ -4,7 +4,7 @@ A BonsaiExperiments is a class consisting of AST memory footpring making use of 
 Class {
 	#name : #BSExperiments,
 	#superclass : #Object,
-	#category : #ASTProfile
+	#category : #'Blast-AST-Experiments'
 }
 
 { #category : #nodes }

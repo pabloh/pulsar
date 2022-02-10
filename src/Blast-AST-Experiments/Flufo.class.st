@@ -29,7 +29,7 @@ Class {
 		'ber',
 		'baz'
 	],
-	#category : #ASTProfile
+	#category : #'Blast-AST-Experiments'
 }
 
 { #category : #'as yet unclassified' }
