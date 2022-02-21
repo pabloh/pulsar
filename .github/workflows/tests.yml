@@ -1,5 +1,14 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
   build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         smalltalk: [ Pharo64-9.0, Pharo64-alpha ]
