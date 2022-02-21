@@ -12,10 +12,10 @@ BaselineOfPulsar >> baseline: spec [
 		do: [	
 			spec
 				package: 'Pulsar';
-				package: 'Pulsar-Tests';
-				package: 'Pulsar-Experiments';
+				package: 'Pulsar-Tests' with: [ spec requires: #('Pulsar') ];
+				package: 'Pulsar-Experiments' with: [ spec requires: #('Pulsar' 'Bonsai') ];
 				package: 'Blast';	
-				package: 'Blast-Tests';
-				package: 'Blast-AST-Experiments';
+				package: 'Blast-Tests' with: [ spec requires: #('Blast') ];
+				package: 'Blast-AST-Experiments' with: [ spec requires: #('Blast' 'Bonsai') ];
 				package: 'Bonsai' ]
 ]
