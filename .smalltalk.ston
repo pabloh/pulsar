@@ -1,0 +1,12 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'Pulsar',
+      #platforms : [ #pharo ],
+      #directory : 'src'
+    }
+  ],
+  #testing : {
+    #packages : [ 'Bonsai', 'Pulsar-Tests', 'Blast-Tests' ]
+  }
+}
