@@ -25,6 +25,17 @@ MemorySizeVisitorTest >> testLiteralArrayNode [
 ]
 
 { #category : #tests }
+MemorySizeVisitorTest >> testLiteralArrayNodeForByteArray [
+	| ast measuredMemory |
+	
+	ast := RBParser parseExpression:  '#[23 24 25]' .	
+	measuredMemory := (visitor visit: ast) measuredSize.
+	
+	self assert: measuredMemory  equals:  (8 + 4 + 6 + 8 + 10) * 8 "36 quad words"
+	
+]
+
+{ #category : #tests }
 MemorySizeVisitorTest >> testLiteralValueNodeForAInteger [
 	| ast measuredMemory |
 	
@@ -49,4 +60,27 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAString [
 
 	self assert: measuredMemory  equals:  10 * 8 "10 quad words"
 
+]
+
+{ #category : #tests }
+MemorySizeVisitorTest >> testReturnNode [
+	| ast measuredMemory |
+	
+	ast := RBParser parseExpression:   '^ 45 ' .
+
+	measuredMemory := (visitor visit: ast) measuredSize.	
+	self assert: measuredMemory  equals:  (5 + 8) * 8 "13 quad words"
+	
+]
+
+{ #category : #tests }
+MemorySizeVisitorTest >> testVariableNode [
+	| ast measuredMemory |
+	
+	ast := RBParser parseExpression:  'var' .  "Unresolved identifier is an unresolved variable"
+
+	measuredMemory := (visitor visit: ast) measuredSize.	
+		
+	self assert: measuredMemory  equals:  (7 + 2 + 2) * 8 "12 quad words"
+	
 ]

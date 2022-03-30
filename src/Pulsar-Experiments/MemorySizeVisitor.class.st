@@ -41,12 +41,14 @@ MemorySizeVisitor >> measuredSize [
 	^ measuredSize
 ]
 
-{ #category : #initialization }
+{ #category : #visiting }
 MemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 	
 	measuredSize := measuredSize 
 		+ aLiteralArrayNode sizeInMemory + aLiteralArrayNode contents sizeInMemory
-		+ (aLiteralArrayNode contents instVarNamed: #array) sizeInMemory  "Breaks encapsulation"
+		+ (aLiteralArrayNode isForByteArray
+			ifTrue: [ 0 ]
+			 ifFalse: [ (aLiteralArrayNode contents instVarNamed: #array) sizeInMemory  "Breaks encapsulation"  ])
 		+ (includeFormatingValues "This is formating information"
 			ifTrue: [  aLiteralArrayNode start sizeInMemory + aLiteralArrayNode stop sizeInMemory ] 
 			ifFalse: [ 0 ]).
@@ -55,14 +57,36 @@ MemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 	aLiteralArrayNode contents do: [  :each |  self visit: each ]
 ]
 
-{ #category : #initialization }
+{ #category : #visiting }
 MemorySizeVisitor >> visitLiteralValueNode:  aLiteralNode [
 
 	measuredSize := measuredSize 
 		+ aLiteralNode sizeInMemory + aLiteralNode value sizeInMemory
 		+ (includeFormatingValues "This is formating information"
 			ifTrue: [  
-				aLiteralNode value sizeInMemory +	aLiteralNode start sizeInMemory + aLiteralNode stop sizeInMemory
+				aLiteralNode start sizeInMemory + aLiteralNode stop sizeInMemory
+			] ifFalse: [ 0 ])
+		 
+]
+
+{ #category : #visiting }
+MemorySizeVisitor >> visitReturnNode:  aReturnNode [
+
+	measuredSize := measuredSize + aReturnNode sizeInMemory
+		+ (includeFormatingValues "This is formating information"
+			ifTrue: [  aReturnNode return sizeInMemory] ifFalse: [ 0 ]).
+						
+	self visit: aReturnNode value
+]
+
+{ #category : #visiting }
+MemorySizeVisitor >> visitVariableNode:  aVariableNode [
+
+	measuredSize := measuredSize 
+		+ aVariableNode sizeInMemory + aVariableNode name sizeInMemory + aVariableNode variable sizeInMemory
+		+ (includeFormatingValues "This is formating information"
+			ifTrue: [  
+				aVariableNode start sizeInMemory
 			] ifFalse: [ 0 ])
 		 
 ]
