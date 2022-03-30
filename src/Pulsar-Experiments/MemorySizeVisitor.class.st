@@ -30,7 +30,7 @@ MemorySizeVisitor >> includeFormatingValues: anBoolean [
 MemorySizeVisitor >> initialize [ 
 	"comment stating purpose of instance-side method"
 	"scope: class-variables  &  instance-variables"	
-			
+
 	measuredSize := 0.
 	includeFormatingValues := false.
 ]
@@ -85,8 +85,5 @@ MemorySizeVisitor >> visitVariableNode:  aVariableNode [
 	measuredSize := measuredSize 
 		+ aVariableNode sizeInMemory + aVariableNode name sizeInMemory + aVariableNode variable sizeInMemory
 		+ (includeFormatingValues "This is formating information"
-			ifTrue: [  
-				aVariableNode start sizeInMemory
-			] ifFalse: [ 0 ])
-		 
+			ifTrue: [  aVariableNode start sizeInMemory ] ifFalse: [ 0 ])
 ]
