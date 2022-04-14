@@ -14,6 +14,16 @@ MemorySizeVisitor class >> newIncludingFormatValues [
 		includeFormatingValues: true
 ]
 
+{ #category : #visiting }
+MemorySizeVisitor >> calculateParenthesesSizeInMemory: aNode [
+
+	^ aNode ifNil: [ 0 ]
+		ifNotNil: [ 
+			aNode ifEmpty: [ 0 ]
+			 ifNotEmpty: [ self notYetImplemented ]
+	 	] 
+]
+
 { #category : #accessing }
 MemorySizeVisitor >> includeFormatingValues [
 
@@ -58,15 +68,16 @@ MemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitLiteralValueNode:  aLiteralNode [
-
+MemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
+	| value |
+	value := aLiteralNode value.
+	
 	measuredSize := measuredSize 
-		+ aLiteralNode sizeInMemory + aLiteralNode value sizeInMemory
-		+ (includeFormatingValues "This is formating information"
-			ifTrue: [  
-				aLiteralNode start sizeInMemory + aLiteralNode stop sizeInMemory
-			] ifFalse: [ 0 ])
-		 
+		+ aLiteralNode sizeInMemory
+	        + ((value isSymbol or: [ (value isKindOf: Boolean) or: [ value isNil ]]) 	"Symbols boolean and undefiened are a special case" 
+		       ifTrue: [ 0 ]  ifFalse: [ value sizeInMemory ])
+	        + (includeFormatingValues "This is formating information"
+		       ifTrue: [ aLiteralNode start sizeInMemory + aLiteralNode stop sizeInMemory ]  ifFalse: [ 0 ])
 ]
 
 { #category : #visiting }
@@ -74,7 +85,7 @@ MemorySizeVisitor >> visitReturnNode:  aReturnNode [
 
 	measuredSize := measuredSize + aReturnNode sizeInMemory
 		+ (includeFormatingValues "This is formating information"
-			ifTrue: [  aReturnNode return sizeInMemory] ifFalse: [ 0 ]).
+			ifTrue: [  (self calculateParenthesesSizeInMemory: aReturnNode ) +  aReturnNode return sizeInMemory] ifFalse: [ 0 ]).
 						
 	self visit: aReturnNode value
 ]
