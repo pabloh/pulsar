@@ -17,12 +17,51 @@ MemorySizeVisitorTest >> setUp [
 MemorySizeVisitorTest >> testArrayNode [
 	| ast measuredMemory |
 	
-	self notYetImplemented.
-
-	ast := RBParser parseExpression:   '#( 45 ''hello'')' .	
+	ast := RBParser parseExpression:   '{ 45. Object new. ''asd'' }' .
 	measuredMemory := (visitor visit: ast) measuredSize.
 	
-	self assert: measuredMemory  equals:  (8 + 4 + 6 + 8 + 10) * 8 "36 quad words"
+	self skip.
+
+	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
+	
+]
+
+{ #category : #tests }
+MemorySizeVisitorTest >> testAssignmentNode [
+	| ast measuredMemory |
+	
+	ast := RBParser parseExpression: 'as := 25' .
+	measuredMemory := (visitor visit: ast) measuredSize.
+	
+	self skip.
+
+	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
+	
+]
+
+{ #category : #tests }
+MemorySizeVisitorTest >> testBlockNode [
+	| ast measuredMemory |
+	
+	ast := RBParser parseExpression: '[ :each |  each inspect ]' .
+	measuredMemory := (visitor visit: ast) measuredSize.
+	
+	self skip.
+
+	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
+	
+]
+
+{ #category : #tests }
+MemorySizeVisitorTest >> testCascadeNode [
+	| ast measuredMemory |
+	
+	ast := (RBParser parseExpression: 'self sendMessage: #self') selectorNode .
+	measuredMemory := (visitor visit: ast) measuredSize.
+	
+	self skip.
+
+	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
 	
 ]
 
@@ -174,6 +213,45 @@ MemorySizeVisitorTest >> testLiteralValueNodeForNil [
 ]
 
 { #category : #tests }
+MemorySizeVisitorTest >> testMessageNode [
+	| ast measuredMemory |
+	
+	ast := (RBParser parseExpression: 'self sendMessage: #self') selectorNode .
+	measuredMemory := (visitor visit: ast) measuredSize.
+	
+	self skip.
+
+	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
+	
+]
+
+{ #category : #tests }
+MemorySizeVisitorTest >> testMethodNode [
+	| ast measuredMemory |
+	
+	ast := RBParser parseMethod:  'foobar 5'. 	
+	measuredMemory := (visitor visit: ast) measuredSize.
+	
+	self skip.
+
+	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
+	
+]
+
+{ #category : #tests }
+MemorySizeVisitorTest >> testMethodNodeWithPragma [
+	| ast measuredMemory |
+	
+	ast := (RBParser parseMethod:  'foobar < foobar>') pragmas first. 	
+	measuredMemory := (visitor visit: ast) measuredSize.
+	
+	self skip.
+
+	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
+	
+]
+
+{ #category : #tests }
 MemorySizeVisitorTest >> testReturnNode [
 	| ast measuredMemory |
 	
@@ -181,6 +259,19 @@ MemorySizeVisitorTest >> testReturnNode [
 	measuredMemory := (visitor visit: ast) measuredSize.	
 
 	self assert: measuredMemory  equals:  (5 + 8) * 8 "13 quad words"
+	
+]
+
+{ #category : #tests }
+MemorySizeVisitorTest >> testSequenceNode [
+	| ast measuredMemory |
+	
+	ast := RBParser parseExpression:  '32 . 213. 23'. 	
+	measuredMemory := (visitor visit: ast) measuredSize.
+	
+	self skip.
+
+	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
 	
 ]
 

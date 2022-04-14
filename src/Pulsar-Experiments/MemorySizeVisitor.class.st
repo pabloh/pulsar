@@ -77,6 +77,7 @@ MemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
 	        + ((value isSymbol or: [ (value isKindOf: Boolean) or: [ value isNil ]]) 	"Symbols boolean and undefiened are a special case" 
 		       ifTrue: [ 0 ]  ifFalse: [ value sizeInMemory ])
 	        + (includeFormatingValues "This is formating information"
+	              "TODO: add sourceText"
 		       ifTrue: [ aLiteralNode start sizeInMemory + aLiteralNode stop sizeInMemory ]  ifFalse: [ 0 ])
 ]
 
