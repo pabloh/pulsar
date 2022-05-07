@@ -8,13 +8,20 @@ Class {
 	#category : #'Pulsar-Experiments'
 }
 
+{ #category : #measure }
+MemorySizeVisitor class >> measureNode: aNode [
+	^ self new
+		visit: aNode;
+		measuredSize 
+]
+
 { #category : #accessing }
 MemorySizeVisitor class >> newIncludingFormatValues [
 	self new
 		includeFormatingValues: true
 ]
 
-{ #category : #visiting }
+{ #category : #'memory measuring' }
 MemorySizeVisitor >> calculateParenthesesSizeInMemory: aNode [
 
 	^ aNode ifNil: [ 0 ]
@@ -45,10 +52,47 @@ MemorySizeVisitor >> initialize [
 	includeFormatingValues := false.
 ]
 
+{ #category : #'memory measuring' }
+MemorySizeVisitor >> measureCollection: aCollectionOfNodes [
+
+	measuredSize := measuredSize
+		+ aCollectionOfNodes sizeInMemory
+		+ (aCollectionOfNodes isArray ifTrue: [ 0 ] ifFalse: [ (aCollectionOfNodes  instVarNamed: #array) sizeInMemory ])
+		 
+	
+]
+
 { #category : #accessing }
 MemorySizeVisitor >> measuredSize [
 
 	^ measuredSize
+]
+
+{ #category : #visiting }
+MemorySizeVisitor >> visitArrayNode:   anArrayNode [
+
+	measuredSize := measuredSize + anArrayNode sizeInMemory.
+	
+	self measureCollection: anArrayNode statements.
+	super visitArrayNode: anArrayNode
+
+]
+
+{ #category : #visiting }
+MemorySizeVisitor >> visitAssignmentNode:  anAssignmentNode [
+
+	measuredSize := measuredSize + anAssignmentNode sizeInMemory.
+	
+	super visitAssignmentNode:  anAssignmentNode
+]
+
+{ #category : #visiting }
+MemorySizeVisitor >> visitBlockNode:  aBlockNode [
+
+	measuredSize := measuredSize + aBlockNode sizeInMemory.	
+	self measureCollection: aBlockNode arguments.
+	
+	super visitBlockNode:  aBlockNode
 ]
 
 { #category : #visiting }
@@ -82,13 +126,50 @@ MemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
 ]
 
 { #category : #visiting }
+MemorySizeVisitor >> visitMessageNode:   aMessageNode [
+
+	measuredSize := measuredSize + aMessageNode sizeInMemory.	
+	self measureCollection: aMessageNode arguments.
+			
+	super visitMessageNode: aMessageNode
+
+]
+
+{ #category : #visiting }
+MemorySizeVisitor >> visitMethodNode:   aMethodNode [
+
+	measuredSize := measuredSize + aMethodNode sizeInMemory.
+	
+	super visitMethodNode:   aMethodNode
+]
+
+{ #category : #visiting }
 MemorySizeVisitor >> visitReturnNode:  aReturnNode [
 
 	measuredSize := measuredSize + aReturnNode sizeInMemory
 		+ (includeFormatingValues "This is formating information"
-			ifTrue: [  (self calculateParenthesesSizeInMemory: aReturnNode ) +  aReturnNode return sizeInMemory] ifFalse: [ 0 ]).
+			ifTrue: [  (self calculateParenthesesSizeInMemory: aReturnNode ) +  aReturnNode return sizeInMemory ] ifFalse: [ 0 ]).
 						
 	self visit: aReturnNode value
+]
+
+{ #category : #visiting }
+MemorySizeVisitor >> visitSelectorNode:   aSelectorNode [
+
+	measuredSize := measuredSize + aSelectorNode sizeInMemory.	
+	"Ignore 'measuredSize value' since is a Symbol"
+
+]
+
+{ #category : #visiting }
+MemorySizeVisitor >> visitSequenceNode:   aSequenceNode [
+
+	self measureCollection: aSequenceNode  statements.	
+	self measureCollection: aSequenceNode  temporaries.	
+
+	aSequenceNode  statements do: [ :each | self visitNode: each ].
+	aSequenceNode  temporaries do: [ :each | self visitNode: each ].
+
 ]
 
 { #category : #visiting }
