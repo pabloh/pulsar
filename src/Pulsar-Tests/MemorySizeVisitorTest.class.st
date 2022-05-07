@@ -6,7 +6,7 @@ Class {
 		'minimalArraySize',
 		'orderedCollectionSize'
 	],
-	#category : #'Pulsar-Tests'
+	#category : #'Pulsar-Tests-Tests'
 }
 
 { #category : #helpers }

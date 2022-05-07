@@ -5,7 +5,7 @@ Class {
 		'measuredSize',
 		'includeFormatingValues'
 	],
-	#category : #'Pulsar-Experiments'
+	#category : #'Pulsar-Experiments-Visitors'
 }
 
 { #category : #measure }
