@@ -9,18 +9,6 @@ Class {
 	#category : #'Pulsar-Tests-Tests'
 }
 
-{ #category : #helpers }
-MemorySizeVisitorTest >> emptyOrderedCollectionSize [
-	
-	^(4 + 3) * 8 "OrderedCollection + Array with no items "
-]
-
-{ #category : #helpers }
-MemorySizeVisitorTest >> minimalOrderedCollectionSize [
-	
-	^ (4 + 11) * 8 "OrderedCollection + Array with 10 items "
-]
-
 { #category : #initialization }
 MemorySizeVisitorTest >> setUp [
 
@@ -34,8 +22,8 @@ MemorySizeVisitorTest >> testArrayNode [
 	ast := RBParser parseExpression:   '{ 45. 77. #a -> 99 }' .
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals: (8 * 8) "Layout"
-               + self minimalOrderedCollectionSize  "statements: 1 OrderedCollection"
+	self assert: measuredMemory equals: (8 * 8) "Layout"
+               + ((4 + 11) * 8)  "statements: 1 OrderedCollection"
                + ((8* 8) * 2)  "2 Integer Nodes"
 		+  (((8 + 2) + 8 + 8 + 6)* 8) "#a -> 99 : 1 Message Node"
 	
@@ -48,8 +36,8 @@ MemorySizeVisitorTest >> testAssignmentNode [
 	ast := RBParser parseExpression: 'as := 25' .
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  (7 * 8) "Layout"
-		+ (9 * 8) "1 variable node"
+	self assert: measuredMemory equals:  (7 * 8) "Layout"
+		+ (9 * 8) "1 Variable node"
 		+ (8 * 8) " 1 Integer node"
 	
 ]
@@ -61,9 +49,9 @@ MemorySizeVisitorTest >> testBlockNode [
 	ast := RBParser parseExpression: '[ 562 ]' .
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals: (12 * 8) "Layout"
-                + self emptyOrderedCollectionSize   "Arguments: 1 OrderedCollection"
-		 + ((16 * 8) + (self minimalOrderedCollectionSize * 2))  "Body: Sequence node with Integer node"
+	self assert: measuredMemory equals: (12 * 8) "Layout"
+                + (7 * 8) "Arguments: 1 OrderedCollection"
+		 + ((16 * 8) + (15* 8 * 2))  "Body: Sequence node with Integer node"
 	        
 	
 ]
@@ -75,10 +63,10 @@ MemorySizeVisitorTest >> testBlockNodeWithArguments [
 	ast := RBParser parseExpression: '[ :each  | each  ]' .
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  (12 * 8)  "Layout"
-	        + self emptyOrderedCollectionSize "1 OrderedCollection"
+	self assert: measuredMemory equals: (12 * 8)  "Layout"
+	        + (7 * 8) "1 Empty OrderedCollection"
 		 + (9 * 8)  "1 Variable node"
-		 + ((17 * 8) + (self minimalOrderedCollectionSize * 2))  "Sequence node with Variable node"
+		 + ((17 * 8) + ((15 * 8) * 2))  "Sequence node with Variable node"
 	
 ]
 
@@ -89,8 +77,8 @@ MemorySizeVisitorTest >> testCascadeNode [
 	ast := RBParser parseExpression: 'var inspect; add: 2; yourself'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  (6 * 8) "Layout"
-               + ((4 + 4) * 8) "messages 1 OrderedCollection"
+	self assert: measuredMemory equals: (6 * 8) "Layout"
+               + ((4 + 4) * 8) "messages: 1 OrderedCollection"
                + (25 * 8)  "var inspect"
 		+ (30 * 8)  "; add: 2"
 		+ (16 * 8) "; yourself"
@@ -245,7 +233,7 @@ MemorySizeVisitorTest >> testMessageNode [
 	self assert: measuredMemory  equals: (8 * 8) "Layout"
                + ((4 + 4) * 8) "Arguments: 1 OrderedCollection"
                + (9 * 8) "Receiver: VariableNode"
-		+ (6 * 8) "SelectorNode"
+		+ (6 * 8) "Selector: SelectorNode"
 		+ (8 * 8) "Arguments: 1 Integer Node"
 ]
 
@@ -349,7 +337,7 @@ MemorySizeVisitorTest >> testSequenceNode [
 	measuredMemory := (visitor visit: ast) measuredSize.
 
 	self assert: measuredMemory equals: (8 * 8) "Layout"
-		+ (self minimalOrderedCollectionSize * 2) "2 OrderedCollections"
+		+ ((15 * 8) * 2) "2 OrderedCollections"
 		+ (8 * 8 * 3) "3 Integers Nodes"
 ]
 
@@ -361,8 +349,8 @@ MemorySizeVisitorTest >> testSequenceNodeWithTemporaries [
 	measuredMemory := (visitor visit: ast) measuredSize.
 
 	self assert: measuredMemory equals: (8 * 8) "Layout"		
-		+ (self minimalOrderedCollectionSize * 2) "2 OrderedCollections"
-		+ (9 * 8 * 2)  "2 Variable Nodes"
+		+ (15 * 8 * 2) "2 OrderedCollections"
+		+ (9 * 8 * 2)  "|a b|: 2 Variable Nodes"
 		+ (8 * 8 * 3) "3 Integers Nodes"
 
 ]
