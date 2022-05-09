@@ -9,10 +9,25 @@ Class {
 }
 
 { #category : #measure }
+MemorySizeVisitor class >> measureCode: aString [
+	^ self measureNode: (RBParser parseExpression: aString)
+]
+
+{ #category : #measure }
+MemorySizeVisitor class >> measureCodeInQuadWords: aString [
+	^ (self measureCode: aString)/8
+]
+
+{ #category : #measure }
 MemorySizeVisitor class >> measureNode: aNode [
 	^ self new
 		visit: aNode;
 		measuredSize 
+]
+
+{ #category : #measure }
+MemorySizeVisitor class >> measureNodeInQuadWords: aNode [
+	^ (self measureNode: aNode)/8
 ]
 
 { #category : #accessing }
@@ -68,6 +83,12 @@ MemorySizeVisitor >> measuredSize [
 	^ measuredSize
 ]
 
+{ #category : #'memory measuring' }
+MemorySizeVisitor >> shallowMeasureNode: aNode [
+
+	measuredSize := measuredSize + aNode sizeInMemory
+]
+
 { #category : #visiting }
 MemorySizeVisitor >> visitArrayNode:   anArrayNode [
 
@@ -96,6 +117,15 @@ MemorySizeVisitor >> visitBlockNode:  aBlockNode [
 ]
 
 { #category : #visiting }
+MemorySizeVisitor >> visitCascadeNode: aCascadeNode [
+
+	measuredSize := measuredSize + aCascadeNode sizeInMemory.
+	self measureCollection: aCascadeNode messages.	
+
+	super visitCascadeNode: aCascadeNode 
+]
+
+{ #category : #visiting }
 MemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 	
 	measuredSize := measuredSize 
@@ -116,7 +146,7 @@ MemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
 	| value |
 	value := aLiteralNode value.
 	
-	measuredSize := measuredSize 
+	measuredSize := measuredSize
 		+ aLiteralNode sizeInMemory
 	        + ((value isSymbol or: [ (value isKindOf: Boolean) or: [ value isNil ]]) 	"Symbols boolean and undefiened are a special case" 
 		       ifTrue: [ 0 ]  ifFalse: [ value sizeInMemory ])
@@ -139,8 +169,21 @@ MemorySizeVisitor >> visitMessageNode:   aMessageNode [
 MemorySizeVisitor >> visitMethodNode:   aMethodNode [
 
 	measuredSize := measuredSize + aMethodNode sizeInMemory.
+	self measureCollection: aMethodNode arguments.
+	self measureCollection: aMethodNode pragmas.
 	
-	super visitMethodNode:   aMethodNode
+	super visitMethodNode:  aMethodNode
+]
+
+{ #category : #visiting }
+MemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
+
+	measuredSize := measuredSize + aPragmaNode sizeInMemory.
+	self measureCollection: aPragmaNode  arguments .
+	
+	super visitPragmaNode: aPragmaNode
+
+
 ]
 
 { #category : #visiting }
@@ -164,6 +207,7 @@ MemorySizeVisitor >> visitSelectorNode:   aSelectorNode [
 { #category : #visiting }
 MemorySizeVisitor >> visitSequenceNode:   aSequenceNode [
 
+	measuredSize := measuredSize + aSequenceNode sizeInMemory.
 	self measureCollection: aSequenceNode  statements.	
 	self measureCollection: aSequenceNode  temporaries.	
 

@@ -61,7 +61,7 @@ MemorySizeVisitorTest >> testBlockNode [
 
 	self assert: measuredMemory  equals:  (12 * 8)  "Layout"
                 + self emptyOrderedCollectionSize   "Arguments: 1 OrderedCollection"
-		 + ((8 * 8) + (self minimalOrderedCollectionSize * 2))  "Body: Sequence node with Integer node"
+		 + ((16 * 8) + (self minimalOrderedCollectionSize * 2))  "Body: Sequence node with Integer node"
 	        
 	
 ]
@@ -74,9 +74,9 @@ MemorySizeVisitorTest >> testBlockNodeWithArguments [
 	measuredMemory := (visitor visit: ast) measuredSize.
 
 	self assert: measuredMemory  equals:  (12 * 8)  "Layout"
-		 + (11 * 8)  "1 Variable node"
-		 + ((11 * 8) + (self minimalOrderedCollectionSize * 2))  "Sequence node with Variable node"
 	        + self emptyOrderedCollectionSize "1 OrderedCollection"
+		 + (11 * 8)  "1 Variable node"
+		 + ((19 * 8) + (self minimalOrderedCollectionSize * 2))  "Sequence node with Variable node"
 	
 ]
 
@@ -84,19 +84,21 @@ MemorySizeVisitorTest >> testBlockNodeWithArguments [
 MemorySizeVisitorTest >> testCascadeNode [
 	| ast measuredMemory |
 	
-	ast := RBParser parseExpression: 'self as: Float; yourself; inspect'.
+	ast := RBParser parseExpression: 'var inspect; add: 2; yourself'.
 	measuredMemory := (visitor visit: ast) measuredSize.
-	
-	self skip.
 
-	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
+	self assert: measuredMemory  equals:  (6 * 8) "Layout"
+               + ((4 + 4) * 8) "messages 1 OrderedCollection"
+               + (27 * 8)  "var inspect"
+		+ (30 * 8)  "; add: 2"
+		+ (16 * 8) "; yourself"
 	
 ]
 
 { #category : #tests }
 MemorySizeVisitorTest >> testLiteralArrayNode [
-
 	| ast measuredMemory |
+	
 	ast := RBParser parseExpression: '#(45 ''hello'')'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
@@ -107,8 +109,8 @@ MemorySizeVisitorTest >> testLiteralArrayNode [
 
 { #category : #tests }
 MemorySizeVisitorTest >> testLiteralArrayNodeForByteArray [
-
 	| ast measuredMemory |
+	
 	ast := RBParser parseExpression: '#[23 24 25]'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
@@ -177,8 +179,8 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAInteger [
 
 { #category : #tests }
 MemorySizeVisitorTest >> testLiteralValueNodeForAScaledDecimal [
-
 	| ast measuredMemory |
+	
 	ast := RBParser parseExpression: '3.2s'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
@@ -246,12 +248,31 @@ MemorySizeVisitorTest >> testMessageNode [
 MemorySizeVisitorTest >> testMethodNode [
 	| ast measuredMemory |
 	
-	ast := RBParser parseMethod:  'foobar ^8' . 	
+	ast := RBParser parseMethod:  'foobar ^1' . 	
 	measuredMemory := (visitor visit: ast) measuredSize.
 	
-	self skip.
+	self assert: measuredMemory  equals:  (14 * 8) "Layout"
+		+ (2 * 8)   "arguments: 1 Array"
+		+ (2 * 8)   "pragmas: 1 Array"
+		+ (51 * 8) "^8"
+					
+	
+]
 
-	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
+{ #category : #tests }
+MemorySizeVisitorTest >> testMethodNodeWithArguments [
+	| ast measuredMemory |
+	
+	ast := RBParser parseMethod:  'foobar: var ^var' . 	
+	measuredMemory := (visitor visit: ast) measuredSize.
+	
+	self assert: measuredMemory  equals:  (14 * 8) "Layout"
+		+ (7 * 8)   "arguments: 1 OrderedCollection"
+		+ (2 * 8)   "pragmas: 1 Array"
+               + (11 * 8)  "var: 1 VariableNode"
+		+ (54 * 8) "^8"
+		
+					
 	
 ]
 
@@ -259,12 +280,14 @@ MemorySizeVisitorTest >> testMethodNode [
 MemorySizeVisitorTest >> testMethodNodeWithPragma [
 	| ast measuredMemory |
 	
-	ast := (RBParser parseMethod:  'foobar < foobar>') pragmas first. 	
+	ast := RBParser parseMethod:  'foobar < qux: 6 > ^8'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 	
-	self skip.
-
-	self assert: measuredMemory  equals:  8 * 8 "36 quad words"
+	self assert: measuredMemory  equals:  (14 * 8) "Layout"
+		+ (2 * 8)   "arguments: 1 Array"
+		+ (15 * 8) "pragmas: 1 OrderedCollection"
+		+ (51 * 8) "^8"
+		+ ((8 + 7 + 8) * 8) "< qux: 6 >"
 	
 ]
 
@@ -314,24 +337,28 @@ MemorySizeVisitorTest >> testSelectorNodeForUnary [
 
 { #category : #tests }
 MemorySizeVisitorTest >> testSequenceNode [
-
 	| ast measuredMemory |
+	
 	ast := RBParser parseExpression: '32 . 213. 23'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory equals: (8 * 8 * 3)
-		+ (self minimalOrderedCollectionSize * 2) "3 Integers Nodes + OrderedCollections size"
+	self assert: measuredMemory equals: (8 * 8) "Layout"
+		+ (8 * 8 * 3) "3 Integers Nodes"
+		+ (self minimalOrderedCollectionSize * 2) "2 OrderedCollections"
 ]
 
 { #category : #tests }
 MemorySizeVisitorTest >> testSequenceNodeWithTemporaries [
-
 	| ast measuredMemory |
+	
 	ast := RBParser parseExpression: '|a b| 32 . 213. 23'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory
-	         equals: (8 * 8 * 3) + (11 * 8 * 2) + (self minimalOrderedCollectionSize * 2) "3 Integers Nodes + 2 Variable Nodes + Internal Collections size"
+	self assert: measuredMemory equals: (8 * 8) "Layout"		
+		+ (self minimalOrderedCollectionSize * 2) "2 OrderedCollections"
+		+ (11 * 8 * 2)  "2 Variable Nodes"
+		+ (8 * 8 * 3) "3 Integers Nodes"
+
 ]
 
 { #category : #tests }
