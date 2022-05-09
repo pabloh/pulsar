@@ -34,7 +34,7 @@ MemorySizeVisitorTest >> testArrayNode [
 	ast := RBParser parseExpression:   '{ 45. 77. #a -> 99 }' .
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  (8 * 8) "Layout"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
                + self minimalOrderedCollectionSize  "statements: 1 OrderedCollection"
                + ((8* 8) * 2)  "2 Integer Nodes"
 		+  (((8 + 2) + 8 + 8 + 6)* 8) "#a -> 99 : 1 Message Node"
@@ -61,7 +61,7 @@ MemorySizeVisitorTest >> testBlockNode [
 	ast := RBParser parseExpression: '[ 562 ]' .
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  (12 * 8)  "Layout"
+	self assert: measuredMemory  equals: (12 * 8) "Layout"
                 + self emptyOrderedCollectionSize   "Arguments: 1 OrderedCollection"
 		 + ((16 * 8) + (self minimalOrderedCollectionSize * 2))  "Body: Sequence node with Integer node"
 	        
@@ -104,9 +104,10 @@ MemorySizeVisitorTest >> testLiteralArrayNode [
 	ast := RBParser parseExpression: '#(45 ''hello'')'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self
-		assert: measuredMemory
-		equals: 8 + 4 + 6 + 8 + 10 * 8 "36 quad words"
+	self assert: measuredMemory equals: (8 * 8) "Layout"
+		+ (10 * 8) "contents: 1 Array" 
+		+ (8* 8) "1 Integer Node"
+		+ (10* 8) "1 String Node"
 ]
 
 { #category : #tests }
@@ -116,9 +117,9 @@ MemorySizeVisitorTest >> testLiteralArrayNodeForByteArray [
 	ast := RBParser parseExpression: '#[23 24 25]'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self
-		assert: measuredMemory
-		equals: (8 + 4 + 6 + 8 + 10)* 8 "36 quad words"
+	self assert: measuredMemory equals: (8 * 8) "Layout"
+		+ (4 * 8) "contents: 1 Array" 
+		+ (8* 8 * 3) "3 Integer Nodes"
 ]
 
 { #category : #tests }
@@ -128,7 +129,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForABoolean [
 	ast := RBParser parseExpression:  'false'.	
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  8  * 8 "8 quad words"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
 	
 	
 		
@@ -144,7 +145,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAFloat [
 	ast := RBParser parseExpression:  '323.724e14'.	
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  8  * 8 "8 quad words"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
 	
 	
 		
@@ -160,7 +161,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAHexadecimalInteger [
 	ast := RBParser parseExpression:  '16r1FF'.	
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  8  * 8 "8 quad words"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
 	
 	
 		
@@ -176,7 +177,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAInteger [
 	ast := RBParser parseExpression:   '32'.	
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  8  * 8 "8 quad words"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
 ]
 
 { #category : #tests }
@@ -186,7 +187,8 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAScaledDecimal [
 	ast := RBParser parseExpression: '3.2s'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  (8 + 4)  * 8 "8 quad words"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
+		+ (4 * 8)  "3.2s ScaledDecimal"
 ]
 
 { #category : #tests }
@@ -196,7 +198,8 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAString [
 	ast := RBParser parseExpression:   '''hello'''.	
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  10 * 8 "10 quad words"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
+		+ (2 * 8)  "'hello' String"
 
 ]
 
@@ -207,7 +210,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForASymbol [
 	ast := RBParser parseExpression:   '#foo'.	
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  8  * 8 "8 quad words"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
 	
 	
 		
@@ -220,10 +223,10 @@ MemorySizeVisitorTest >> testLiteralValueNodeForASymbol [
 MemorySizeVisitorTest >> testLiteralValueNodeForNil [
 	| ast measuredMemory |
 	
-	ast := RBParser parseExpression:   'nil'.	
+	ast := RBParser parseExpression: 'nil'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  8  * 8 "8 quad words"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
 	
 	
 		
@@ -239,7 +242,7 @@ MemorySizeVisitorTest >> testMessageNode [
 	ast := RBParser parseExpression: 'var add: 2'.
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals:  (8 * 8) "Layout"
+	self assert: measuredMemory  equals: (8 * 8) "Layout"
                + ((4 + 4) * 8) "Arguments: 1 OrderedCollection"
                + (9 * 8) "Receiver: VariableNode"
 		+ (6 * 8) "SelectorNode"
@@ -253,7 +256,7 @@ MemorySizeVisitorTest >> testMethodNode [
 	ast := RBParser parseMethod:  'foobar ^1' . 	
 	measuredMemory := (visitor visit: ast) measuredSize.
 	
-	self assert: measuredMemory  equals:  (14 * 8) "Layout"
+	self assert: measuredMemory  equals: (14 * 8) "Layout"
 		+ (2 * 8) "arguments: 1 Array"
 		+ (2 * 8) "pragmas: 1 Array"
 		+ (51 * 8) "^8"
@@ -300,7 +303,8 @@ MemorySizeVisitorTest >> testReturnNode [
 	ast := RBParser parseExpression:   '^ 45 ' .
 	measuredMemory := (visitor visit: ast) measuredSize.	
 
-	self assert: measuredMemory  equals:  (5 + 8) * 8 "13 quad words"
+	self assert: measuredMemory  equals:  (5 * 8) "Layout"
+		+ (8 * 8) "1 Integer Node"
 	
 ]
 
@@ -370,7 +374,7 @@ MemorySizeVisitorTest >> testVariableNode [
 	ast := RBParser parseExpression:  ' var' .  "Unresolved identifier is an unresolved variable"
 	measuredMemory := (visitor visit: ast) measuredSize.			
 
-	self assert: measuredMemory  equals:  (7 * 8) "Layout"
+	self assert: measuredMemory  equals: (7 * 8) "Layout"
 		+ (2 * 8) "1 Unresolved Variable"
 	
 ]
