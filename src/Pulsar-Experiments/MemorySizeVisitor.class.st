@@ -220,7 +220,7 @@ MemorySizeVisitor >> visitSequenceNode:   aSequenceNode [
 MemorySizeVisitor >> visitVariableNode:  aVariableNode [
 
 	measuredSize := measuredSize 
-		+ aVariableNode sizeInMemory + aVariableNode name sizeInMemory + aVariableNode variable sizeInMemory
+		+ aVariableNode sizeInMemory + aVariableNode variable sizeInMemory "Ignore Symbol at 'aVariableNode name' "
 		+ (includeFormatingValues "This is formating information"
 			ifTrue: [  aVariableNode start sizeInMemory ] ifFalse: [ 0 ])
 ]

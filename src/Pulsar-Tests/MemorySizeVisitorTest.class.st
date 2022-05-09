@@ -35,7 +35,7 @@ MemorySizeVisitorTest >> testArrayNode [
 	measuredMemory := (visitor visit: ast) measuredSize.
 
 	self assert: measuredMemory  equals:  (8 * 8) "Layout"
-               + self minimalOrderedCollectionSize 
+               + self minimalOrderedCollectionSize  "statements: 1 OrderedCollection"
                + ((8* 8) * 2)  "2 Integer Nodes"
 		+  (((8 + 2) + 8 + 8 + 6)* 8) "#a -> 99 : 1 Message Node"
 	
@@ -48,7 +48,9 @@ MemorySizeVisitorTest >> testAssignmentNode [
 	ast := RBParser parseExpression: 'as := 25' .
 	measuredMemory := (visitor visit: ast) measuredSize.
 
-	self assert: measuredMemory  equals: (11 * 8) + (8 * 8) + (7 * 8) "1 variable node + 1 Integer node"
+	self assert: measuredMemory  equals:  (7 * 8) "Layout"
+		+ (9 * 8) "1 variable node"
+		+ (8 * 8) " 1 Integer node"
 	
 ]
 
@@ -75,8 +77,8 @@ MemorySizeVisitorTest >> testBlockNodeWithArguments [
 
 	self assert: measuredMemory  equals:  (12 * 8)  "Layout"
 	        + self emptyOrderedCollectionSize "1 OrderedCollection"
-		 + (11 * 8)  "1 Variable node"
-		 + ((19 * 8) + (self minimalOrderedCollectionSize * 2))  "Sequence node with Variable node"
+		 + (9 * 8)  "1 Variable node"
+		 + ((17 * 8) + (self minimalOrderedCollectionSize * 2))  "Sequence node with Variable node"
 	
 ]
 
@@ -89,7 +91,7 @@ MemorySizeVisitorTest >> testCascadeNode [
 
 	self assert: measuredMemory  equals:  (6 * 8) "Layout"
                + ((4 + 4) * 8) "messages 1 OrderedCollection"
-               + (27 * 8)  "var inspect"
+               + (25 * 8)  "var inspect"
 		+ (30 * 8)  "; add: 2"
 		+ (16 * 8) "; yourself"
 	
@@ -239,8 +241,8 @@ MemorySizeVisitorTest >> testMessageNode [
 
 	self assert: measuredMemory  equals:  (8 * 8) "Layout"
                + ((4 + 4) * 8) "Arguments: 1 OrderedCollection"
-               + (11 * 8)  "Receiver: VariableNode"
-		+ (6 * 8)  "SelectorNode"
+               + (9 * 8) "Receiver: VariableNode"
+		+ (6 * 8) "SelectorNode"
 		+ (8 * 8) "Arguments: 1 Integer Node"
 ]
 
@@ -252,8 +254,8 @@ MemorySizeVisitorTest >> testMethodNode [
 	measuredMemory := (visitor visit: ast) measuredSize.
 	
 	self assert: measuredMemory  equals:  (14 * 8) "Layout"
-		+ (2 * 8)   "arguments: 1 Array"
-		+ (2 * 8)   "pragmas: 1 Array"
+		+ (2 * 8) "arguments: 1 Array"
+		+ (2 * 8) "pragmas: 1 Array"
 		+ (51 * 8) "^8"
 					
 	
@@ -267,10 +269,10 @@ MemorySizeVisitorTest >> testMethodNodeWithArguments [
 	measuredMemory := (visitor visit: ast) measuredSize.
 	
 	self assert: measuredMemory  equals:  (14 * 8) "Layout"
-		+ (7 * 8)   "arguments: 1 OrderedCollection"
-		+ (2 * 8)   "pragmas: 1 Array"
-               + (11 * 8)  "var: 1 VariableNode"
-		+ (54 * 8) "^8"
+		+ (7 * 8) "arguments: 1 OrderedCollection"
+		+ (2 * 8) "pragmas: 1 Array"
+               + (9 * 8) "var: 1 VariableNode"
+		+ (52 * 8) "^var"
 		
 					
 	
@@ -284,7 +286,7 @@ MemorySizeVisitorTest >> testMethodNodeWithPragma [
 	measuredMemory := (visitor visit: ast) measuredSize.
 	
 	self assert: measuredMemory  equals:  (14 * 8) "Layout"
-		+ (2 * 8)   "arguments: 1 Array"
+		+ (2 * 8) "arguments: 1 Array"
 		+ (15 * 8) "pragmas: 1 OrderedCollection"
 		+ (51 * 8) "^8"
 		+ ((8 + 7 + 8) * 8) "< qux: 6 >"
@@ -343,8 +345,8 @@ MemorySizeVisitorTest >> testSequenceNode [
 	measuredMemory := (visitor visit: ast) measuredSize.
 
 	self assert: measuredMemory equals: (8 * 8) "Layout"
-		+ (8 * 8 * 3) "3 Integers Nodes"
 		+ (self minimalOrderedCollectionSize * 2) "2 OrderedCollections"
+		+ (8 * 8 * 3) "3 Integers Nodes"
 ]
 
 { #category : #tests }
@@ -356,7 +358,7 @@ MemorySizeVisitorTest >> testSequenceNodeWithTemporaries [
 
 	self assert: measuredMemory equals: (8 * 8) "Layout"		
 		+ (self minimalOrderedCollectionSize * 2) "2 OrderedCollections"
-		+ (11 * 8 * 2)  "2 Variable Nodes"
+		+ (9 * 8 * 2)  "2 Variable Nodes"
 		+ (8 * 8 * 3) "3 Integers Nodes"
 
 ]
@@ -368,6 +370,7 @@ MemorySizeVisitorTest >> testVariableNode [
 	ast := RBParser parseExpression:  ' var' .  "Unresolved identifier is an unresolved variable"
 	measuredMemory := (visitor visit: ast) measuredSize.			
 
-	self assert: measuredMemory  equals:  (7 + 2 + 2) * 8 "11 quad words"
+	self assert: measuredMemory  equals:  (7 * 8) "Layout"
+		+ (2 * 8) "1 Unresolved Variable"
 	
 ]
