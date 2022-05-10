@@ -50,10 +50,10 @@ MemorySizeVisitorTest >> testBlockNode [
 	measuredMemory := (visitor visit: ast) measuredSize.
 
 	self assert: measuredMemory equals: (12 * 8) "Layout"
-                + (7 * 8) "Arguments: 1 OrderedCollection"
-		 + ((16 * 8) + (15* 8 * 2))  "Body: Sequence node with Integer node"
-	        
-	
+		+ (7 * 8) "Arguments: 1 OrderedCollection"
+		+ (((8 + (15 * 2)) * 8) "Body: Sequence Node"
+			+ (8 * 8) "1 Integer node"
+		)
 ]
 
 { #category : #tests }
@@ -64,10 +64,11 @@ MemorySizeVisitorTest >> testBlockNodeWithArguments [
 	measuredMemory := (visitor visit: ast) measuredSize.
 
 	self assert: measuredMemory equals: (12 * 8)  "Layout"
-	        + (7 * 8) "1 Empty OrderedCollection"
+	        + (7 * 8) "arguements: 1 OrderedCollection"
 		 + (9 * 8)  "1 Variable node"
-		 + ((17 * 8) + ((15 * 8) * 2))  "Sequence node with Variable node"
-	
+		+ (((8 + (15 * 2)) * 8) "Body: Sequence Node"
+			+ (9 * 8) "1 Variable node"
+		)
 ]
 
 { #category : #tests }
@@ -79,9 +80,17 @@ MemorySizeVisitorTest >> testCascadeNode [
 
 	self assert: measuredMemory equals: (6 * 8) "Layout"
                + ((4 + 4) * 8) "messages: 1 OrderedCollection"
-               + (25 * 8)  "var inspect"
-		+ (30 * 8)  "; add: 2"
-		+ (16 * 8) "; yourself"
+               + (((8 + 2) * 8) "var inspect: 1 Message Node" 
+			+ (9 * 8) "Receiver: 1 Variable Node"
+			+ (6 * 8) "Selector: 1 Selector Node"
+		)
+		+ (((8 + 8) * 8) "; add: 2: 1 Message Node" 
+			+ (6 * 8) "Selector: 1 Selector Node"
+			+ (8 * 8) "Arguments: 1 Integer Node"
+		)
+               + (((8 + 2) * 8) ";yourself: 1 Message Node" 
+			+ (6 * 8) "Selector: 1 Selector Node"
+		)
 	
 ]
 
@@ -162,7 +171,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAHexadecimalInteger [
 MemorySizeVisitorTest >> testLiteralValueNodeForAInteger [
 	| ast measuredMemory |
 	
-	ast := RBParser parseExpression:   '32'.	
+	ast := RBParser parseExpression: '32'.	
 	measuredMemory := (visitor visit: ast) measuredSize.
 
 	self assert: measuredMemory  equals: (8 * 8) "Layout"
@@ -247,7 +256,12 @@ MemorySizeVisitorTest >> testMethodNode [
 	self assert: measuredMemory  equals: (14 * 8) "Layout"
 		+ (2 * 8) "arguments: 1 Array"
 		+ (2 * 8) "pragmas: 1 Array"
-		+ (51 * 8) "^8"
+		+ (((8 + (15 * 2)) * 8) "Body: Sequence Node" "^8"
+			+ ((5 * 8) "1 Return node"
+				+ (8 * 8) "1 Integer node"
+			)
+		)
+		
 					
 	
 ]
@@ -263,7 +277,11 @@ MemorySizeVisitorTest >> testMethodNodeWithArguments [
 		+ (7 * 8) "arguments: 1 OrderedCollection"
 		+ (2 * 8) "pragmas: 1 Array"
                + (9 * 8) "var: 1 VariableNode"
-		+ (52 * 8) "^var"
+		+ (((8 + (15 * 2)) * 8) "Body: Sequence Node" "^var"
+			+ ((5 * 8) "1 Return node"
+				+ (9 * 8) "1 Variable node"
+			)
+		)
 		
 					
 	
@@ -279,8 +297,12 @@ MemorySizeVisitorTest >> testMethodNodeWithPragma [
 	self assert: measuredMemory  equals:  (14 * 8) "Layout"
 		+ (2 * 8) "arguments: 1 Array"
 		+ (15 * 8) "pragmas: 1 OrderedCollection"
-		+ (51 * 8) "^8"
-		+ ((8 + 7 + 8) * 8) "< qux: 6 >"
+		+ ((8 + 7 + 8) * 8) "< qux: 6 >: 1 Pragma Node"
+		+ (((8 + (15 * 2)) * 8) "Body: Sequence Node" "^8"
+			+ ((5 * 8) "1 Return node"
+				+ (8 * 8) "1 Integer node"
+			)
+		)
 	
 ]
 
