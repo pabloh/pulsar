@@ -1,5 +1,5 @@
 Class {
-	#name : #MemorySizeVisitor,
+	#name : #PLMemorySizeVisitor,
 	#superclass : #RBProgramNodeVisitor,
 	#instVars : [
 		'measuredSize',
@@ -9,57 +9,57 @@ Class {
 }
 
 { #category : #measure }
-MemorySizeVisitor class >> measureCode: aString [
+PLMemorySizeVisitor class >> measureCode: aString [
 	^ self measureNode: (RBParser parseExpression: aString)
 ]
 
 { #category : #measure }
-MemorySizeVisitor class >> measureCodeInQuadWords: aString [
+PLMemorySizeVisitor class >> measureCodeInQuadWords: aString [
 	^ (self measureCode: aString)/8
 ]
 
 { #category : #measure }
-MemorySizeVisitor class >> measureNode: aNode [
+PLMemorySizeVisitor class >> measureMethod: aCompiledMethod [
+	^ self measureNode: aCompiledMethod ast
+]
+
+{ #category : #measure }
+PLMemorySizeVisitor class >> measureMethodSource: aString [
+	^ self measureNode: (RBParser parseMethod: aString)
+]
+
+{ #category : #measure }
+PLMemorySizeVisitor class >> measureNode: aNode [
 	^ self new
 		visit: aNode;
 		measuredSize 
 ]
 
 { #category : #measure }
-MemorySizeVisitor class >> measureNodeInQuadWords: aNode [
+PLMemorySizeVisitor class >> measureNodeInQuadWords: aNode [
 	^ (self measureNode: aNode)/8
 ]
 
 { #category : #accessing }
-MemorySizeVisitor class >> newIncludingFormatValues [
+PLMemorySizeVisitor class >> newIncludingFormatValues [
 	self new
 		includeFormatingValues: true
 ]
 
-{ #category : #'memory measuring' }
-MemorySizeVisitor >> calculateParenthesesSizeInMemory: aNode [
-
-	^ aNode ifNil: [ 0 ]
-		ifNotNil: [ 
-			aNode ifEmpty: [ 0 ]
-			 ifNotEmpty: [ self notYetImplemented ]
-	 	] 
-]
-
 { #category : #accessing }
-MemorySizeVisitor >> includeFormatingValues [
+PLMemorySizeVisitor >> includeFormatingValues [
 
 	^ includeFormatingValues
 ]
 
 { #category : #accessing }
-MemorySizeVisitor >> includeFormatingValues: anBoolean [
+PLMemorySizeVisitor >> includeFormatingValues: anBoolean [
 
 	includeFormatingValues := anBoolean
 ]
 
 { #category : #initialization }
-MemorySizeVisitor >> initialize [ 
+PLMemorySizeVisitor >> initialize [ 
 	"comment stating purpose of instance-side method"
 	"scope: class-variables  &  instance-variables"	
 
@@ -67,8 +67,8 @@ MemorySizeVisitor >> initialize [
 	includeFormatingValues := false.
 ]
 
-{ #category : #'memory measuring' }
-MemorySizeVisitor >> measureCollection: aCollectionOfNodes [
+{ #category : #measuring }
+PLMemorySizeVisitor >> measureCollection: aCollectionOfNodes [
 
 	measuredSize := measuredSize
 		+ aCollectionOfNodes sizeInMemory
@@ -77,30 +77,46 @@ MemorySizeVisitor >> measureCollection: aCollectionOfNodes [
 	
 ]
 
+{ #category : #measuring }
+PLMemorySizeVisitor >> measureMethod: aCompiledMethod [
+
+	self visit: aCompiledMethod ast
+]
+
+{ #category : #measuring }
+PLMemorySizeVisitor >> measureNodeParentheses: aNode [
+
+	measuredSize := measuredSize + 
+		aNode ifNil: [ 0 ]
+				ifNotNil: [ 
+					aNode ifEmpty: [ 0 ]
+					 ifNotEmpty: [ self notYetImplemented ]	 ] 
+]
+
 { #category : #accessing }
-MemorySizeVisitor >> measuredSize [
+PLMemorySizeVisitor >> measuredSize [
 
 	^ measuredSize
 ]
 
-{ #category : #'memory measuring' }
-MemorySizeVisitor >> shallowMeasureNode: aNode [
+{ #category : #measuring }
+PLMemorySizeVisitor >> shallowMeasure: anObject [
 
-	measuredSize := measuredSize + aNode sizeInMemory
+	measuredSize := measuredSize + anObject sizeInMemory
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitArrayNode:   anArrayNode [
+PLMemorySizeVisitor >> visitArrayNode: anArrayNode [
 
-	measuredSize := measuredSize + anArrayNode sizeInMemory.
-	
+	measuredSize := measuredSize + anArrayNode sizeInMemory.	
 	self measureCollection: anArrayNode statements.
+	
 	super visitArrayNode: anArrayNode
 
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitAssignmentNode:  anAssignmentNode [
+PLMemorySizeVisitor >> visitAssignmentNode:  anAssignmentNode [
 
 	measuredSize := measuredSize + anAssignmentNode sizeInMemory.
 	
@@ -108,7 +124,7 @@ MemorySizeVisitor >> visitAssignmentNode:  anAssignmentNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitBlockNode:  aBlockNode [
+PLMemorySizeVisitor >> visitBlockNode:  aBlockNode [
 
 	measuredSize := measuredSize + aBlockNode sizeInMemory.	
 	self measureCollection: aBlockNode arguments.
@@ -117,7 +133,7 @@ MemorySizeVisitor >> visitBlockNode:  aBlockNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitCascadeNode: aCascadeNode [
+PLMemorySizeVisitor >> visitCascadeNode: aCascadeNode [
 
 	measuredSize := measuredSize + aCascadeNode sizeInMemory.
 	self measureCollection: aCascadeNode messages.	
@@ -126,7 +142,7 @@ MemorySizeVisitor >> visitCascadeNode: aCascadeNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
+PLMemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 	
 	measuredSize := measuredSize 
 		+ aLiteralArrayNode sizeInMemory + aLiteralArrayNode contents sizeInMemory
@@ -142,7 +158,7 @@ MemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
+PLMemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
 	| value |
 	value := aLiteralNode value.
 	
@@ -156,7 +172,7 @@ MemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitMessageNode:   aMessageNode [
+PLMemorySizeVisitor >> visitMessageNode:   aMessageNode [
 
 	measuredSize := measuredSize + aMessageNode sizeInMemory.	
 	self measureCollection: aMessageNode arguments.
@@ -166,7 +182,7 @@ MemorySizeVisitor >> visitMessageNode:   aMessageNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitMethodNode:   aMethodNode [
+PLMemorySizeVisitor >> visitMethodNode: aMethodNode [
 
 	measuredSize := measuredSize + aMethodNode sizeInMemory.
 	self measureCollection: aMethodNode arguments.
@@ -176,7 +192,7 @@ MemorySizeVisitor >> visitMethodNode:   aMethodNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
+PLMemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
 
 	measuredSize := measuredSize + aPragmaNode sizeInMemory.
 	self measureCollection: aPragmaNode  arguments .
@@ -187,17 +203,17 @@ MemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitReturnNode:  aReturnNode [
+PLMemorySizeVisitor >> visitReturnNode:  aReturnNode [
 
 	measuredSize := measuredSize + aReturnNode sizeInMemory
 		+ (includeFormatingValues "This is formating information"
-			ifTrue: [  (self calculateParenthesesSizeInMemory: aReturnNode ) +  aReturnNode return sizeInMemory ] ifFalse: [ 0 ]).
+			ifTrue: [  (self measureNodeParentheses: aReturnNode ) . aReturnNode return sizeInMemory ] ifFalse: [ 0 ]).
 						
 	self visit: aReturnNode value
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitSelectorNode:   aSelectorNode [
+PLMemorySizeVisitor >> visitSelectorNode:   aSelectorNode [
 
 	measuredSize := measuredSize + aSelectorNode sizeInMemory.	
 	"Ignore 'measuredSize value' since is a Symbol"
@@ -205,19 +221,18 @@ MemorySizeVisitor >> visitSelectorNode:   aSelectorNode [
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitSequenceNode:   aSequenceNode [
+PLMemorySizeVisitor >> visitSequenceNode: aSequenceNode [
 
 	measuredSize := measuredSize + aSequenceNode sizeInMemory.
 	self measureCollection: aSequenceNode  statements.	
 	self measureCollection: aSequenceNode  temporaries.	
 
-	aSequenceNode  statements do: [ :each | self visitNode: each ].
-	aSequenceNode  temporaries do: [ :each | self visitNode: each ].
+	super visitSequenceNode: aSequenceNode.
 
 ]
 
 { #category : #visiting }
-MemorySizeVisitor >> visitVariableNode:  aVariableNode [
+PLMemorySizeVisitor >> visitVariableNode:  aVariableNode [
 
 	measuredSize := measuredSize 
 		+ aVariableNode sizeInMemory + aVariableNode variable sizeInMemory "Ignore Symbol at 'aVariableNode name' "

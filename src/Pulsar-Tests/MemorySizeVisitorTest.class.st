@@ -12,7 +12,7 @@ Class {
 { #category : #initialization }
 MemorySizeVisitorTest >> setUp [
 
-	visitor := MemorySizeVisitor new.
+	visitor := PLMemorySizeVisitor new.
 ]
 
 { #category : #tests }
