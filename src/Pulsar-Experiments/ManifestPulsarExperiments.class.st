@@ -9,7 +9,7 @@ Class {
 
 { #category : #'code-critics' }
 ManifestPulsarExperiments class >> ruleBadMessageRule2V1FalsePositive [
-	^ #(#(#(#RGMethodDefinition #(#PLMemorySizeVisitor #measureCollection: #false)) #'2022-04-28T13:08:13.712331-03:00') )
+	^ #(#(#(#RGMethodDefinition #(#PLMemorySizeVisitor #measureCollectionWithoutItsChilds: #false)) #'2022-04-28T13:08:13.712331-03:00') #(#(#RGMethodDefinition #(#PLMemorySizeVisitor #sizeForRecursiveStructure: #false)) #'2022-05-18T06:38:40.323653-03:00') )
 ]
 
 { #category : #'code-critics' }

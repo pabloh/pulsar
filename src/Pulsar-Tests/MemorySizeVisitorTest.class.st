@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'visitor',
 		'minimalArraySize',
-		'orderedCollectionSize'
+		'orderedCollectionSize',
+		'visitorWithWhitespace'
 	],
 	#category : #'Pulsar-Tests-Tests'
 }
@@ -12,7 +13,8 @@ Class {
 { #category : #initialization }
 MemorySizeVisitorTest >> setUp [
 
-	visitor := PLMemorySizeVisitor new.
+	visitor := PLMemorySizeVisitor new.	
+	visitorWithWhitespace := PLMemorySizeVisitor newWithWhitespace 
 ]
 
 { #category : #tests }
@@ -92,6 +94,17 @@ MemorySizeVisitorTest >> testCascadeNode [
 			+ (6 * 8) "Selector: 1 Selector Node"
 		)
 	
+]
+
+{ #category : #'tests - formatting' }
+MemorySizeVisitorTest >> testFormatedVariableNode [
+	| ast measuredMemory |
+	
+	ast := RBParser parseExpression:  ' (((var)))' .  "Unresolved identifier is an unresolved variable"
+	measuredMemory := (visitorWithWhitespace visit: ast) measuredSize.			
+
+	self assert: measuredMemory  equals: (7 * 8) "Layout"
+		+ (2 * 8) "1 Unresolved Variable"
 ]
 
 { #category : #tests }

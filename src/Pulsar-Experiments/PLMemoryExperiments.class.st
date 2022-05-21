@@ -22,8 +22,18 @@ PLMemoryExperiments class >> allBehaviorsDo:  aBlock [
 { #category : #accessing }
 PLMemoryExperiments class >> allMethodsDo: aBlock [
 
-	self allBehaviorsDo: [ :class | 
-		class methodDict do: [ :each | aBlock value: each ]	] 
+	self allBehaviorsDo: [ :aBehavior | 
+		aBehavior methodDictionary do: [ :aMethod |
+			aMethod isFromTrait ifFalse: [ aBlock value: aMethod ] ] ]
+]
+
+{ #category : #measure }
+PLMemoryExperiments class >> countAllRBParserASTMethods [
+	| number |
+	
+	number := 0.
+	self allMethodsDo: [ :each | number := number +1].	
+	^ number
 ]
 
 { #category : #measure }
@@ -35,7 +45,9 @@ PLMemoryExperiments class >> measureAllRBParserASTMethods [
 	"TODO Add Symbols and variable names"
 	self allMethodsDo: [ :each | visitor measureMethod: each ] .
 	
-	^ visitor measuredSize 
+	^ visitor measuredSize.	
+	
+	
 
 ]
 
