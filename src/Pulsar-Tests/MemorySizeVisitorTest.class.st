@@ -145,6 +145,7 @@ MemorySizeVisitorTest >> testFormatedBlockNodeWithArguments [
 			+ 9 quadWords "1 Variable node"
 		)
 		+ 7 quadWords "1 OrderedCollection for 2 colons"
+		+ (4 + 11) quadWords "1 OrderCollections with no periods"
 ]
 
 { #category : #'tests - whitespace' }
@@ -249,6 +250,7 @@ MemorySizeVisitorTest >> testFormatedMethodNode [
 			)
 		)
 		+ 2 quadWords  "1 IntegerArray for keywordPositions"
+		+ (4 + 11) quadWords "1 OrderCollections with no periods for SequenceNode"
 		
 					
 	
@@ -272,6 +274,7 @@ MemorySizeVisitorTest >> testFormatedMethodNodeWithPragma [
 		)
 		+ 2 quadWords  "1 IntegerArray for keywordPositions"
 		+ 2 quadWords  "1 IntegerArray for keywordPositions on Pragma"
+		+ (4 + 11) quadWords "1 OrderCollections with no periods for SequenceNode"
 	
 ]
 
