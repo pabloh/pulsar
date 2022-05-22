@@ -51,6 +51,21 @@ PLMemoryExperiments class >> measureAllRBParserASTMethods [
 
 ]
 
+{ #category : #measure }
+PLMemoryExperiments class >> measureAllRBParserASTMethodsWithWhitespace [
+	| visitor |
+	
+	visitor := PLMemorySizeVisitor newWithWhitespace.
+	
+	"TODO Add Symbols and variable names"
+	self allMethodsDo: [ :each | visitor measureMethod: each ] .
+	
+	^ visitor measuredSize.	
+	
+	
+
+]
+
 { #category : #accessing }
 PLMemoryExperiments class >> navigation [
 

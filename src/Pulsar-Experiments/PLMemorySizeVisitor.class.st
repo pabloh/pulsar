@@ -88,7 +88,8 @@ PLMemorySizeVisitor >> isNonRecursiveObject: anObject [
 	^ ((anObject isKindOf: String ) and: [ (anObject isKindOf: Symbol) not ]) 
 		or: [  (anObject isKindOf: LargeInteger)
 			or: [ (anObject isKindOf: Fraction)
-				or: [ (anObject isKindOf: Interval) ] ] ] .
+				or: [ (anObject isKindOf: Interval) 
+					or: [ (anObject isKindOf: IntegerArray ) ] ] ] ] .
 ]
 
 { #category : #measuring }
@@ -124,6 +125,12 @@ PLMemorySizeVisitor >> measureComments: aNode [
 ]
 
 { #category : #measuring }
+PLMemorySizeVisitor >> measureMemoryLayout:  aNode [
+
+	measuredSize := measuredSize + aNode sizeInMemory
+]
+
+{ #category : #measuring }
 PLMemorySizeVisitor >> measureMethod: aCompiledMethod [
 
 	self visitNode: aCompiledMethod ast
@@ -132,8 +139,14 @@ PLMemorySizeVisitor >> measureMethod: aCompiledMethod [
 { #category : #measuring }
 PLMemorySizeVisitor >> measureParentheses: aNode [
 
-	aNode parentheses
-		ifNotEmpty: [measuredSize := measuredSize + (self sizeForRecursiveStructure: aNode parentheses) ]
+	aNode hasParentheses ifTrue: [ self measureRecursiveStructure: aNode parentheses ]
+
+]
+
+{ #category : #measuring }
+PLMemorySizeVisitor >> measureRecursiveStructure: anObject [
+
+	measuredSize := measuredSize + (self sizeForRecursiveStructure: anObject)
 
 ]
 
@@ -169,7 +182,9 @@ PLMemorySizeVisitor >> sizeForRecursiveStructure: anObject [
 { #category : #visiting }
 PLMemorySizeVisitor >> visitArrayNode: anArrayNode [
 
-	measuredSize := measuredSize + anArrayNode sizeInMemory.	
+	self ifWhitespaceIncluded: [ self measureRecursiveStructure: anArrayNode periods ].
+
+	self measureMemoryLayout: anArrayNode.		
 	self measureCollectionWithoutItsChilds: anArrayNode statements.
 	
 	super visitArrayNode: anArrayNode
@@ -179,15 +194,17 @@ PLMemorySizeVisitor >> visitArrayNode: anArrayNode [
 { #category : #visiting }
 PLMemorySizeVisitor >> visitAssignmentNode:  anAssignmentNode [
 
-	measuredSize := measuredSize + anAssignmentNode sizeInMemory.
+	self measureMemoryLayout: anAssignmentNode.	
 	
-	super visitAssignmentNode:  anAssignmentNode
+	super visitAssignmentNode: anAssignmentNode
 ]
 
 { #category : #visiting }
 PLMemorySizeVisitor >> visitBlockNode:  aBlockNode [
 
-	measuredSize := measuredSize + aBlockNode sizeInMemory.	
+	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aBlockNode colons ].
+
+	self measureMemoryLayout: aBlockNode.	
 	self measureCollectionWithoutItsChilds: aBlockNode arguments.
 	
 	super visitBlockNode:  aBlockNode
@@ -196,7 +213,9 @@ PLMemorySizeVisitor >> visitBlockNode:  aBlockNode [
 { #category : #visiting }
 PLMemorySizeVisitor >> visitCascadeNode: aCascadeNode [
 
-	measuredSize := measuredSize + aCascadeNode sizeInMemory.
+	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aCascadeNode semicolons ].
+
+	self measureMemoryLayout: aCascadeNode.
 	self measureCollectionWithoutItsChilds: aCascadeNode messages.	
 
 	super visitCascadeNode: aCascadeNode 
@@ -219,16 +238,20 @@ PLMemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
 	| value |
 	value := aLiteralNode value.
 	
+	self ifWhitespaceIncluded: [ aLiteralNode sourceText ifNotNil: [ self measureRecursiveStructure: aLiteralNode sourceText ] ].
+	
 	measuredSize := measuredSize
 		+ aLiteralNode sizeInMemory
-	        + ((value isSymbol or: [ (value isKindOf: Boolean) or: [ value isNil ]]) 	"Symbols boolean and undefiened are a special case" 
+	        + ((value isSymbol or: [ (value isKindOf: Boolean) or: [ value isNil ]]) "Symbols boolean and undefined are a special case" 
 		       ifTrue: 0  ifFalse: [ value sizeInMemory ])
 ]
 
 { #category : #visiting }
-PLMemorySizeVisitor >> visitMessageNode:   aMessageNode [
+PLMemorySizeVisitor >> visitMessageNode: aMessageNode [
 
-	measuredSize := measuredSize + aMessageNode sizeInMemory.	
+	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aMessageNode keywordsPositions  ].
+
+	self measureMemoryLayout: aMessageNode.
 	self measureCollectionWithoutItsChilds: aMessageNode arguments.
 			
 	super visitMessageNode: aMessageNode
@@ -237,8 +260,17 @@ PLMemorySizeVisitor >> visitMessageNode:   aMessageNode [
 
 { #category : #visiting }
 PLMemorySizeVisitor >> visitMethodNode: aMethodNode [
+	"Ignore measuring: 
+		- scope: specific for semantic analisys	
+		- selector: is a Symbol
+		- source: because we want to reproduce it
+		- replacements and nodeReplacements: specific for refactoring
+		- compilationToContext: specific for compiler
+		- bcToASTCache: specific for debugger"
+		
+	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aMethodNode keywordsPositions  ].
 
-	measuredSize := measuredSize + aMethodNode sizeInMemory.
+	self measureMemoryLayout: aMethodNode.
 	self measureCollectionWithoutItsChilds: aMethodNode arguments.
 	self measureCollectionWithoutItsChilds: aMethodNode pragmas.
 	
@@ -256,7 +288,9 @@ PLMemorySizeVisitor >> visitNode:  aNode [
 { #category : #visiting }
 PLMemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
 
-	measuredSize := measuredSize + aPragmaNode sizeInMemory.
+	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aPragmaNode keywordsPositions  ].
+
+	self measureMemoryLayout: aPragmaNode.
 	self measureCollectionWithoutItsChilds: aPragmaNode  arguments .
 	
 	super visitPragmaNode: aPragmaNode
@@ -267,23 +301,27 @@ PLMemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
 { #category : #visiting }
 PLMemorySizeVisitor >> visitReturnNode:  aReturnNode [
 
-	measuredSize := measuredSize + aReturnNode sizeInMemory.
+	self measureMemoryLayout: aReturnNode.
 						
 	super visitReturnNode: aReturnNode
 ]
 
 { #category : #visiting }
-PLMemorySizeVisitor >> visitSelectorNode:   aSelectorNode [
+PLMemorySizeVisitor >> visitSelectorNode: aSelectorNode [
 
-	measuredSize := measuredSize + aSelectorNode sizeInMemory.	
+	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aSelectorNode keywordPositions  ].
+
 	"Ignore 'measuredSize value' since is a Symbol"
+	self measureMemoryLayout: aSelectorNode.
 
 ]
 
 { #category : #visiting }
 PLMemorySizeVisitor >> visitSequenceNode: aSequenceNode [
 
-	measuredSize := measuredSize + aSequenceNode sizeInMemory.
+	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aSequenceNode periods   ].
+
+	self measureMemoryLayout: aSequenceNode.
 	self measureCollectionWithoutItsChilds: aSequenceNode  statements.	
 	self measureCollectionWithoutItsChilds: aSequenceNode  temporaries.	
 
