@@ -31,8 +31,8 @@ PLMemorySizeVisitor class >> measureMethodSource: aString [
 { #category : #measure }
 PLMemorySizeVisitor class >> measureNode: aNode [
 	^ self new
-		visit: aNode;
-		measuredSize 
+		visitNode: aNode;
+		measuredSize
 ]
 
 { #category : #measure }
@@ -45,6 +45,12 @@ PLMemorySizeVisitor class >> newWithWhitespace [
 	^ self new
 		includeWhitespace: true;
 		yourself
+]
+
+{ #category : #controlling }
+PLMemorySizeVisitor >> ifWhitespaceIncluded: aBlock [
+
+	 includeWhitespace ifTrue: aBlock
 ]
 
 { #category : #accessing }
@@ -92,13 +98,17 @@ PLMemorySizeVisitor >> measureCollectionWithoutItsChilds: aCollectionOfNodes [
 	measuredSize := measuredSize
 		+ aCollectionOfNodes sizeInMemory
 		+ ((aCollectionOfNodes isMemberOf: OrderedCollection) 
-			ifTrue: [ (aCollectionOfNodes  instVarNamed: #array) sizeInMemory ] ifFalse: [ 0 ])
+			ifTrue: [ (aCollectionOfNodes  instVarNamed: #array) sizeInMemory ] ifFalse: 0)
 		+ ((aCollectionOfNodes isMemberOf: SmallDictionary) 
 			ifTrue: [ (aCollectionOfNodes  instVarNamed: #keys) sizeInMemory 
 						+ (aCollectionOfNodes  instVarNamed: #values) sizeInMemory ]
-			ifFalse: [ 0 ])
+			ifFalse: 0)
+]
 
-					
+{ #category : #measuring }
+PLMemorySizeVisitor >> measureComment: aCommentNode [
+
+	measuredSize := measuredSize + aCommentNode sizeInMemory + aCommentNode contents sizeInMemory.
 	
 ]
 
@@ -108,22 +118,30 @@ PLMemorySizeVisitor >> measureComments: aNode [
 	aNode propertyAt: #comments
 		ifPresent: [ :comments | 
 			self measureCollectionWithoutItsChilds: (aNode instVarNamed: #properties).
-			measuredSize := measuredSize + (self sizeForRecursiveStructure: comments) ]
+			measuredSize := measuredSize + comments sizeInMemory.
+			comments do: [ :each | self measureComment: each ] ]
 		ifAbsent: [ ].
-	
 ]
 
 { #category : #measuring }
 PLMemorySizeVisitor >> measureMethod: aCompiledMethod [
 
-	self visit: aCompiledMethod ast
+	self visitNode: aCompiledMethod ast
 ]
 
 { #category : #measuring }
 PLMemorySizeVisitor >> measureParentheses: aNode [
 
-	aNode parentheses ifNotNil: [
-		measuredSize := measuredSize + (self sizeForRecursiveStructure: aNode parentheses) ]
+	aNode parentheses
+		ifNotEmpty: [measuredSize := measuredSize + (self sizeForRecursiveStructure: aNode parentheses) ]
+
+]
+
+{ #category : #measuring }
+PLMemorySizeVisitor >> measuredAttachedWhitespaceElements: aNode [
+
+	aNode isValue ifTrue: [ self measureParentheses: aNode ].
+	self measureComments: aNode.
 
 ]
 
@@ -190,14 +208,10 @@ PLMemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 	measuredSize := measuredSize 
 		+ aLiteralArrayNode sizeInMemory + aLiteralArrayNode contents sizeInMemory
 		+ (aLiteralArrayNode isForByteArray
-			ifTrue: [ 0 ]
-			 ifFalse: [ (aLiteralArrayNode contents instVarNamed: #array) sizeInMemory  "Breaks encapsulation"  ])
-		+ (includeWhitespace "This is formating information"
-			ifTrue: [  aLiteralArrayNode start sizeInMemory + aLiteralArrayNode stop sizeInMemory ] 
-			ifFalse: [ 0 ]).
+			ifTrue: 0
+			ifFalse: [ (aLiteralArrayNode contents instVarNamed: #array) sizeInMemory ]).
 	
-	"Call recursively on child nodes"
-	aLiteralArrayNode contents do: [  :each |  self visit: each ]
+	super visitLiteralArrayNode: aLiteralArrayNode 
 ]
 
 { #category : #visiting }
@@ -208,10 +222,7 @@ PLMemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
 	measuredSize := measuredSize
 		+ aLiteralNode sizeInMemory
 	        + ((value isSymbol or: [ (value isKindOf: Boolean) or: [ value isNil ]]) 	"Symbols boolean and undefiened are a special case" 
-		       ifTrue: [ 0 ]  ifFalse: [ value sizeInMemory ])
-	        + (includeWhitespace "This is formating information"
-	              "TODO: add sourceText"
-		       ifTrue: [ aLiteralNode start sizeInMemory + aLiteralNode stop sizeInMemory ]  ifFalse: [ 0 ])
+		       ifTrue: 0  ifFalse: [ value sizeInMemory ])
 ]
 
 { #category : #visiting }
@@ -235,6 +246,14 @@ PLMemorySizeVisitor >> visitMethodNode: aMethodNode [
 ]
 
 { #category : #visiting }
+PLMemorySizeVisitor >> visitNode:  aNode [
+
+	self ifWhitespaceIncluded: [ self measuredAttachedWhitespaceElements: aNode ].
+	
+	super visitNode: aNode
+]
+
+{ #category : #visiting }
 PLMemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
 
 	measuredSize := measuredSize + aPragmaNode sizeInMemory.
@@ -248,11 +267,9 @@ PLMemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
 { #category : #visiting }
 PLMemorySizeVisitor >> visitReturnNode:  aReturnNode [
 
-	measuredSize := measuredSize + aReturnNode sizeInMemory
-		+ (includeWhitespace "This is formating information"
-			ifTrue: [  (self measureParentheses: aReturnNode ) . aReturnNode return sizeInMemory ] ifFalse: [ 0 ]).
+	measuredSize := measuredSize + aReturnNode sizeInMemory.
 						
-	self visit: aReturnNode value
+	super visitReturnNode: aReturnNode
 ]
 
 { #category : #visiting }
@@ -277,8 +294,6 @@ PLMemorySizeVisitor >> visitSequenceNode: aSequenceNode [
 { #category : #visiting }
 PLMemorySizeVisitor >> visitVariableNode:  aVariableNode [
 
-	measuredSize := measuredSize 
-		+ aVariableNode sizeInMemory + aVariableNode variable sizeInMemory "Ignore Symbol at 'aVariableNode name' "
-		+ (includeWhitespace "This is formating information"
-			ifTrue: [  aVariableNode start sizeInMemory ] ifFalse: [ 0 ])
+	"Ignore Symbol at 'aVariableNode name' "
+	measuredSize := measuredSize + aVariableNode sizeInMemory + aVariableNode variable sizeInMemory
 ]
