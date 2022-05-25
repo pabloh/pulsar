@@ -139,6 +139,7 @@ PLMemorySizeVisitor >> measureMethod: aCompiledMethod [
 { #category : #measuring }
 PLMemorySizeVisitor >> measureParentheses: aNode [
 
+	"'aNode parentheses' returns a structure even when the instance variable in the object is actually 'nil'"
 	aNode hasParentheses ifTrue: [ self measureRecursiveStructure: aNode parentheses ]
 
 ]
@@ -332,6 +333,7 @@ PLMemorySizeVisitor >> visitSequenceNode: aSequenceNode [
 { #category : #visiting }
 PLMemorySizeVisitor >> visitVariableNode:  aVariableNode [
 
-	"Ignore Symbol at 'aVariableNode name' "
-	measuredSize := measuredSize + aVariableNode sizeInMemory + aVariableNode variable sizeInMemory
+	"Ignore Symbol at 'aVariableNode name' because it should be already at 'Symbol>>SymbolTable'"
+	"Ignore variable at 'aVariableNode variable' since is only relevant for Semantic Analisys"
+	self measureMemoryLayout: aVariableNode 
 ]

@@ -66,6 +66,16 @@ PLMemoryExperiments class >> measureAllRBParserASTMethodsWithWhitespace [
 
 ]
 
+{ #category : #measure }
+PLMemoryExperiments class >> measureSymbolTable [	
+	
+	Symbol cleanUp .
+	
+	^ (Symbol classVarNamed: #SymbolTable) sizeInMemory +
+		(Symbol classVarNamed: #SymbolTable) array sizeInMemory +
+			((Symbol classVarNamed: #SymbolTable) sumNumbers: #sizeInMemory)
+]
+
 { #category : #accessing }
 PLMemoryExperiments class >> navigation [
 

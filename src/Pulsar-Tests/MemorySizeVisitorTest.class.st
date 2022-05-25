@@ -39,7 +39,7 @@ MemorySizeVisitorTest >> testAssignmentNode [
 	measuredMemory := (visitor visitNode: ast) measuredSize.
 
 	self assert: measuredMemory equals: 7 quadWords "Layout"
-		+ 9 quadWords "1 Variable node"
+		+ 7 quadWords "1 Variable node"
 		+ 8 quadWords " 1 Integer node"
 	
 ]
@@ -67,9 +67,9 @@ MemorySizeVisitorTest >> testBlockNodeWithArguments [
 
 	self assert: measuredMemory equals: 12 quadWords "Layout"
 		+ 7 quadWords "Arguments: 1 OrderedCollection"
-		 + (2 * 9) quadWords  "2 Variable node"
+		 + (2 * 7) quadWords  "2 Variable node"
 		+ ((8 + (15 * 2)) quadWords "Body: Sequence Node"
-			+ 9 quadWords "1 Variable node"
+			+ 7 quadWords "1 Variable node"
 		)
 ]
 
@@ -83,7 +83,7 @@ MemorySizeVisitorTest >> testCascadeNode [
 	self assert: measuredMemory equals: (6 quadWords) "Layout"
                + ((4 + 4) quadWords)  "messages: 1 OrderedCollection"
                + (((8 + 2) quadWords) "var inspect: 1 Message Node" 
-			+ (9 quadWords) "Receiver: 1 Variable Node"
+			+ (7 quadWords) "Receiver: 1 Variable Node"
 			+ (6 quadWords) "Selector: 1 Selector Node"
 		)
 		+ (((8 + 8) quadWords) "; add: 2: 1 Message Node" 
@@ -140,9 +140,9 @@ MemorySizeVisitorTest >> testFormatedBlockNodeWithArguments [
 
 	self assert: measuredMemory equals: 12 quadWords "Layout"
 		+ 7 quadWords "Arguments: 1 OrderedCollection"
-		 + (2 * 9) quadWords  "1 Variable node"
+		 + (2 * 7) quadWords  "2 Variables node"
 		+ ((8 + (15 * 2)) quadWords "Body: Sequence Node"
-			+ 9 quadWords "1 Variable node"
+			+ 7 quadWords "1 Variable node"
 		)
 		+ 7 quadWords "1 OrderedCollection for 2 colons"
 		+ (4 + 11) quadWords "1 OrderCollections with no periods"
@@ -158,7 +158,7 @@ MemorySizeVisitorTest >> testFormatedCascadeNode [
 	self assert: measuredMemory equals: (6 quadWords) "Layout"
                + ((4 + 4) quadWords)  "messages: 1 OrderedCollection"
                + (((8 + 2) quadWords) "var inspect: 1 Message Node" 
-			+ (9 quadWords) "Receiver: 1 Variable Node"
+			+ (7 quadWords) "Receiver: 1 Variable Node"
 			+ (6 quadWords) "Selector: 1 Selector Node"
 			+ (2 quadWords)  "1 IntegerArray for keywordPositions"
 			+ (2 quadWords)  "1 IntegerArray for SelectorNode's keywordPositions"
@@ -220,6 +220,18 @@ MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAInteger [
 ]
 
 { #category : #'tests - whitespace' }
+MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAScaledDecimal [
+	| ast measuredMemory |
+	
+	ast := RBParser parseExpression: '3.2s'.
+	measuredMemory := (visitorWithWhitespace visitNode: ast) measuredSize.
+
+	self assert: measuredMemory  equals: 8 quadWords "Layout"
+		+ 4 quadWords  "3.2s ScaledDecimal"
+		+ 2 quadWords "sourceText"
+]
+
+{ #category : #'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedMessageNode [
 	| ast measuredMemory |
 	
@@ -228,7 +240,7 @@ MemorySizeVisitorTest >> testFormatedMessageNode [
 
 	self assert: measuredMemory  equals: 8 quadWords "Layout"
                + (4 + 4) quadWords "Arguments: 1 OrderedCollection"
-              + 9 quadWords "Receiver: VariableNode"
+              + 7 quadWords "Receiver: VariableNode"
 		+ (6 + 8) quadWords "Selector: SelectorNode"
 		+ (8 + 2) quadWords "Arguments: 1 Integer Node"
 		+ 2 quadWords  "1 IntegerArray for keywordPositions"
@@ -345,7 +357,6 @@ MemorySizeVisitorTest >> testFormatedVariableNode [
 	measuredMemory := (visitorWithWhitespace visitNode: ast) measuredSize.			
 
 	self assert: measuredMemory  equals: 7 quadWords "Layout"
-		+ 2 quadWords "1 Unresolved Variable"
 		+ (12 + 8) quadWords "1 Comment node"
 		+ (4 + 5) quadWords "properties structure"
 		+ (3 * 4) quadWords "3 Intervals for parens"
@@ -496,7 +507,7 @@ MemorySizeVisitorTest >> testMessageNode [
 
 	self assert: measuredMemory equals: 8 quadWords "Layout"
                + (4 + 4) quadWords "Arguments: 1 OrderedCollection"
-               + 9 quadWords "Receiver: VariableNode"
+               + 7 quadWords "Receiver: VariableNode"
 		+ 6 quadWords "Selector: SelectorNode"
 		+ 8 quadWords "Arguments: 1 Integer Node"
 ]
@@ -531,10 +542,10 @@ MemorySizeVisitorTest >> testMethodNodeWithArguments [
 	self assert: measuredMemory equals: 14 quadWords "Layout"
 		+ (7 quadWords) "arguments: 1 OrderedCollection"
 		+ (2 quadWords) "pragmas: 1 Array"
-               + (9 quadWords) "var: 1 VariableNode"
+               + (7 quadWords) "var: 1 VariableNode"
 		+ (((8 + (15 * 2)) quadWords) "Body: Sequence Node" "^var"
 			+ ((5 quadWords) "1 Return node"
-				+ (9 quadWords) "1 Variable node"
+				+ (7 quadWords) "1 Variable node"
 			)
 		)
 		
@@ -627,7 +638,7 @@ MemorySizeVisitorTest >> testSequenceNodeWithTemporaries [
 
 	self assert: measuredMemory equals: 8 quadWords "Layout"		
 		+ (2 * 15) quadWords "2 OrderedCollections"
-		+ (2 * 9) quadWords  "|a b|: 2 Variable Nodes"
+		+ (2 * 7) quadWords  "|a b|: 2 Variable Nodes"
 		+ (3 * 8) quadWords "3 Integers Nodes"
 
 ]
@@ -640,6 +651,5 @@ MemorySizeVisitorTest >> testVariableNode [
 	measuredMemory := (visitor visitNode: ast) measuredSize.			
 
 	self assert: measuredMemory  equals: 7 quadWords "Layout"
-		+ 2 quadWords "1 Unresolved Variable"
 	
 ]
