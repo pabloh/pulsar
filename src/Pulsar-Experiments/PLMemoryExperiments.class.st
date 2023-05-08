@@ -37,6 +37,21 @@ PLMemoryExperiments class >> countAllRBParserASTMethods [
 ]
 
 { #category : #measure }
+PLMemoryExperiments class >> countAllRBParserASTNodes [
+	| visitor |
+	
+	visitor := PLNodeCounterVisitor new.
+	
+	"TODO Add Symbols and variable names"
+	self allMethodsDo: [ :each | visitor measureMethod: each ] .
+	
+	^ visitor nodeCount.	
+	
+	
+
+]
+
+{ #category : #measure }
 PLMemoryExperiments class >> measureAllRBParserASTMethods [
 	| visitor |
 	
