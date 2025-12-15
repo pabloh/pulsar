@@ -4,17 +4,19 @@ A BTBlockEncoder encodes BTBlockNode objects to binary encoder.
 
 "
 Class {
-	#name : #BTMethodBodyDecoder,
-	#superclass : #BTNodeDecoder,
-	#category : #'Blast-Decoders'
+	#name : 'BTMethodBodyDecoder',
+	#superclass : 'BTNodeDecoder',
+	#category : 'Blast-Decoders',
+	#package : 'Blast',
+	#tag : 'Decoders'
 }
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> argListSizeFieldSize [
 	^self wordBitsSize
 ]
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTMethodBodyDecoder >> decode: aBitList [
 	| argumentList temporaryList statementList hasReturn tempListSize argListSize statementListSize |
 	
@@ -45,7 +47,7 @@ BTMethodBodyDecoder >> decode: aBitList [
 		hasReturn: hasReturn
 ]
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTMethodBodyDecoder >> encode: aBlockNode [
 	| result |
 
@@ -64,87 +66,87 @@ BTMethodBodyDecoder >> encode: aBlockNode [
 	^ result
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTMethodBodyDecoder >> encodedArgumentListLengthFor: aBlockNode [
 	^ BTBitList fromInteger: 
 		aBlockNode arguments size
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTMethodBodyDecoder >> encodedReturnFor: aBlockNode [
 	^ BTBitList value: aBlockNode hasReturn width: 1
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTMethodBodyDecoder >> encodedStatementFor: anExpressionNode [
 	^ BTBitList fromInteger: 
 		((self storageFor: anExpressionNode) store: anExpressionNode)
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTMethodBodyDecoder >> encodedStatementListLengthFor: aBlockNode [
 	^ BTBitList fromInteger: 
 		aBlockNode statements size
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTMethodBodyDecoder >> encodedTempVarFor: aVariableNode [
 	^ BTBitList fromInteger: 
 		(self tempVariableNodeStorage store: aVariableNode) 
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTMethodBodyDecoder >> encodedTempVarListLengthFor: aBlockNode [
 	^ BTBitList fromInteger: 
 		aBlockNode temporaries size
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> extractArgListSizeFrom: aBitList [
 	^ aBitList removeFirstBits: self argListSizeFieldSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> extractHasReturnFrom: aBitList [
 	^aBitList isSetBitAt: 1
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> extractStatementFrom: aBitList [
 	^ aBitList removeFirstBits: self statementFieldSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> extractStatementListSizeFrom: aBitList [
 	^ aBitList removeFirstBits: self statementsListSizeFieldSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> extractTempListSizeFrom: aBitList [
 	^ aBitList removeFirstBits: self temporariesListSizeFieldSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> extractTempVarPositionFrom: aBitList [
 	^ aBitList removeFirstBits: self tempVariableFieldSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> statementFieldSize [
 	^self wordBitsSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> statementsListSizeFieldSize [
 	^self wordBitsSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> tempVariableFieldSize [
 	^self wordBitsSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMethodBodyDecoder >> temporariesListSizeFieldSize [
 	^self wordBitsSize
 ]

@@ -3,47 +3,49 @@ A BTMessageEncoder is a BTPragmaNode to binary encoder.
 
 "
 Class {
-	#name : #BTPragmaDecoder,
-	#superclass : #BTNodeDecoder,
+	#name : 'BTPragmaDecoder',
+	#superclass : 'BTNodeDecoder',
 	#instVars : [
 		'selector',
 		'arguments',
 		'selectorIndex',
 		'argumentsIndexes'
 	],
-	#category : #'Blast-Decoders'
+	#category : 'Blast-Decoders',
+	#package : 'Blast',
+	#tag : 'Decoders'
 }
 
-{ #category : #'binary format' }
+{ #category : 'binary format' }
 BTPragmaDecoder >> binaryFormatClass [
 	^ BTPragmaBinaryFormat detectFormatAt: self
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 BTPragmaDecoder >> buildNode [
 	^ BTPragmaNode
 		selector: self fetchSelector
 		arguments: self fetchArguments
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 BTPragmaDecoder >> extractParts [
 	binaryFormat removeHeader.
 	selectorIndex := binaryFormat decodeSelectorIndex.
 	argumentsIndexes := binaryFormat decodeArgumentsIndexesFor: self pragmaNumArgs
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTPragmaDecoder >> fetchArguments [
 	^ self literalStorage objectsAt: argumentsIndexes
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTPragmaDecoder >> fetchSelector [
 	^ self pragmaSelectorStorage objectAt: selectorIndex
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTPragmaDecoder >> pragmaNumArgs [
 	^ self fetchSelector numArgs
 ]

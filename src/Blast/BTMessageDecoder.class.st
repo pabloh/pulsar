@@ -3,18 +3,20 @@ A BTMessageEncoder is a BTMessageNode to binary encoder.
 
 "
 Class {
-	#name : #BTMessageDecoder,
-	#superclass : #BTNodeDecoder,
-	#category : #'Blast-Decoders'
+	#name : 'BTMessageDecoder',
+	#superclass : 'BTNodeDecoder',
+	#category : 'Blast-Decoders',
+	#package : 'Blast',
+	#tag : 'Decoders'
 }
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMessageDecoder >> argumentSize [
 
 	^self wordBitsSize
 ]
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTMessageDecoder >> decode: aBitList [
 	| receiverPos selectorPos typePrefix receiver selector arguments |
 	
@@ -36,7 +38,7 @@ BTMessageDecoder >> decode: aBitList [
 	^ BTMessageNode receiver: receiver selector: selector arguments: arguments
 ]
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTMessageDecoder >> encode: aMessageNode [
 	| receiverBits receiverTypePrefixBits selectorBits  result |
 	
@@ -56,49 +58,49 @@ BTMessageDecoder >> encode: aMessageNode [
 	^result.
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTMessageDecoder >> encodedArgumentExpression: anExpressionNode [
 
 	^ BTBitList fromInteger: 
 		((self storageFor: anExpressionNode) store: anExpressionNode)
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTMessageDecoder >> encodedMessageSelector: aSelector [
 
 	^ BTBitList fromInteger:
 		(self selectorStorage store:  aSelector)
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTMessageDecoder >> encodedReceiverExpression: anExpressionNode [
 
 	^ BTBitList fromInteger: 
 		((self storageFor: anExpressionNode) store: anExpressionNode)
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMessageDecoder >> extractArgumentPositionFrom: aBitList [
 	^ aBitList removeFirstBits: self argumentSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMessageDecoder >> extractReceiverPositionFrom: aBitList [
 	^ aBitList removeFirstBits: self receiverSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMessageDecoder >> extractSelectorPositionFrom: aBitList [
 	^ aBitList removeFirstBits: self selectorSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMessageDecoder >> receiverSize [
 
 	^self wordBitsSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTMessageDecoder >> selectorSize [
 
 	^self wordBitsSize

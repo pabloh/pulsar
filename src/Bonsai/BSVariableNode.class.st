@@ -6,15 +6,17 @@ Instance Variables
 
 "
 Class {
-	#name : #BSVariableNode,
-	#superclass : #BSFlyweightNode,
+	#name : 'BSVariableNode',
+	#superclass : 'BSFlyweightNode',
 	#instVars : [
 		'name'
 	],
-	#category : #'Bonsai-Expressions'
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSVariableNode class >> name: aSymbol [
 	self assert: aSymbol isSymbol.
 	self assert: aSymbol ~= #self.
@@ -23,35 +25,35 @@ BSVariableNode class >> name: aSymbol [
 	^ self privateLookup: { aSymbol }
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSVariableNode class >> privateHash: array [
 	"Need to be redefined to distinguish between an identifier and a symbol because both are encoded with symbols (ex: between the variable foo and the symbol #foo)"
 	^ (array instVarAt: 1) hash bitXor: 678664627
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BSVariableNode >> acceptVisitor: aBSNodeVisitor [
 
 	^ aBSNodeVisitor visitVariablelNode: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSVariableNode >> isVariableNode [
 	^ true
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSVariableNode >> name [
 	^ name
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSVariableNode >> name: aSymbol [
 	^ self class name: aSymbol
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSVariableNode >> printOn: aStream [
 	aStream << self name
 ]

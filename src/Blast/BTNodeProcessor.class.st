@@ -9,113 +9,115 @@ storageDirectory
 
 "
 Class {
-	#name : #BTNodeProcessor,
-	#superclass : #Object,
+	#name : 'BTNodeProcessor',
+	#superclass : 'Object',
 	#instVars : [
 		'storageDirectory',
 		'binaryFormat'
 	],
-	#category : #'Blast-Core'
+	#category : 'Blast-Core',
+	#package : 'Blast',
+	#tag : 'Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTNodeProcessor class >> using: aStorageDirectory [
 	^self basicNew
 		storageDirectory: aStorageDirectory;
 		yourself
 ]
 
-{ #category : #'binary format' }
+{ #category : 'binary format' }
 BTNodeProcessor >> binaryFormatClass [
 	self subclassResponsibility 
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTNodeProcessor >> cascadePartsStorage [
 	^ storageDirectory assignmentNodeStorage
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTNodeProcessor >> encodedTypePrefixFor: anExpressionNode [
 	^ BTBitList value: (self typePrefixFor: anExpressionNode) width: self typePrefixSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTNodeProcessor >> extractTypePrefixFrom: aBitList [
 	^ aBitList removeFirstBits: self typePrefixSize
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 BTNodeProcessor >> initialize [
 	storageDirectory := BTNodeStorageDirectory default.
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTNodeProcessor >> literalStorage [
 	^ storageDirectory literalNodeStorage
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTNodeProcessor >> pragmaSelectorStorage [
 	^ storageDirectory pragmaSelectorStorage
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeProcessor >> result [
 	^ result
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTNodeProcessor >> selectorStorage [
 	^ storageDirectory selectorStorage 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeProcessor >> storageDirectory [
 	^ storageDirectory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeProcessor >> storageDirectory: anObject [
 	storageDirectory := anObject
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTNodeProcessor >> storageFor: aNode [
 	^ aNode storageAt: storageDirectory
 ]
 
-{ #category : #'private - type prefixes' }
+{ #category : 'private - type prefixes' }
 BTNodeProcessor >> storageForTypePrefix: aPrefixType [
 	^ self shouldBeImplemented.
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTNodeProcessor >> tempVariableStogare [
 	^ storageDirectory tempVariableNodeStorage
 ]
 
-{ #category : #'private - type prefixes' }
+{ #category : 'private - type prefixes' }
 BTNodeProcessor >> typePrefixFor: aNode [
 	^ self shouldBeImplemented
 ]
 
-{ #category : #'private - field sizes' }
+{ #category : 'private - field sizes' }
 BTNodeProcessor >> typePrefixSize [
 	^ 3.
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTNodeProcessor >> unaryPragmaNodeStorage [
 	^ storageDirectory unaryPragmaNodeStorage
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTNodeProcessor >> variableStogare [
 	^ storageDirectory variableNodeStorage
 ]
 
-{ #category : #'private - field sizes' }
+{ #category : 'private - field sizes' }
 BTNodeProcessor >> wordBitsSize [
 	^ Smalltalk wordSize * 8 "bits per byte"
 ]

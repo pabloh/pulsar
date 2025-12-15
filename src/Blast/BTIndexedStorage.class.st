@@ -3,12 +3,14 @@ A BTIndexedStorage adds an index to an existing BTStorage.
 
 "
 Class {
-	#name : #BTIndexedStorage,
-	#superclass : #BTStorageWrapper,
-	#category : #'Blast-Storage'
+	#name : 'BTIndexedStorage',
+	#superclass : 'BTStorageWrapper',
+	#category : 'Blast-Storage',
+	#package : 'Blast',
+	#tag : 'Storage'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTIndexedStorage class >> indexed: anStorage [
 	| storageClass |
 	storageClass := ((anStorage capacity isZero) or: [ anStorage capacity > BTLinearIndexedStorage upperLimit ])
@@ -18,7 +20,7 @@ BTIndexedStorage class >> indexed: anStorage [
 	^ storageClass for: anStorage.
 ]
 
-{ #category : #storing }
+{ #category : 'storing' }
 BTIndexedStorage >> store: anObject [
 	^ self subclassResponsibility
 ]

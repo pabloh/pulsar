@@ -3,22 +3,24 @@ A BTCascadeMessageEncoder is an encoder for cascade messages.
 
 "
 Class {
-	#name : #BTCascadeMessageDecoder,
-	#superclass : #BTNodeDecoder,
-	#category : #'Blast-Decoders'
+	#name : 'BTCascadeMessageDecoder',
+	#superclass : 'BTNodeDecoder',
+	#category : 'Blast-Decoders',
+	#package : 'Blast',
+	#tag : 'Decoders'
 }
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTCascadeMessageDecoder >> cascadeLengthSize [
 	^self wordBitsSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTCascadeMessageDecoder >> cascadePartSize [
 	^self wordBitsSize
 ]
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTCascadeMessageDecoder >> decode: aBitList [
 	| receiverPos typePrefix receiver cascadeLength parts |
 	typePrefix := self extractTypePrefixFrom: aBitList.
@@ -36,7 +38,7 @@ BTCascadeMessageDecoder >> decode: aBitList [
 	^ BTCascadeNode receiver: receiver parts: parts
 ]
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTCascadeMessageDecoder >> encode: aCascadeMessageNode [
 	| receiverBits cascadeLengthBits receiverTypePrefixBits |
 	receiverTypePrefixBits := self encodedTypePrefixFor: aCascadeMessageNode receiver.
@@ -48,42 +50,42 @@ BTCascadeMessageDecoder >> encode: aCascadeMessageNode [
 		into: [ :result :part | result append: (self encodedCascadePart: part) ]
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTCascadeMessageDecoder >> encodedCascadeLengthFor: aCascadeMessageNode [
 	^ BTBitList fromInteger:
 		aCascadeMessageNode parts size
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTCascadeMessageDecoder >> encodedCascadePart: aCascadePartNode [
 	"TODO: just point to the selector when there is message send without parameters"
 	^BTBitList fromInteger:
 		(self cascadePartsStorage store: aCascadePartNode )
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTCascadeMessageDecoder >> encodedReceiverExpression: anExpressionNode [
 
 	^ BTBitList fromInteger: 
 		((self storageFor: anExpressionNode) store: anExpressionNode)
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTCascadeMessageDecoder >> extractCascadeLengthFrom: aBitList [
 	^ aBitList removeFirstBits: self cascadeLengthSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTCascadeMessageDecoder >> extractCascadePartPosFrom: aBitList [
 	^ aBitList removeFirstBits: self cascadePartSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTCascadeMessageDecoder >> extractReceiverPositionFrom: aBitList [
 	^ aBitList removeFirstBits: self receiverSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTCascadeMessageDecoder >> receiverSize [
 	^self wordBitsSize
 ]

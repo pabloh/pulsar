@@ -2,17 +2,19 @@
 Represents the pseudo-variable 'self'
 "
 Class {
-	#name : #BSSelfNode,
-	#superclass : #BSPseudoVariableNode,
-	#category : #'Bonsai-Expressions'
+	#name : 'BSSelfNode',
+	#superclass : 'BSPseudoVariableNode',
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSSelfNode >> isSelfNode [
 	^ true 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSSelfNode >> printOn: aStream [
 	aStream << 'self'
 ]

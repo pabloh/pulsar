@@ -9,18 +9,20 @@ Variable Part 		<BSLiteralValue*>
 
 "
 Class {
-	#name : #BSPragmaNode,
-	#superclass : #BSFlyweightNode,
-	#type : #variable,
+	#name : 'BSPragmaNode',
+	#superclass : 'BSFlyweightNode',
+	#type : 'variable',
 	#traits : 'TKeyworded',
 	#classTraits : 'TKeyworded classTrait',
 	#instVars : [
 		'selector'
 	],
-	#category : #'Bonsai-Method'
+	#category : 'Bonsai-Method',
+	#package : 'Bonsai',
+	#tag : 'Method'
 }
 
-{ #category : #'private-checking' }
+{ #category : 'private-checking' }
 BSPragmaNode class >> privateCheckSelector: selector arguments: arguments [ 
 	(arguments size = selector numArgs) ifFalse: [ 
 		self error: 
@@ -28,7 +30,7 @@ BSPragmaNode class >> privateCheckSelector: selector arguments: arguments [
 				format: {selector. selector numArgs. arguments size }) ].
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSPragmaNode class >> receiver: anExpressionNode selector: aSymbol arguments: anExpressionNodeArray [
 	self privateCheckSelector: aSymbol arguments: anExpressionNodeArray. 
 	self assert: anExpressionNode isExpressionNode.
@@ -37,7 +39,7 @@ BSPragmaNode class >> receiver: anExpressionNode selector: aSymbol arguments: an
 	^ self privateLookup: { anExpressionNode. aSymbol }, anExpressionNodeArray
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSPragmaNode class >> selector: aSymbol arguments: anLiteralNodeArray [
 	self privateCheckSelector: aSymbol arguments: anLiteralNodeArray. 
 	self assert: aSymbol isSymbol.
@@ -45,45 +47,45 @@ BSPragmaNode class >> selector: aSymbol arguments: anLiteralNodeArray [
 	^ self privateLookup: { aSymbol }, anLiteralNodeArray
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BSPragmaNode >> acceptVisitor: aBSNodeVisitor [
 
 	^ aBSNodeVisitor visitPragmaNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSPragmaNode >> arguments [
 	^ self variablePart
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSPragmaNode >> arguments: anExpressionArray [
 	^ self class 
 		selector: self selector 
 		arguments: anExpressionArray
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSPragmaNode >> isExpressionNode [ 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSPragmaNode >> isPragmaNode [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSPragmaNode >> keywords [
 	^ self selector keywords
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 BSPragmaNode >> keywordsAndArgumentsDo: aBlock [
 	self keywordsAndArgumentsDo: aBlock separatedBy: nil
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 BSPragmaNode >> keywordsAndArgumentsDo: aBlock separatedBy: aSeparatorBlock [
 	| firstIteration |
 	firstIteration := true.
@@ -94,7 +96,7 @@ BSPragmaNode >> keywordsAndArgumentsDo: aBlock separatedBy: aSeparatorBlock [
 		aBlock value: keyword value: argument ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSPragmaNode >> printKeywordsAndArgumentsOn: aStream [
 	self arguments isEmpty ifTrue: [ ^ aStream << self selector ].
 	self 
@@ -107,19 +109,19 @@ BSPragmaNode >> printKeywordsAndArgumentsOn: aStream [
 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSPragmaNode >> printOn: aStream [
 	aStream << '<'.
 	self printKeywordsAndArgumentsOn: aStream.
 	aStream << '>'.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSPragmaNode >> selector [
 	^ selector
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSPragmaNode >> selector: aSymbol [
 	^ self class 
 		selector: aSymbol

@@ -9,15 +9,16 @@ block
 
 "
 Class {
-	#name : #AstNodeProcessor,
-	#superclass : #RBProgramNodeVisitor,
+	#name : 'AstNodeProcessor',
+	#superclass : 'OCProgramNodeVisitor',
 	#instVars : [
 		'block'
 	],
-	#category : #'Blast-AST-Experiments'
+	#category : 'Blast-AST-Experiments',
+	#package : 'Blast-AST-Experiments'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AstNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := IdentitySet new.
@@ -27,7 +28,7 @@ AstNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 	^ result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AstNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := 0.
@@ -37,7 +38,7 @@ AstNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
 	^ result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AstNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 
 	self new
@@ -45,96 +46,96 @@ AstNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 		visitNode: aNodeTree.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AstNodeProcessor class >> forEachNodeThat: aCondition at: aNodeTree do: aBlock [
 
 	self forEachNodeAt: aNodeTree do: [:aNode | (aCondition value: aNode) ifTrue:  [ aBlock cull: aNode ] ].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 AstNodeProcessor class >> iterateOver: aNodeTree with: aBlock [
 
 	self forEachNodeAt: aNodeTree do: aBlock.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 AstNodeProcessor >> block [
 	^ block
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 AstNodeProcessor >> block: anObject [
 	block := anObject
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 AstNodeProcessor >> process: aNode [
 	block cull: aNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitArrayNode: anArrayNode [
 	self process: anArrayNode.
 	super visitArrayNode: anArrayNode.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitAssignmentNode: anAssignmentNode [
 
 	self process: anAssignmentNode.
 	super visitAssignmentNode: anAssignmentNode.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitBlockNode: aBlockNode [ 
 
 	self process: aBlockNode.
 	super visitBlockNode: aBlockNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitCascadeNode: aCascadeNode [ 
 	self process: aCascadeNode.
 	super visitCascadeNode: aCascadeNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitLiteralArrayNode: aRBLiteralArrayNode [ 
 	self process: aRBLiteralArrayNode.
 	super visitLiteralArrayNode: aRBLiteralArrayNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitLiteralNode: aLiteralNode [
 	self process: aLiteralNode.
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitMessageNode: aMessageNode [ 
 	self process: aMessageNode.
 	super visitMessageNode: aMessageNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitMethodNode: aMethodNode [ 
 	self process: aMethodNode.
 	super visitMethodNode: aMethodNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitPragmaNode: aPragmaNode [
 	self process: aPragmaNode.
 	super visitPragmaNode: aPragmaNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitReturnNode: aReturnNode [ 
 	self process: aReturnNode.
 	super visitReturnNode: aReturnNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitSequenceNode: aSequenceNode [ 
 	self process: aSequenceNode.
 	
@@ -142,7 +143,7 @@ AstNodeProcessor >> visitSequenceNode: aSequenceNode [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 AstNodeProcessor >> visitVariableNode: aVariableNode [
 	self process: aVariableNode.
 

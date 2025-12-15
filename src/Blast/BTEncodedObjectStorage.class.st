@@ -9,38 +9,40 @@ encoderClass
 
 "
 Class {
-	#name : #BTEncodedObjectStorage,
-	#superclass : #BTStorageWrapper,
+	#name : 'BTEncodedObjectStorage',
+	#superclass : 'BTStorageWrapper',
 	#instVars : [
 		'translator'
 	],
-	#category : #'Blast-Storage'
+	#category : 'Blast-Storage',
+	#package : 'Blast',
+	#tag : 'Storage'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTEncodedObjectStorage class >> for: aStorage using: aTranslator [.
 	^ (self for: aStorage)
 		translator: aTranslator;
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTEncodedObjectStorage >> objectAt: anIndex [
 	^ translator decode: (storage objectAt: anIndex)
 ]
 
-{ #category : #storing }
+{ #category : 'storing' }
 BTEncodedObjectStorage >> store: anObject [ 
 	^ storage store: (translator encode: anObject)
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTEncodedObjectStorage >> translator [
 	^ translator
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTEncodedObjectStorage >> translator: aTranslator [
 	translator := aTranslator 
 ]

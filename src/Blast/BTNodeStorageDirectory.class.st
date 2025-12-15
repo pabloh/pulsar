@@ -2,8 +2,8 @@
 A BTNodeStorageDirectory is a directory which holds a reference to every node storage been used to store a set of methods
 "
 Class {
-	#name : #BTNodeStorageDirectory,
-	#superclass : #BTStorageDirectory,
+	#name : 'BTNodeStorageDirectory',
+	#superclass : 'BTStorageDirectory',
 	#instVars : [
 		'arrayNodeStorage',
 		'assignmentNodeStorage',
@@ -23,28 +23,30 @@ Class {
 	#classInstVars : [
 		'default'
 	],
-	#category : #'Blast-Storage'
+	#category : 'Blast-Storage',
+	#package : 'Blast',
+	#tag : 'Storage'
 }
 
-{ #category : #'default instance' }
+{ #category : 'default instance' }
 BTNodeStorageDirectory class >> default [
 	^ default ifNil: [ default := self new ]
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 BTNodeStorageDirectory class >> initialize [
 
 	Smalltalk
 		addToShutDownList: self
 ]
 
-{ #category : #'default instance' }
+{ #category : 'default instance' }
 BTNodeStorageDirectory class >> shutDown: quitting [
 
 	quitting ifTrue: [ self default pruneDeletedEntries ]
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> arrayEncodingFormat [
 	^ BTNodeTranslator
 		encoderClass: BTArrayEncoder 
@@ -52,12 +54,12 @@ BTNodeStorageDirectory >> arrayEncodingFormat [
 		directory: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> arrayNodeStorage [
 	^ arrayNodeStorage
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> assignmentEncodingFormat [
 	^ BTNodeTranslator
 		encoderClass: BTAssignmentEncoder 
@@ -65,12 +67,12 @@ BTNodeStorageDirectory >> assignmentEncodingFormat [
 		directory: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> assignmentNodeStorage [
 	^ assignmentNodeStorage
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> blockEncodingFormat [
 	^ BTNodeTranslator
 		encoderClass: BTBlockEncoder 
@@ -78,12 +80,12 @@ BTNodeStorageDirectory >> blockEncodingFormat [
 		directory: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> blockNodeStorage [
 	^ blockNodeStorage 
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> cascadeMessageEncodingFormat [
 	^ BTNodeTranslator
 		encoderClass: BTCascadeMessageEncoder 
@@ -91,12 +93,12 @@ BTNodeStorageDirectory >> cascadeMessageEncodingFormat [
 		directory: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> cascadeMessageNodeStorage [
 	^ cascadeMessageNodeStorage
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> cascadePartEncodingFormat [
 	^ BTNodeTranslator
 		encoderClass: BTCascadePartEncoder 
@@ -104,49 +106,49 @@ BTNodeStorageDirectory >> cascadePartEncodingFormat [
 		directory: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> cascadePartNodeStorage [
 	^ cascadePartNodeStorage
 ]
 
-{ #category : #clearing }
+{ #category : 'clearing' }
 BTNodeStorageDirectory >> clearStorages [
 	self createStorages
 ]
 
-{ #category : #'storage creation' }
+{ #category : 'storage creation' }
 BTNodeStorageDirectory >> createKeywordPragaNodeStorage [
 	^ self createBinaryStorageUsing: self pragmaEncodingFormat
 ]
 
-{ #category : #'storage creation' }
+{ #category : 'storage creation' }
 BTNodeStorageDirectory >> createPragmaSelectorStorage [
 
 	^ BTIndexedStorage indexed:
 		(BTObjectStorage preloadedWith: self preloadedPragmaKeywordSelectors)
 ]
 
-{ #category : #'storage creation' }
+{ #category : 'storage creation' }
 BTNodeStorageDirectory >> createSelectorStorage [
 
 	^ BTSetIndexedStorage for: BTObjectStorage new
 ]
 
-{ #category : #'storage creation' }
+{ #category : 'storage creation' }
 BTNodeStorageDirectory >> createUnaryPragaNodeStorage [
 	
 	^ self createEncodedStorageUsing: self unaryPragmaEncodingFormat 
 		wrapping: (BTObjectStorage preloadedWith: self preloadedPragmaUnarySelectors)
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> identifierEncodingFormat [
 	^ BTNodeTranslator
 		encoderBlock: [ :node | node name ]
 		decoderBlock: [ :value | BTVariableNode name: value ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 BTNodeStorageDirectory >> initialize [
 	variableNodeStorage := self createObjectStorageUsing: self identifierEncodingFormat.
 	literalNodeStorage := self createObjectStorageUsing: self literalEncodingFormat.
@@ -165,24 +167,24 @@ BTNodeStorageDirectory >> initialize [
 	keywordPragmaNodeStorage := self createKeywordPragaNodeStorage.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> keywordPragmaNodeStorage [
 	^ keywordPragmaNodeStorage
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> literalEncodingFormat [
 	^ BTNodeTranslator
 		encoderBlock: [ :node | node value ]
 		decoderBlock: [ :value | BTLiteralNode value: value ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> literalNodeStorage [
 	^ literalNodeStorage
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> messageEncodingFormat [
 	^ BTNodeTranslator
 		encoderClass: BTMessageEncoder 
@@ -190,7 +192,7 @@ BTNodeStorageDirectory >> messageEncodingFormat [
 		directory: self
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> pragmaEncodingFormat [
 	^ BTNodeTranslator
 		encoderClass: BTPragmaEncoder 
@@ -198,12 +200,12 @@ BTNodeStorageDirectory >> pragmaEncodingFormat [
 		directory: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> pragmaSelectorStorage [
 	^ pragmaSelectorStorage
 ]
 
-{ #category : #'preloaded data' }
+{ #category : 'preloaded data' }
 BTNodeStorageDirectory >> preloadedPragmaKeywordSelectors [
 
 	^ #(wikiStyleHelp:
@@ -214,7 +216,7 @@ BTNodeStorageDirectory >> preloadedPragmaKeywordSelectors [
 		api:getter:registration: api:min:max:getter: api:min:max:getter:registration:)
 ]
 
-{ #category : #'preloaded data' }
+{ #category : 'preloaded data' }
 BTNodeStorageDirectory >> preloadedPragmaUnarySelectors [
 
 	^ #(processBrowserStackListMenu
@@ -242,45 +244,45 @@ BTNodeStorageDirectory >> preloadedPragmaUnarySelectors [
 		textEditorMenu preDebuggingAction)
 ]
 
-{ #category : #'preloaded data' }
+{ #category : 'preloaded data' }
 BTNodeStorageDirectory >> preloadedSelectors [
 	self flag: #TODO
 ]
 
-{ #category : #'preloaded data' }
+{ #category : 'preloaded data' }
 BTNodeStorageDirectory >> preloadedVariableNames [
 	self flag: #TODO
 ]
 
-{ #category : #maintenance }
+{ #category : 'maintenance' }
 BTNodeStorageDirectory >> pruneDeletedEntries [
 	"TODO: prune deleted entries on every storage and compact them"
 	self flag: #TODO
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> selectorStorage [
 	^ selectorStorage
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> tempVariableNodeStorage [
 	^ tempVariableNodeStorage
 ]
 
-{ #category : #'encoding formats' }
+{ #category : 'encoding formats' }
 BTNodeStorageDirectory >> unaryPragmaEncodingFormat [
 	^ BTNodeTranslator
 		encoderBlock: [ :node | node selector ]
 		decoderBlock: [ :value | BTPragmaNode selector: value ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> unaryPragmaNodeStorage [
 	^ unaryPragmaNodeStorage
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeStorageDirectory >> variableNodeStorage [
 	^ variableNodeStorage
 ]

@@ -17,18 +17,20 @@ temporaries
 
 "
 Class {
-	#name : #BTBlockNode,
-	#superclass : #BTEncodedNode,
+	#name : 'BTBlockNode',
+	#superclass : 'BTEncodedNode',
 	#instVars : [
 		'arguments',
 		'temporaries',
 		'statements',
 		'hasReturn'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTBlockNode class >> arguments: anArgumentList temporaries: aTemporaryList statements: aStatementList hasReturn: aBoolean [
 	
 	^self new
@@ -39,33 +41,33 @@ BTBlockNode class >> arguments: anArgumentList temporaries: aTemporaryList state
 		yourself
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTBlockNode >> acceptVisitor: aBTNodeVisitor [
 
 	^ aBTNodeVisitor visitBlockNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBlockNode >> arguments [
 	^ arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBlockNode >> arguments: anArgumentList [
 	arguments := anArgumentList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBlockNode >> hasReturn [
 	^ hasReturn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBlockNode >> hasReturn: anObject [
 	hasReturn := anObject
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTBlockNode >> printArgumentsOn: aStream [
 	self arguments ifNotEmptyDo: [ :args |
 		args do: [ :arg |
@@ -73,13 +75,13 @@ BTBlockNode >> printArgumentsOn: aStream [
 		aStream << '| ' ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTBlockNode >> printBodyOn: aStream [
 	self printTemporariesOn: aStream.
 	self	 printStatementsOn: aStream.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTBlockNode >> printOn: aStream [
 	aStream << '[ '.
 	self printArgumentsOn: aStream.
@@ -87,7 +89,7 @@ BTBlockNode >> printOn: aStream [
 	aStream << ' ]'.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTBlockNode >> printStatementsOn: aStream [
 	self statements allButLastDo: [ :expression | 
 		expression printOn: aStream.
@@ -98,7 +100,7 @@ BTBlockNode >> printStatementsOn: aStream [
 		self statements last printOn: aStream].
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTBlockNode >> printTemporariesOn: aStream [
 	self temporaries ifNotEmpty: [
 		aStream << ' | '.
@@ -108,22 +110,22 @@ BTBlockNode >> printTemporariesOn: aStream [
 		aStream << ' | ']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBlockNode >> statements [
 	^ statements
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBlockNode >> statements: anObject [
 	statements := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBlockNode >> temporaries [
 	^ temporaries
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBlockNode >> temporaries: anObject [
 	temporaries := anObject
 ]

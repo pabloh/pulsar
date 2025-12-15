@@ -8,19 +8,21 @@ Variable Part 		<BSExpressionValue*>
 
 "
 Class {
-	#name : #BSMessageNode,
-	#superclass : #BSFlyweightNode,
-	#type : #variable,
+	#name : 'BSMessageNode',
+	#superclass : 'BSFlyweightNode',
+	#type : 'variable',
 	#traits : 'TKeyworded',
 	#classTraits : 'TKeyworded classTrait',
 	#instVars : [
 		'receiver',
 		'selector'
 	],
-	#category : #'Bonsai-Expressions'
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSMessageNode class >> receiver: anExpressionNode selector: aSymbol arguments: anExpressionNodeArray [
 	self privateCheckSelector: aSymbol arguments: anExpressionNodeArray. 
 	self assert: anExpressionNode isExpressionNode.
@@ -29,18 +31,18 @@ BSMessageNode class >> receiver: anExpressionNode selector: aSymbol arguments: a
 	^ self privateLookup: { anExpressionNode. aSymbol }, anExpressionNodeArray
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BSMessageNode >> acceptVisitor: aBSNodeVisitor [
 
 	^ aBSNodeVisitor visitMessageNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMessageNode >> arguments [
 	^ self variablePart
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSMessageNode >> arguments: anExpressionArray [
 	^ self class 
 		receiver: self receiver 
@@ -48,12 +50,12 @@ BSMessageNode >> arguments: anExpressionArray [
 		arguments: anExpressionArray
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSMessageNode >> isMessageNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSMessageNode >> printOn: aStream [
 	aStream
 		<< self receiver asString;
@@ -61,12 +63,12 @@ BSMessageNode >> printOn: aStream [
 	self printKeywordsAndArgumentsOn: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMessageNode >> receiver [
 	^ receiver
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSMessageNode >> receiver: anExpressionValue [
 	^ self class 
 		receiver: anExpressionValue 
@@ -74,12 +76,12 @@ BSMessageNode >> receiver: anExpressionValue [
 		arguments: self arguments 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMessageNode >> selector [
 	^ selector
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSMessageNode >> selector: aSymbol [
 	^ self class 
 		receiver: self receiver 

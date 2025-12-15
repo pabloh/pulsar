@@ -9,33 +9,35 @@ table
 
 "
 Class {
-	#name : #BTBinaryStorage,
-	#superclass : #BTStorage,
+	#name : 'BTBinaryStorage',
+	#superclass : 'BTStorage',
 	#instVars : [
 		'wordArray',
 		'lastIndex'
 	],
-	#category : #'Blast-Storage'
+	#category : 'Blast-Storage',
+	#package : 'Blast',
+	#tag : 'Storage'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBinaryStorage >> capacity [
 	 ^ wordArray capacity
 ]
 
-{ #category : #'private ' }
+{ #category : 'private ' }
 BTBinaryStorage >> checkBoundsFor: anIndex [
 	 anIndex > self lastIndex
 		ifTrue: [SubscriptOutOfBounds signalFor: anIndex ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 BTBinaryStorage >> initialize: aCapacity [
 	lastIndex := 0.
 	wordArray := WordArray new: aCapacity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTBinaryStorage >> lastIndex [
 	^ lastIndex
 ]

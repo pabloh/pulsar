@@ -21,18 +21,19 @@ foo
 
 "
 Class {
-	#name : #Flufo,
-	#superclass : #Object,
+	#name : 'Flufo',
+	#superclass : 'Object',
 	#instVars : [
 		'biz',
 		'foo',
 		'ber',
 		'baz'
 	],
-	#category : #'Blast-AST-Experiments'
+	#category : 'Blast-AST-Experiments',
+	#package : 'Blast-AST-Experiments'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Flufo >> foo [
 	"esto es un comentario en un metodo"
 	|var bir|
@@ -43,7 +44,7 @@ Flufo >> foo [
 	^ foo +  var "comentario".
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Flufo >> foo: arg1 bar: arg2 [
 	"esto es un comentario en un metodo"
 
@@ -54,13 +55,13 @@ Flufo >> foo: arg1 bar: arg2 [
 	^ temp + 3 + 4 + 1.0 "comentario".
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Flufo >> initialize [
 	foo := 1.
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 Flufo >> python [
 	^ monty
 ]

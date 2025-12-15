@@ -3,34 +3,36 @@ A BTMessageEncoder is a BTPragmaNode to binary encoder.
 
 "
 Class {
-	#name : #BTPragmaEncoder,
-	#superclass : #BTNodeEncoder,
+	#name : 'BTPragmaEncoder',
+	#superclass : 'BTNodeEncoder',
 	#instVars : [
 		'selectorIndex',
 		'argumentsIndexes'
 	],
-	#category : #'Blast-Encoders'
+	#category : 'Blast-Encoders',
+	#package : 'Blast',
+	#tag : 'Encoders'
 }
 
-{ #category : #'binary format' }
+{ #category : 'binary format' }
 BTPragmaEncoder >> binaryFormatClass [
 	^ BTPragmaBinaryFormat selectFormatFor: self
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 BTPragmaEncoder >> buildResult [
 	binaryFormat encodeHeader.
 	binaryFormat encodeSelector: selectorIndex.
 	binaryFormat encodeArguments: argumentsIndexes
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 BTPragmaEncoder >> processParts [
 	selectorIndex := self pragmaSelectorStorage store: node selector.
 	argumentsIndexes := self literalStorage storeAll: node arguments
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 BTPragmaEncoder >> selectorArity [
 	^ node selector numArgs
 ]

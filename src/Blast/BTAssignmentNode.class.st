@@ -13,21 +13,23 @@ variable
 
 "
 Class {
-	#name : #BTAssignmentNode,
-	#superclass : #BTEncodedNode,
+	#name : 'BTAssignmentNode',
+	#superclass : 'BTEncodedNode',
 	#instVars : [
 		'variable',
 		'expression'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTAssignmentNode class >> storageAt: aStorageDirectory [
 	^ aStorageDirectory assignmentNodeStorage
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTAssignmentNode class >> variable: aVariableNode expression: anExpression [
 
 	^self new
@@ -36,40 +38,40 @@ BTAssignmentNode class >> variable: aVariableNode expression: anExpression [
 		yourself
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTAssignmentNode >> acceptVisitor: aBTNodeVisitor [
 
 	^ aBTNodeVisitor visitAssignmentNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTAssignmentNode >> expression [
 	^ expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTAssignmentNode >> expression: anExpression [
 	expression := anExpression
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BTAssignmentNode >> isAssignmentNode [
 	^true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTAssignmentNode >> printOn: aStream [
 	self variable printOn: aStream.
 	aStream << ' := '.
 	self expression printOn: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTAssignmentNode >> variable [
 	^ variable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTAssignmentNode >> variable: aVariableNode [
 	variable := aVariableNode
 ]

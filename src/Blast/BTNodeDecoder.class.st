@@ -9,49 +9,51 @@ encodedNode
 
 "
 Class {
-	#name : #BTNodeDecoder,
-	#superclass : #BTNodeProcessor,
+	#name : 'BTNodeDecoder',
+	#superclass : 'BTNodeProcessor',
 	#instVars : [
 		'encodedNode'
 	],
-	#category : #'Blast-Decoders'
+	#category : 'Blast-Decoders',
+	#package : 'Blast',
+	#tag : 'Decoders'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTNodeDecoder class >> for: anEncodedNode using: aStorageDirectory [
 	^ (self using: aStorageDirectory)
 		encodedNode: anEncodedNode; 
 		yourself
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 BTNodeDecoder >> buildNode [
 	^ self subclassResponsibility 
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 BTNodeDecoder >> decode [
 	self detectBinaryFormat.
 	self extractParts.
 	^ self buildNode
 ]
 
-{ #category : #'binary format' }
+{ #category : 'binary format' }
 BTNodeDecoder >> detectBinaryFormat [
 	binaryFormat := self binaryFormatClass on: encodedNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeDecoder >> encodedNode [
 	^ encodedNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeDecoder >> encodedNode: aNode [
 	encodedNode := aNode
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 BTNodeDecoder >> extractParts [
 	^ self subclassResponsibility 
 ]

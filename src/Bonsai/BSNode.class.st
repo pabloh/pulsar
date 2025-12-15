@@ -3,67 +3,69 @@ Bonsai is an implementation of the flyweight pattern for ASTs.
 This class is the root of the expression hierarchy
 "
 Class {
-	#name : #BSNode,
-	#superclass : #Object,
-	#category : #'Bonsai-Expressions'
+	#name : 'BSNode',
+	#superclass : 'Object',
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isArrayNode [ 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isAssignmentNode [ 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isBlockNode [ 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isCascadeNode [ 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isExpressionNode [ 
 	^ true
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isLiteralNode [ 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isMessageNode [
 	^ false 
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isPragmaNode [ 
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isSelfNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isSuperNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isThisContextNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSNode >> isVariableNode [
 	^ false
 ]

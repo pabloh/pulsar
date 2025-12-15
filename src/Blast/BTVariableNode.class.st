@@ -2,15 +2,17 @@
 A BTLiteralNode is the AST node for variables.
 "
 Class {
-	#name : #BTVariableNode,
-	#superclass : #BTEncodedNode,
+	#name : 'BTVariableNode',
+	#superclass : 'BTEncodedNode',
 	#instVars : [
 		'name'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTVariableNode class >> name: aName [
 
 	^self new
@@ -18,34 +20,34 @@ BTVariableNode class >> name: aName [
 		yourself.
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTVariableNode class >> storageAt: aStorageDirectory [
 	^aStorageDirectory variableNodeStorage
 	
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTVariableNode >> acceptVisitor: aBTNodeVisitor [
 
 	^ aBTNodeVisitor visitVariablelNode: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BTVariableNode >> isVariableNode [
 	^true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTVariableNode >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTVariableNode >> name: aName [
 	name := aName
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTVariableNode >> printOn: aStream [
 	aStream << name.
 ]

@@ -3,36 +3,33 @@ An AstMemoryProfile is a class for helping profiling AST memory footpring.
 
 "
 Class {
-	#name : #AstMemoryExperiments,
-	#superclass : #Object,
+	#name : 'AstMemoryExperiments',
+	#superclass : 'Object',
 	#classInstVars : [
 		'browserEnvironment',
 		'methodsSource',
 		'methodsAsts',
 		'methodsBonsaiAsts'
 	],
-	#category : #'Blast-AST-Experiments'
+	#category : 'Blast-AST-Experiments',
+	#package : 'Blast-AST-Experiments'
 }
 
-{ #category : #'classes and traits' }
+{ #category : 'classes and traits' }
 AstMemoryExperiments class >> allClassesTraitsAndMetaClasesDo: aBlock [
 
-	^ self browserEnvironment classesAndTraitsDo: aBlock
+	^ Smalltalk globals allBehaviorsDo: aBlock 
 ]
 
-{ #category : #'classes and traits' }
+{ #category : 'classes and traits' }
 AstMemoryExperiments class >> allClassesTraitsAndMetaClasses [
 	"There is no similar method at RBBrowserEnvironment 
 		(also RBBrowserEnvironment>>allMetaClasses seems to be broken)"
 
-	|set|
-	set := IdentitySet new: 4096.
-	self allClassesTraitsAndMetaClasesDo: [ :class | set add: class ].
-
-	^ set
+	^ Smalltalk globals allBehaviors
 ]
 
-{ #category : #comments }
+{ #category : 'comments' }
 AstMemoryExperiments class >> allCommentsCount [
 	|count|
 	
@@ -45,7 +42,7 @@ AstMemoryExperiments class >> allCommentsCount [
 	^count.
 ]
 
-{ #category : #comments }
+{ #category : 'comments' }
 AstMemoryExperiments class >> allCommentsLength [
 	|length|
 	
@@ -59,7 +56,7 @@ AstMemoryExperiments class >> allCommentsLength [
 	^length.
 ]
 
-{ #category : #identifiers }
+{ #category : 'identifiers' }
 AstMemoryExperiments class >> allIdentifiersNames [
 	"Instance variables, local variables and selectors names"
 	|identifiers|
@@ -72,23 +69,23 @@ AstMemoryExperiments class >> allIdentifiersNames [
 	^identifiers
 ]
 
-{ #category : #'classes and traits' }
+{ #category : 'classes and traits' }
 AstMemoryExperiments class >> allMethods [
 	^ self allClassesTraitsAndMetaClasses flatCollect: [ :class | class methodDict ] as: OrderedCollection
 ]
 
-{ #category : #'classes and traits' }
+{ #category : 'classes and traits' }
 AstMemoryExperiments class >> allMethodsCount [
 	^ self allClassesTraitsAndMetaClasses 
 		inject: 0 into: [ :counter :class | counter + class methodDict size ]
 ]
 
-{ #category : #'classes and traits' }
+{ #category : 'classes and traits' }
 AstMemoryExperiments class >> allMethodsIncluding: aLiteralKind [
 	^ self countMethodsMatching: (self literalsPatterns at: aLiteralKind)
 ]
 
-{ #category : #nodes }
+{ #category : 'nodes' }
 AstMemoryExperiments class >> allNodesCount [
 	|count|	
 	count := 0.
@@ -100,24 +97,24 @@ AstMemoryExperiments class >> allNodesCount [
 	^ count
 ]
 
-{ #category : #assignments }
+{ #category : 'assignments' }
 AstMemoryExperiments class >> assignments [	
 	^ self allMethods flatCollect: [ :method |  
 		AstNodeProcessor collectNodesThat: #isAssignment at: method ast ]
 ]
 
-{ #category : #assignments }
+{ #category : 'assignments' }
 AstMemoryExperiments class >> assignmentsCount [
 	^ self assignments size
 ]
 
-{ #category : #nodes }
+{ #category : 'nodes' }
 AstMemoryExperiments class >> avgNodesPerMethod [
 	
 	^(self allNodesCount / self allMethodsCount) printShowingDecimalPlaces: 5 
 ]
 
-{ #category : #sequences }
+{ #category : 'sequences' }
 AstMemoryExperiments class >> blockNodesByReturn [
 	| blocks |
 	blocks := OrderedCollection new.
@@ -128,7 +125,7 @@ AstMemoryExperiments class >> blockNodesByReturn [
 	^ blocks groupedBy: [ :m| m lastIsReturn ]
 ]
 
-{ #category : #'helper methods' }
+{ #category : 'helper methods' }
 AstMemoryExperiments class >> browserEnvironment [
 	browserEnvironment 
 		ifNil: [ browserEnvironment := RBNotEnvironment onEnvironment: (RBCategoryEnvironment category: self category) ].
@@ -136,7 +133,7 @@ AstMemoryExperiments class >> browserEnvironment [
 		^ browserEnvironment
 ]
 
-{ #category : #'souce code space' }
+{ #category : 'souce code space' }
 AstMemoryExperiments class >> clearMethodsStructures [
 	methodsSource := nil.
 	methodsAsts := nil.
@@ -145,27 +142,27 @@ AstMemoryExperiments class >> clearMethodsStructures [
 	BSFlyweightNode resetAllCaches.
 ]
 
-{ #category : #literals }
+{ #category : 'literals' }
 AstMemoryExperiments class >> countAndPercentagesForLiteralsAtMethodsFor: aLiteralKind [
 
 	^  self countAndPercentangesFor: (self countLiteralsAtMethodsFor: aLiteralKind) using: self allMethodsCount.
 ]
 
-{ #category : #comments }
+{ #category : 'comments' }
 AstMemoryExperiments class >> countAndPercentagesForMethodsWithComments [
 
 	^ self countAndPercentangesFor: self countMethodsWithComments using: self allMethodsCount.
 	
 ]
 
-{ #category : #'helper methods' }
+{ #category : 'helper methods' }
 AstMemoryExperiments class >> countAndPercentangesAcumulatedFor: aDictionary [
 
 
 	^self countAndPercentangesAcumulatedFor: aDictionary using: (aDictionary values sum)
 ]
 
-{ #category : #'helper methods' }
+{ #category : 'helper methods' }
 AstMemoryExperiments class >> countAndPercentangesAcumulatedFor: aDictionary groupedBy: aBlock [
 	| groupedDictionary |
 	groupedDictionary := (aDictionary groupedBy: aBlock) collect: #size.
@@ -173,7 +170,7 @@ AstMemoryExperiments class >> countAndPercentangesAcumulatedFor: aDictionary gro
 	^self countAndPercentangesAcumulatedFor: groupedDictionary using: (groupedDictionary values sum)
 ]
 
-{ #category : #'helper methods' }
+{ #category : 'helper methods' }
 AstMemoryExperiments class >> countAndPercentangesAcumulatedFor: aDictionary using: aTotal [
 |acum|
 acum := 0.
@@ -182,7 +179,7 @@ acum := 0.
 		{count. (count / aTotal * 100) printShowingDecimalPlaces: 5. (acum / aTotal * 100) printShowingDecimalPlaces: 5 } ]
 ]
 
-{ #category : #'helper methods' }
+{ #category : 'helper methods' }
 AstMemoryExperiments class >> countAndPercentangesAcumulatedOrderedFor: aDictionary [
 	| list |
 	
@@ -193,32 +190,32 @@ AstMemoryExperiments class >> countAndPercentangesAcumulatedOrderedFor: aDiction
 		collect: [ :k :v| k -> v ] 
 ]
 
-{ #category : #'helper methods' }
+{ #category : 'helper methods' }
 AstMemoryExperiments class >> countAndPercentangesFor: aDictionary [
 
 	^ self countAndPercentangesFor: aDictionary using: (aDictionary values sum)
 ]
 
-{ #category : #'helper methods' }
+{ #category : 'helper methods' }
 AstMemoryExperiments class >> countAndPercentangesFor: aDictionary using: aTotal [
 
 	^aDictionary collect: [:count| {count. (count / aTotal * 100) printShowingDecimalPlaces: 5 } ]
 ]
 
-{ #category : #literals }
+{ #category : 'literals' }
 AstMemoryExperiments class >> countLiteralsAtMethodsFor: aLiteralKind [
 
 	^ (self allMethodsIncluding: aLiteralKind) collect: [ :dict | dict size ]
 ]
 
-{ #category : #literals }
+{ #category : 'literals' }
 AstMemoryExperiments class >> countLiteralsByValueFor: aLiteralKind [
 
 	^((AstMemoryExperiments nodesMatching: (AstMemoryExperiments literalsPatterns at: aLiteralKind ))
 		groupedBy: [ :node | node value ]) collect: [:set | set size ]
 ]
 
-{ #category : #literals }
+{ #category : 'literals' }
 AstMemoryExperiments class >> countMethodsMatching: aSourcePattern [
 	| counter |
 	^ self allMethods
@@ -230,13 +227,13 @@ AstMemoryExperiments class >> countMethodsMatching: aSourcePattern [
 			counter ]
 ]
 
-{ #category : #comments }
+{ #category : 'comments' }
 AstMemoryExperiments class >> countMethodsWithComments [
 
 	^self methodsWithComments collect: [:methods| methods size ]
 ]
 
-{ #category : #nodes }
+{ #category : 'nodes' }
 AstMemoryExperiments class >> countNodesMatching: aSourcePattern [
 	|result|
 	result := 0.
@@ -248,7 +245,7 @@ AstMemoryExperiments class >> countNodesMatching: aSourcePattern [
 	^ result 
 ]
 
-{ #category : #identifiers }
+{ #category : 'identifiers' }
 AstMemoryExperiments class >> instanceVariablesClasses [
 	| varNames |
 	varNames := Dictionary new.
@@ -262,7 +259,7 @@ AstMemoryExperiments class >> instanceVariablesClasses [
 	^ varNames
 ]
 
-{ #category : #identifiers }
+{ #category : 'identifiers' }
 AstMemoryExperiments class >> instanceVariablesNames [
 |varNames|
 varNames := Set new.
@@ -275,14 +272,14 @@ AstMemoryExperiments allClassesTraitsAndMetaClasesDo: [:klass|
 ^ varNames
 ]
 
-{ #category : #identifiers }
+{ #category : 'identifiers' }
 AstMemoryExperiments class >> instanceVariablesRepetition [
 	| varNames |
 	varNames := self uniqInstanceVariables.
 	^ varNames keys groupedBy: [ :key | (varNames at: key) size ]
 ]
 
-{ #category : #'literals - integers' }
+{ #category : 'literals - integers' }
 AstMemoryExperiments class >> integerNodesByBase [
 
 	^ (self nodesMatching: (self literalsPatterns at: #integers)) 
@@ -299,7 +296,7 @@ AstMemoryExperiments class >> integerNodesByBase [
 					source first: (rPos - 1) ] ].
 ]
 
-{ #category : #'literals - integers' }
+{ #category : 'literals - integers' }
 AstMemoryExperiments class >> integerNodesByBaseCountAndPercentages [
 	| totalIntegerNodes |
 	totalIntegerNodes := self countNodesMatching: (self literalsPatterns at: #integers).
@@ -309,7 +306,7 @@ AstMemoryExperiments class >> integerNodesByBaseCountAndPercentages [
 	
 ]
 
-{ #category : #'helper methods' }
+{ #category : 'helper methods' }
 AstMemoryExperiments class >> literalsPatterns [
 	^ Dictionary new
 		add: #literals				->	'`{:node | node isLiteralNode and: [ node isLiteralArray not ] }';
@@ -323,7 +320,7 @@ AstMemoryExperiments class >> literalsPatterns [
 		yourself
 ]
 
-{ #category : #literals }
+{ #category : 'literals' }
 AstMemoryExperiments class >> literalsPercentagesAtMethodsFor: aLiteralKind [
 	| total  |	
 	total := self allMethodsCount.
@@ -331,7 +328,7 @@ AstMemoryExperiments class >> literalsPercentagesAtMethodsFor: aLiteralKind [
 	^ (self countLiteralsAtMethodsFor: aLiteralKind) collect: [:count | (100 * count / total) printShowingDecimalPlaces: 5 ]
 ]
 
-{ #category : #messages }
+{ #category : 'messages' }
 AstMemoryExperiments class >> messagesByArity [
 	| messages |
 	messages := Dictionary new.
@@ -344,40 +341,40 @@ AstMemoryExperiments class >> messagesByArity [
 	^ messages
 ]
 
-{ #category : #messages }
+{ #category : 'messages' }
 AstMemoryExperiments class >> messagesByArityCount [
 	^ self messagesByArity collect: #size
 
 ]
 
-{ #category : #sequences }
+{ #category : 'sequences' }
 AstMemoryExperiments class >> methodBodiesByReturn [
 	^ self allMethods groupedBy: [ :m| m ast lastIsReturn ]
 ]
 
-{ #category : #'souce code space' }
+{ #category : 'souce code space' }
 AstMemoryExperiments class >> methodsAsts [
 	^methodsAsts
 ]
 
-{ #category : #'souce code space' }
+{ #category : 'souce code space' }
 AstMemoryExperiments class >> methodsBonsaiAsts [
 	^methodsBonsaiAsts
 ]
 
-{ #category : #'souce code space' }
+{ #category : 'souce code space' }
 AstMemoryExperiments class >> methodsSource [
 	^methodsSource
 ]
 
-{ #category : #comments }
+{ #category : 'comments' }
 AstMemoryExperiments class >> methodsWithComments [
 
 	^ self allMethods
 		groupedBy: [ :aMethod | AstNodeProcessor countNodesThat: [:aNode| aNode comments isNotEmpty ] at: aMethod ast ]
 ]
 
-{ #category : #nodes }
+{ #category : 'nodes' }
 AstMemoryExperiments class >> nodesAtMethodsMatching: aSourcePattern [
 	^ self allMethods
 		collect: [ :method | 
@@ -391,7 +388,7 @@ AstMemoryExperiments class >> nodesAtMethodsMatching: aSourcePattern [
 		thenReject: [ :nodes| nodes isEmpty ]
 ]
 
-{ #category : #nodes }
+{ #category : 'nodes' }
 AstMemoryExperiments class >> nodesMatching: aSourcePattern [
 	^ self allMethods 
 		flatCollect: [ :method | 
@@ -403,7 +400,7 @@ AstMemoryExperiments class >> nodesMatching: aSourcePattern [
 			result ] as: IdentitySet
 ]
 
-{ #category : #comments }
+{ #category : 'comments' }
 AstMemoryExperiments class >> nodesWithComments [
 
 	^ self allMethods
@@ -411,7 +408,7 @@ AstMemoryExperiments class >> nodesWithComments [
 		thenReject: [: nodes| nodes isEmpty ]
 ]
 
-{ #category : #literals }
+{ #category : 'literals' }
 AstMemoryExperiments class >> percentagesForLiteralsAtMethodsFor: aLiteralKind [
 	| total  |	
 	total := self allMethodsCount.
@@ -419,7 +416,7 @@ AstMemoryExperiments class >> percentagesForLiteralsAtMethodsFor: aLiteralKind [
 	^ (self countLiteralsAtMethodsFor: aLiteralKind) collect: [:count | (100 * count / total) printShowingDecimalPlaces: 5 ]
 ]
 
-{ #category : #comments }
+{ #category : 'comments' }
 AstMemoryExperiments class >> percentagesForMethodsWithComments [
 	| total |	
 	total := self allMethodsCount.
@@ -428,7 +425,7 @@ AstMemoryExperiments class >> percentagesForMethodsWithComments [
 
 ]
 
-{ #category : #pragmas }
+{ #category : 'pragmas' }
 AstMemoryExperiments class >> pragmasUsageByArity [
 	| pragmas |
 	pragmas := OrderedCollection new.
@@ -440,29 +437,29 @@ AstMemoryExperiments class >> pragmasUsageByArity [
 	^ pragmas groupedBy: #numArgs
 ]
 
-{ #category : #pragmas }
+{ #category : 'pragmas' }
 AstMemoryExperiments class >> pragmasUsageByArityCount [
 
 	^ self pragmasUsageByArity collect: #size
 ]
 
-{ #category : #pragmas }
+{ #category : 'pragmas' }
 AstMemoryExperiments class >> pragmasUsageByArityCountAndPercentanges [
 
 	^ self countAndPercentangesFor: self pragmasUsageByArityCount.
 ]
 
-{ #category : #'souce code space' }
+{ #category : 'souce code space' }
 AstMemoryExperiments class >> removeMethodsAstsAtTheImage [
 	methodsAsts  := OrderedCollection new: self allMethodsCount.
 ]
 
-{ #category : #'souce code space' }
+{ #category : 'souce code space' }
 AstMemoryExperiments class >> removeMethodsSourceAtTheImage [
 	methodsSource := OrderedCollection new: self allMethodsCount
 ]
 
-{ #category : #'souce code space' }
+{ #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsAstsAtTheImage [
 	methodsAsts  := OrderedCollection new: self allMethodsCount.
 	
@@ -480,32 +477,24 @@ AstMemoryExperiments class >> saveMethodsAstsAtTheImage [
 		methodsAsts add: ast ]
 ]
 
-{ #category : #'souce code space' }
+{ #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsBonsaiAstsAtTheImage [
-	methodsBonsaiAsts  := OrderedCollection new: self allMethodsCount.
-	
-	self allMethods do: [ :method | 
-		|ast|
-		ast := RBParser parseMethod: method sourceCode.
-		ast
-			source: nil;
-			scope: nil;
-			clearReplacements;
-			clearNodeReplacements;
-			compilationContext: nil.
-		AstNodeProcessor forEachNodeAt: ast do: [ :node| node comments: nil ].
-			
-		methodsBonsaiAsts add: (BSEncoder new visitNode: ast) ]
+
+	methodsBonsaiAsts := OrderedCollection new: self allMethodsCount.
+
+	methodsBonsaiAsts addAll: (self allMethods collect: [ :method |				
+					
+				 BSEncoder new visitNode: method ast ])
 ]
 
-{ #category : #'souce code space' }
+{ #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsSourceAtTheImage [
 	methodsSource := OrderedCollection new: self allMethodsCount.
 	
 	self allMethods do: [ :method | methodsSource add: method sourceCode ]
 ]
 
-{ #category : #selectors }
+{ #category : 'selectors' }
 AstMemoryExperiments class >> selectorsByArity [
 	| selectors |
 	selectors := Set new.
@@ -516,12 +505,12 @@ AstMemoryExperiments class >> selectorsByArity [
 	^ selectors groupedBy: #numArgs
 ]
 
-{ #category : #selectors }
+{ #category : 'selectors' }
 AstMemoryExperiments class >> selectorsByArityCount [
 	^ self selectorsByArity collect: #size
 ]
 
-{ #category : #selectors }
+{ #category : 'selectors' }
 AstMemoryExperiments class >> selectorsByArityCountAndPercetanges [
 	| selsCounts|
 	selsCounts := self selectorsByArityCount.
@@ -529,7 +518,7 @@ AstMemoryExperiments class >> selectorsByArityCountAndPercetanges [
 	^ self countAndPercentangesFor: selsCounts.
 ]
 
-{ #category : #selectors }
+{ #category : 'selectors' }
 AstMemoryExperiments class >> selectorsByUsage [
 	| selectors |
 	selectors := Dictionary new.
@@ -542,12 +531,12 @@ AstMemoryExperiments class >> selectorsByUsage [
 	^ selectors
 ]
 
-{ #category : #selectors }
+{ #category : 'selectors' }
 AstMemoryExperiments class >> selectorsByUsageSorted [		
 	^ self selectorsByUsage associations sort: [ :a1 :a2 | a1 value > a2 value]
 ]
 
-{ #category : #sequences }
+{ #category : 'sequences' }
 AstMemoryExperiments class >> sequencesByLength [
 	| sequences |
 	sequences := Dictionary new.
@@ -560,32 +549,32 @@ AstMemoryExperiments class >> sequencesByLength [
 	^ sequences
 ]
 
-{ #category : #sequences }
+{ #category : 'sequences' }
 AstMemoryExperiments class >> sequencesByLengthCount [
 
 	^ self sequencesByLength collect: #size
 ]
 
-{ #category : #identifiers }
+{ #category : 'identifiers' }
 AstMemoryExperiments class >> tempVariablesNames [
 
 	^self tempVariablesRepetition inject: Set new into: [ :res :vars |  res addAll: vars. res ]
 ]
 
-{ #category : #identifiers }
+{ #category : 'identifiers' }
 AstMemoryExperiments class >> tempVariablesRepetition [
 	| uniqVars |
 	uniqVars := self uniqTempVariables.
 	^uniqVars keys groupedBy: [ :key| uniqVars at: key ]
 ]
 
-{ #category : #identifiers }
+{ #category : 'identifiers' }
 AstMemoryExperiments class >> uniqInstanceVariables [
 
 	^ self instanceVariablesClasses collect: #size
 ]
 
-{ #category : #identifiers }
+{ #category : 'identifiers' }
 AstMemoryExperiments class >> uniqTempVariables [
 	|tempVars|
 	tempVars := OrderedCollection new.
@@ -604,7 +593,7 @@ AstMemoryExperiments class >> uniqTempVariables [
 	^(tempVars groupedBy: #yourself) collect: #size.
 ]
 
-{ #category : #identifiers }
+{ #category : 'identifiers' }
 AstMemoryExperiments class >> variableNamesRepetition [
 	| uniqVars |
 	uniqVars := self uniqTempVariables.

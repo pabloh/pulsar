@@ -1,30 +1,32 @@
 Class {
-	#name : #BTCommonPragmaBinaryFormat,
-	#superclass : #BTPragmaBinaryFormat,
-	#category : #'Blast-BinaryFormats'
+	#name : 'BTCommonPragmaBinaryFormat',
+	#superclass : 'BTPragmaBinaryFormat',
+	#category : 'Blast-BinaryFormats',
+	#package : 'Blast',
+	#tag : 'BinaryFormats'
 }
 
-{ #category : #'format testing' }
+{ #category : 'format testing' }
 BTCommonPragmaBinaryFormat class >> appliesFor: aStrategyContext [
 	^ aStrategyContext selectorIndex between: 0 and: 31
 ]
 
-{ #category : #'format testing' }
+{ #category : 'format testing' }
 BTCommonPragmaBinaryFormat class >> formatMatches: aBitList [
 	^ aBitList firstBits: 1 equals: 0
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 BTCommonPragmaBinaryFormat >> decodeSelectorIndex [
 	^ self pragmaSelectorPacker extractThenUnpackFrom: bitList
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 BTCommonPragmaBinaryFormat >> encodeHeader [
 	bitList appendBits: 1 from: 0
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 BTCommonPragmaBinaryFormat >> encodeSelector: selectorIndex [
 	self pragmaSelectorPacker pack: selectorIndex into: bitList
 ]

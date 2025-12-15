@@ -3,20 +3,21 @@ A HashExperiments is collection of experiments over hash tables.
 
 "
 Class {
-	#name : #HashExperiments,
-	#superclass : #Object,
+	#name : 'HashExperiments',
+	#superclass : 'Object',
 	#classInstVars : [
 		'sample'
 	],
-	#category : #'Blast-AST-Experiments'
+	#category : 'Blast-AST-Experiments',
+	#package : 'Blast-AST-Experiments'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 HashExperiments class >> clearSample [
 	sample := nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 HashExperiments class >> meassureFor: aSample [
 	| sample set array|
 	
@@ -32,13 +33,13 @@ HashExperiments class >> meassureFor: aSample [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 HashExperiments class >> sample [
 	sample ifNil: [ sample := (BSMessageNode select: [ :n | n selector numArgs == 0 ] thenCollect: #selector) shuffled first: 10240 ].
 	^ sample
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 HashExperiments class >> sampleOf: aNumber [
 	^ SelectorKeys shuffled first: aNumber
 ]

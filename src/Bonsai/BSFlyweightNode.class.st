@@ -3,44 +3,46 @@ This class is the root of Bonsai's flyweight hierarchy.
 It has a class-side instance variable cache that its subclassses use for caching their instances.
 "
 Class {
-	#name : #BSFlyweightNode,
-	#superclass : #BSNode,
+	#name : 'BSFlyweightNode',
+	#superclass : 'BSNode',
 	#classVars : [
 		'HashBlock'
 	],
 	#classInstVars : [
 		'cache'
 	],
-	#category : #'Bonsai-Expressions'
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSFlyweightNode class >> basicNew [
 	self error: 'You must instantiate flyweights with appropriate methods. See class side ''instance creation'' protocol'
 ]
 
-{ #category : #caching }
+{ #category : 'caching' }
 BSFlyweightNode class >> cache [
 	^ cache ifNil: [ cache := Set new: self initialCacheSize ]
 ]
 
-{ #category : #caching }
+{ #category : 'caching' }
 BSFlyweightNode class >> cache: aSet [
 	cache :=  aSet
 ]
 
-{ #category : #caching }
+{ #category : 'caching' }
 BSFlyweightNode class >> initialCacheSize [
 	"Approximation of the size of the caches to avoid to many rehash"
 	^ 20000
 ]
 
-{ #category : #'private-caching' }
+{ #category : 'private-caching' }
 BSFlyweightNode class >> initialize [
 	HashBlock := [ :hash :otherHash | (hash bitShift: -7) bitXor: otherHash ]
 ]
 
-{ #category : #'private-caching' }
+{ #category : 'private-caching' }
 BSFlyweightNode class >> privateHash: arrayOrFlyweight [
 	
 	| hash |
@@ -49,7 +51,7 @@ BSFlyweightNode class >> privateHash: arrayOrFlyweight [
 	^ hash
 ]
 
-{ #category : #'private-caching' }
+{ #category : 'private-caching' }
 BSFlyweightNode class >> privateLookup: initCollection [
 	| array index start element |
 	array := self cache array.
@@ -62,7 +64,7 @@ BSFlyweightNode class >> privateLookup: initCollection [
 		(index := index \\ array size + 1) = start ] whileFalse.
 ]
 
-{ #category : #'private-caching' }
+{ #category : 'private-caching' }
 BSFlyweightNode class >> privateNewInstanceWith: initCollection [
 	| newInstance |
 	self assert: [ initCollection size = self instSize or: [ initCollection size > self instSize and: [ self isVariable ] ] ].
@@ -73,17 +75,17 @@ BSFlyweightNode class >> privateNewInstanceWith: initCollection [
 	^ newInstance
 ]
 
-{ #category : #caching }
+{ #category : 'caching' }
 BSFlyweightNode class >> resetAllCaches [
 	self allSubclassesDo: #resetCache 
 ]
 
-{ #category : #cache }
+{ #category : 'cache' }
 BSFlyweightNode class >> resetCache [
 	cache := nil
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 BSFlyweightNode >> = anObject [
 	"A flyweight is equal to itself or to an array whose items are equals to my instances variables"
 	^ anObject == self or: 
@@ -94,17 +96,17 @@ BSFlyweightNode >> = anObject [
 				true ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 BSFlyweightNode >> hash [
 	^ self class privateHash: self
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 BSFlyweightNode >> size [
 	^ self basicSize + self class instSize
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BSFlyweightNode >> variablePart [
 	"Returns an array tht corresponds to the variable part of the receiver"
 	^ (1 to: self basicSize) collect: [ :index | self at: index ] as: Array

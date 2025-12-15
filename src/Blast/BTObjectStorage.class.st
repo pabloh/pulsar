@@ -9,21 +9,23 @@ objects
 
 "
 Class {
-	#name : #BTObjectStorage,
-	#superclass : #BTStorage,
+	#name : 'BTObjectStorage',
+	#superclass : 'BTStorage',
 	#instVars : [
 		'objects'
 	],
-	#category : #'Blast-Storage'
+	#category : 'Blast-Storage',
+	#package : 'Blast',
+	#tag : 'Storage'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTObjectStorage class >> adjustCapacity: aCapacity [
 
 	^ 32 max: ((aCapacity/8) ceiling * 8)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTObjectStorage class >> new: aCapacity preloadedWith: aCollection [
 
 	^ (self new: aCapacity)
@@ -32,7 +34,7 @@ BTObjectStorage class >> new: aCapacity preloadedWith: aCollection [
 	
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTObjectStorage class >> preloadedWith: aCollection [
 
 	^ (self new: (self adjustCapacity: aCollection size))
@@ -41,43 +43,43 @@ BTObjectStorage class >> preloadedWith: aCollection [
 	
 ]
 
-{ #category : #storing }
+{ #category : 'storing' }
 BTObjectStorage >> addAll: aCollection [
 	objects addAll: aCollection
 
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 BTObjectStorage >> capacity [
 	^ objects capacity
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 BTObjectStorage >> indexOf: anObject ifAbsent: aBlock [
 	^ objects identityIndexOf: anObject ifAbsent: aBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 BTObjectStorage >> initialize: aCapacity [
 	objects := OrderedCollection new: aCapacity
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 BTObjectStorage >> lastIndex [
 	^ objects size
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 BTObjectStorage >> objectAt: anIndex [
 	^ objects at: anIndex
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTObjectStorage >> objects [
 	^objects
 ]
 
-{ #category : #storing }
+{ #category : 'storing' }
 BTObjectStorage >> store: anObject [
 	objects addLast: anObject.
 	^ self lastIndex

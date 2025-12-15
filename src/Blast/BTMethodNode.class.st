@@ -17,8 +17,8 @@ selector
 
 "
 Class {
-	#name : #BTMethodNode,
-	#superclass : #BTEncodedNode,
+	#name : 'BTMethodNode',
+	#superclass : 'BTEncodedNode',
 	#traits : 'TKeywordedNode',
 	#classTraits : 'TKeywordedNode classTrait',
 	#instVars : [
@@ -26,10 +26,12 @@ Class {
 		'pragmas',
 		'body'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTMethodNode class >> selector: aSelector pragmas: aPragmaList body: aSequenceNode [
 	
 	^self new
@@ -39,38 +41,38 @@ BTMethodNode class >> selector: aSelector pragmas: aPragmaList body: aSequenceNo
 		yourself
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTMethodNode >> acceptVisitor: aBTNodeVisitor [
 
 	^ aBTNodeVisitor visitMethodNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMethodNode >> arguments [
 	^self body arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMethodNode >> body [
 	^ body
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMethodNode >> body: aBlockNode [
 	body := aBlockNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMethodNode >> pragmas [
 	^ pragmas
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMethodNode >> pragmas: aPragmaList [
 	pragmas := aPragmaList
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTMethodNode >> printOn: aStream [
 	self printKeywordsAndArgumentsOn: aStream.
 	aStream cr.
@@ -78,18 +80,18 @@ BTMethodNode >> printOn: aStream [
 	self body printBodyOn: aStream
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTMethodNode >> printPragmasOn: aStream [
 	self pragmas
 		do: [ :pragma | aStream print: pragma; cr ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMethodNode >> selector [
 	^ selector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMethodNode >> selector: aSelector [
 	selector := aSelector
 ]

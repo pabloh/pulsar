@@ -9,21 +9,23 @@ storedSet
 
 "
 Class {
-	#name : #BTSetIndexedStorage,
-	#superclass : #BTIndexedStorage,
+	#name : 'BTSetIndexedStorage',
+	#superclass : 'BTIndexedStorage',
 	#instVars : [
 		'storedSet'
 	],
-	#category : #'Blast-Storage'
+	#category : 'Blast-Storage',
+	#package : 'Blast',
+	#tag : 'Storage'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTSetIndexedStorage >> storage: anStorage [
 	super storage: anStorage.
 	storedSet := BTStoredObjectSet for: anStorage
 ]
 
-{ #category : #storing }
+{ #category : 'storing' }
 BTSetIndexedStorage >> store: anObject [
 	^ storedSet add: anObject
 ]

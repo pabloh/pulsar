@@ -3,24 +3,26 @@ A BTStorageDirectory is a base class for more specific kinds of storage director
 
 "
 Class {
-	#name : #BTStorageDirectory,
-	#superclass : #Object,
-	#category : #'Blast-Storage'
+	#name : 'BTStorageDirectory',
+	#superclass : 'Object',
+	#category : 'Blast-Storage',
+	#package : 'Blast',
+	#tag : 'Storage'
 }
 
-{ #category : #clearing }
+{ #category : 'clearing' }
 BTStorageDirectory >> clearStorages [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'storage creation' }
+{ #category : 'storage creation' }
 BTStorageDirectory >> createBinaryStorageUsing: aTranscoder [
 
 	^ self createEncodedStorageUsing: aTranscoder wrapping: BTBinaryStorage new
 
 ]
 
-{ #category : #'storage creation' }
+{ #category : 'storage creation' }
 BTStorageDirectory >> createEncodedStorageUsing: aTranscoder wrapping: anStorage [
 
 	^ BTEncodedObjectStorage
@@ -28,7 +30,7 @@ BTStorageDirectory >> createEncodedStorageUsing: aTranscoder wrapping: anStorage
 		using: aTranscoder
 ]
 
-{ #category : #'storage creation' }
+{ #category : 'storage creation' }
 BTStorageDirectory >> createObjectStorageUsing: aTranscoder [
 
 	^ self createEncodedStorageUsing: aTranscoder wrapping: BTObjectStorage new

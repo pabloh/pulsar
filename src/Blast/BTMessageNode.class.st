@@ -17,8 +17,8 @@ selector
 
 "
 Class {
-	#name : #BTMessageNode,
-	#superclass : #BTEncodedNode,
+	#name : 'BTMessageNode',
+	#superclass : 'BTEncodedNode',
 	#traits : 'TKeywordedNode',
 	#classTraits : 'TKeywordedNode classTrait',
 	#instVars : [
@@ -26,10 +26,12 @@ Class {
 		'selector',
 		'arguments'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTMessageNode class >> receiver: anExpression selector: aSelector arguments: anArgumentList [
 	
 	^self new
@@ -39,49 +41,49 @@ BTMessageNode class >> receiver: anExpression selector: aSelector arguments: anA
 		yourself 
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTMessageNode >> acceptVisitor: aBTNodeVisitor [
 
 	^ aBTNodeVisitor visitMessageNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMessageNode >> arguments [
 	^ arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMessageNode >> arguments: anArgumentList [
 	arguments := anArgumentList
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BTMessageNode >> isMessageNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTMessageNode >> printOn: aStream [
 	aStream print: self receiver; space.
 	self printKeywordsAndArgumentsOn: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMessageNode >> receiver [
 	^ receiver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMessageNode >> receiver: anExpression [
 	receiver := anExpression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMessageNode >> selector [
 	^ selector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTMessageNode >> selector: aSelector [
 	selector := aSelector
 ]

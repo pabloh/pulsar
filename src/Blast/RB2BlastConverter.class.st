@@ -3,67 +3,69 @@ A RB2BlastConverter allows you to create Blast AST nodes from RBParser nodes as 
 
 "
 Class {
-	#name : #RB2BlastConverter,
-	#superclass : #RBProgramNodeVisitor,
+	#name : 'RB2BlastConverter',
+	#superclass : 'RBProgramNodeVisitor',
 	#instVars : [
 		'literalsCache'
 	],
-	#category : #'Blast-Conversion'
+	#category : 'Blast-Conversion',
+	#package : 'Blast',
+	#tag : 'Conversion'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 RB2BlastConverter class >> convert: anRBMethodNode [
 
 	^ self encode: anRBMethodNode.
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RB2BlastConverter class >> encode: anRBMethodNode [
 
 	^ self new visitNode: anRBMethodNode.
 ]
 
-{ #category : #'literals cache' }
+{ #category : 'literals cache' }
 RB2BlastConverter >> canBeCached: aLiteralValue [
 	"Symbols and SmallIntegers are pointless to reuse since the first ones are unique accross the system and the latter ones are implemented as tagged pointers, on a 64 bits system this should also be valid for float values"
 	^ (aLiteralValue isSymbol or: [ aLiteralValue isInteger and: [ aLiteralValue isLarge not ] ]) not
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RB2BlastConverter >> encodeCompiledMethod: aCompiledMethod [
 	self initializeLiteralsCacheFrom: aCompiledMethod.
 	^ self visitMethodNode: aCompiledMethod ast
 ]
 
-{ #category : #'literals cache' }
+{ #category : 'literals cache' }
 RB2BlastConverter >> initializeLiteralsCacheFrom: aCompiledMethod [
 	aCompiledMethod literalsDo: [ :each | 
 		(self canBeCached: each) ifTrue: [ self literalsCache add: each ] ]
 ]
 
-{ #category : #'literals cache' }
+{ #category : 'literals cache' }
 RB2BlastConverter >> literalFromCache: aLiteralValue [
 	^ self literalsCache like: aLiteralValue ifAbsent: aLiteralValue
 ]
 
-{ #category : #'literals cache' }
+{ #category : 'literals cache' }
 RB2BlastConverter >> literalsCache [
 	^ literalsCache ifNil: [ literalsCache := Set new ].
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitArgumentNodes: aNodeCollection [
 
 	^ self visitNodeCollection: aNodeCollection
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitArrayNode: anArrayNode [
 	
 	^ BTArrayNode expressions: (self visitNodeCollection: anArrayNode statements)
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitAssignmentNode: anAssignmentNode [
 	|variable expression|
 	
@@ -73,7 +75,7 @@ RB2BlastConverter >> visitAssignmentNode: anAssignmentNode [
 	^ BTAssignmentNode variable: variable expression: expression
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitBlockNode: aBlockNode [
 	| arguments statements temporaries returns |
 	
@@ -85,7 +87,7 @@ RB2BlastConverter >> visitBlockNode: aBlockNode [
 	^ BTBlockNode arguments: arguments temporaries: temporaries statements: statements hasReturn: returns.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitCascadeNode: aCascadeNode [
 	| receiver parts |
 	
@@ -100,13 +102,13 @@ RB2BlastConverter >> visitCascadeNode: aCascadeNode [
 	^ BTCascadeNode receiver: receiver parts: parts
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitLiteralNode: aLiteralNode [
 
 	^ BTLiteralNode value: (self literalFromCache: (aLiteralNode value))
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitMessageNode: aMessageNode [
 	| receiver selector arguments |
 
@@ -120,7 +122,7 @@ RB2BlastConverter >> visitMessageNode: aMessageNode [
 		arguments: arguments.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitMethodNode: aMethodNode [
 	| selector pragmas body |
 	
@@ -134,13 +136,13 @@ RB2BlastConverter >> visitMethodNode: aMethodNode [
 		body: body.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitNodeCollection: aNodeCollection [
 
 	^ aNodeCollection collect: [ :aNode | self visitNode: aNode ] as: Array
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitPragmaNode: aPragmaNode [
 	| selector arguments |
 
@@ -152,7 +154,7 @@ RB2BlastConverter >> visitPragmaNode: aPragmaNode [
 		arguments: arguments.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 RB2BlastConverter >> visitVariableNode: aVariableNode [
 	
 	^ BTVariableNode name: aVariableNode name.

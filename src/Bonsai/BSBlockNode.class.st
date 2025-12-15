@@ -9,23 +9,25 @@ Variable Part			<BSExpressionFlyweight*>
 
 "
 Class {
-	#name : #BSBlockNode,
-	#superclass : #BSFlyweightNode,
-	#type : #variable,
+	#name : 'BSBlockNode',
+	#superclass : 'BSFlyweightNode',
+	#type : 'variable',
 	#instVars : [
 		'arguments',
 		'temporaries',
 		'hasReturn'
 	],
-	#category : #'Bonsai-Expressions'
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSBlockNode class >> arguments: argSymbolArray temporaries: tempSymbolArray expressions: anExpressionNodeArray [ 
 	^ self arguments: argSymbolArray temporaries: tempSymbolArray expressions: anExpressionNodeArray hasReturn: false
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSBlockNode class >> arguments: argVariableNodeArray temporaries: tempVariableNodeArray expressions: anExpressionNodeArray hasReturn: aBoolean [
 	self assert: (argVariableNodeArray allSatisfy: #isVariableNode).
 	self assert: (tempVariableNodeArray allSatisfy: #isVariableNode).
@@ -34,18 +36,18 @@ BSBlockNode class >> arguments: argVariableNodeArray temporaries: tempVariableNo
 	^ self privateLookup: {argVariableNodeArray. tempVariableNodeArray. aBoolean}, anExpressionNodeArray
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BSBlockNode >> acceptVisitor: aBSNodeVisitor [
 
 	^ aBSNodeVisitor visitBlockNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSBlockNode >> arguments [
 	^ arguments shallowCopy 
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSBlockNode >> arguments: anIdentifierArray [
 	^ self class 
 		arguments: anIdentifierArray 
@@ -54,12 +56,12 @@ BSBlockNode >> arguments: anIdentifierArray [
 		hasReturn: self hasReturn 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSBlockNode >> expressions [
 	^ self variablePart
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSBlockNode >> expressions: anExpressionArray [
 	^ self class 
 		arguments: self arguments 
@@ -68,12 +70,12 @@ BSBlockNode >> expressions: anExpressionArray [
 		hasReturn: self hasReturn
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSBlockNode >> hasReturn [
 	^ hasReturn
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSBlockNode >> hasReturn: aBoolean [
 	^ self class 
 		arguments: self arguments 
@@ -82,12 +84,12 @@ BSBlockNode >> hasReturn: aBoolean [
 		hasReturn: aBoolean
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSBlockNode >> isBlockNode [
 	^ true 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSBlockNode >> printArgumentsOn: aStream [
 	self arguments ifNotEmpty: [ :args |
 		args do: [ :identifier |
@@ -98,14 +100,14 @@ BSBlockNode >> printArgumentsOn: aStream [
 		aStream << '| ' ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSBlockNode >> printExpressionsOn: aStream [
 	self expressions 
 		do: [ :expression | expression printOn: aStream ]
 		separatedBy: [ aStream < '. ' ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSBlockNode >> printOn: aStream [
 	aStream << '[ '.
 	self 
@@ -115,7 +117,7 @@ BSBlockNode >> printOn: aStream [
 	aStream << ' ]'.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSBlockNode >> printStatementsOn: aStream [
 	self expressions ifNotEmpty: [
 		self expressions allButLastDo: [ :statement | 
@@ -126,7 +128,7 @@ BSBlockNode >> printStatementsOn: aStream [
 		aStream print: self expressions last ].
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSBlockNode >> printTemporariesOn: aStream [
 	self temporaries ifNotEmpty: [
 		aStream << ' | '.
@@ -136,19 +138,19 @@ BSBlockNode >> printTemporariesOn: aStream [
 		aStream << ' | ']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSBlockNode >> return [
 	^ self hasReturn
 		ifTrue: [ self at: self basicSize ]
 		ifFalse: [ nil ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSBlockNode >> temporaries [
 	^ temporaries shallowCopy
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSBlockNode >> temporaries: anIdentifierArray [
 	^ self class 
 		arguments: self arguments 

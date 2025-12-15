@@ -13,27 +13,29 @@ encoder
 
 "
 Class {
-	#name : #BTNodeEncoder,
-	#superclass : #BTNodeProcessor,
+	#name : 'BTNodeEncoder',
+	#superclass : 'BTNodeProcessor',
 	#instVars : [
 		'node'
 	],
-	#category : #'Blast-Encoders'
+	#category : 'Blast-Encoders',
+	#package : 'Blast',
+	#tag : 'Encoders'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTNodeEncoder class >> for: aNode using: aStorageDirectory [
 	^ (self using: aStorageDirectory)
 		node: aNode; 
 		yourself
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 BTNodeEncoder >> buildResult [
 	self subclassResponsibility 
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 BTNodeEncoder >> encode [
 	self processParts.
 	self selectBinaryFormat.
@@ -41,22 +43,22 @@ BTNodeEncoder >> encode [
 	^ binaryFormat bitList
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeEncoder >> node [
 	^ node
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTNodeEncoder >> node: aNode [
 	node := aNode
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 BTNodeEncoder >> processParts [
 	self subclassResponsibility 
 ]
 
-{ #category : #'binary format' }
+{ #category : 'binary format' }
 BTNodeEncoder >> selectBinaryFormat [
 	binaryFormat := self binaryFormatClass on: BTBitList new
 ]

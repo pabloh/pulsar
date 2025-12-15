@@ -1,15 +1,17 @@
 Class {
-	#name : #BTDefaultAssignmentBinaryFormat,
-	#superclass : #BTAssignmentBinaryFormat,
-	#category : #'Blast-BinaryFormats'
+	#name : 'BTDefaultAssignmentBinaryFormat',
+	#superclass : 'BTAssignmentBinaryFormat',
+	#category : 'Blast-BinaryFormats',
+	#package : 'Blast',
+	#tag : 'BinaryFormats'
 }
 
-{ #category : #'format testing' }
+{ #category : 'format testing' }
 BTDefaultAssignmentBinaryFormat class >> appliesFor: aStrategyContext [
 	^ true
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 BTDefaultAssignmentBinaryFormat >> buildResultFor: anEncoder [
 	anEncoder result
 		append: anEncoder encodedHeader;

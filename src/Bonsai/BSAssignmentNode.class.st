@@ -7,44 +7,46 @@ Instance Variables
 
 "
 Class {
-	#name : #BSAssignmentNode,
-	#superclass : #BSFlyweightNode,
+	#name : 'BSAssignmentNode',
+	#superclass : 'BSFlyweightNode',
 	#instVars : [
 		'variable',
 		'expression'
 	],
-	#category : #'Bonsai-Expressions'
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSAssignmentNode class >> variable: aVariableNode expression: anExpressionNode [
 	self assert: aVariableNode isVariableNode.
 	self assert: anExpressionNode isExpressionNode.
 	^ self privateLookup: { aVariableNode. anExpressionNode }
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BSAssignmentNode >> acceptVisitor: aBSNodeVisitor [
 
 	^ aBSNodeVisitor visitAssignmentNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSAssignmentNode >> expression [
 	^ expression
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSAssignmentNode >> expression: anExpressionValue [
 	^ self class variable: self variable expression: anExpressionValue
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSAssignmentNode >> isAssignmentNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSAssignmentNode >> printOn: aStream [
 	aStream 
 		print: self variable;
@@ -52,12 +54,12 @@ BSAssignmentNode >> printOn: aStream [
 		print: self expression
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSAssignmentNode >> variable [
 	^ variable
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSAssignmentNode >> variable: anIdentifierValue [
 	^ self class variable: anIdentifierValue expression: self expression
 ]

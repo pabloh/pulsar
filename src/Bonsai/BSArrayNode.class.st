@@ -5,40 +5,42 @@ Variable Part			<BSExpressionFlyweight*>
 
 "
 Class {
-	#name : #BSArrayNode,
-	#superclass : #BSFlyweightNode,
-	#type : #variable,
-	#category : #'Bonsai-Expressions'
+	#name : 'BSArrayNode',
+	#superclass : 'BSFlyweightNode',
+	#type : 'variable',
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSArrayNode class >> expressions: anExpressionNodeArray [
 	self assert: (anExpressionNodeArray allSatisfy: #isExpressionNode).
 	^ self privateLookup: anExpressionNodeArray
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BSArrayNode >> acceptVisitor: aBSNodeVisitor [
 
 	^ aBSNodeVisitor visitArrayNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSArrayNode >> expressions [
 	^ self variablePart
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSArrayNode >> expressions: expressionArray [
 	^ self class expressions: expressionArray
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSArrayNode >> isArrayNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSArrayNode >> printOn: aStream [
 	aStream << '{ '.
 	self expressions

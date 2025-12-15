@@ -1,26 +1,28 @@
 Class {
-	#name : #BTPragmaBinaryFormat,
-	#superclass : #BTNodeBinaryFormat,
-	#category : #'Blast-BinaryFormats'
+	#name : 'BTPragmaBinaryFormat',
+	#superclass : 'BTNodeBinaryFormat',
+	#category : 'Blast-BinaryFormats',
+	#package : 'Blast',
+	#tag : 'BinaryFormats'
 }
 
-{ #category : #'format selection' }
+{ #category : 'format selection' }
 BTPragmaBinaryFormat class >> defaultFormat [
 	^ BTDefaultPragmaBinaryFormat
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 BTPragmaBinaryFormat >> decodeArgumentsIndexesFor: numArgs [
 	(1 to: numArgs) collect: [ :idx |
 		self literalsPacker extractThenUnpackFrom: bitList ]
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 BTPragmaBinaryFormat >> encodeArguments: argumentsIndexes [
 	argumentsIndexes do: [ :each | self literalsPacker pack: each into: bitList ]
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 BTPragmaBinaryFormat >> removeHeader [	
 	bitList removeFirstBits: 1
 ]

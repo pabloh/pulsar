@@ -9,15 +9,16 @@ block
 
 "
 Class {
-	#name : #BSNodeProcessor,
-	#superclass : #BSNodeVisitor,
+	#name : 'BSNodeProcessor',
+	#superclass : 'BSNodeVisitor',
 	#instVars : [
 		'block'
 	],
-	#category : #'Blast-AST-Experiments'
+	#category : 'Blast-AST-Experiments',
+	#package : 'Blast-AST-Experiments'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BSNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := IdentitySet new.
@@ -27,7 +28,7 @@ BSNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 	^ result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BSNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := 0.
@@ -37,7 +38,7 @@ BSNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
 	^ result
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 
 	self new
@@ -45,90 +46,90 @@ BSNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 		visitNode: aNodeTree.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSNodeProcessor class >> forEachNodeThat: aCondition at: aNodeTree do: aBlock [
 
 	self forEachNodeAt: aNodeTree do: [:aNode | (aCondition value: aNode) ifTrue:  [ aBlock cull: aNode ] ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSNodeProcessor class >> iterateOver: aNodeTree with: aBlock [
 
 	self forEachNodeAt: aNodeTree do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSNodeProcessor >> block [
 	^ block
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSNodeProcessor >> block: anObject [
 	block := anObject
 ]
 
-{ #category : #processing }
+{ #category : 'processing' }
 BSNodeProcessor >> process: aNode [
 	block cull: aNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSNodeProcessor >> visitArrayNode: anArrayNode [
 
 	self process: anArrayNode.
 	super visitArrayNode: anArrayNode.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSNodeProcessor >> visitAssignmentNode: anAssignmentNode [
 
 	self process: anAssignmentNode.
 	super visitAssignmentNode: anAssignmentNode.
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSNodeProcessor >> visitBlockNode: aBlockNode [ 
 
 	self process: aBlockNode.
 	super visitBlockNode: aBlockNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSNodeProcessor >> visitCascadeNode: aCascadeNode [
 
 	self process: aCascadeNode.
 	super visitCascadeNode: aCascadeNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSNodeProcessor >> visitLiteralNode: aLiteralNode [
 
 	self process: aLiteralNode.
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSNodeProcessor >> visitMessageNode: aMessageNode [
 
 	self process: aMessageNode.
 	super visitMessageNode: aMessageNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSNodeProcessor >> visitMethodNode: aMethodNode [
 
 	self process: aMethodNode.
 	super visitMethodNode: aMethodNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSNodeProcessor >> visitPragmaNode: aPragmaNode [
 
 	self process: aPragmaNode.
 	super visitPragmaNode: aPragmaNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSNodeProcessor >> visitVariablelNode: aVariableNode [
 
 	self process: aVariableNode.

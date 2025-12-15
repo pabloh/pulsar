@@ -13,16 +13,18 @@ receiver
 
 "
 Class {
-	#name : #BTCascadeNode,
-	#superclass : #BTEncodedNode,
+	#name : 'BTCascadeNode',
+	#superclass : 'BTEncodedNode',
 	#instVars : [
 		'receiver',
 		'parts'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTCascadeNode class >> receiver: anExpressionNode parts: aCascadePartList [
 
 	^self new
@@ -31,23 +33,23 @@ BTCascadeNode class >> receiver: anExpressionNode parts: aCascadePartList [
 		yourself 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BTCascadeNode >> acceptVisitor: aBTNodeVisitor [
 
 	^ aBTNodeVisitor visitCascadeNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTCascadeNode >> parts [
 	^ parts
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTCascadeNode >> parts: aCascadePartList [
 	parts := aCascadePartList
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BTCascadeNode >> printOn: aStream [
 	aStream print: self receiver; space.
 	self parts  
@@ -55,12 +57,12 @@ BTCascadeNode >> printOn: aStream [
 		separatedBy: [ aStream < ';' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTCascadeNode >> receiver [
 	^ receiver.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTCascadeNode >> receiver: anExpression [
 	receiver := anExpression
 ]

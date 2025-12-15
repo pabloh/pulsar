@@ -2,11 +2,13 @@
 A trait used to gather the common behavior of classes that have a selector and a list of arguments.
 "
 Trait {
-	#name : #TKeyworded,
-	#category : #'Bonsai-Expressions'
+	#name : 'TKeyworded',
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #'private-checking' }
+{ #category : 'private-checking' }
 TKeyworded classSide >> privateCheckSelector: selector arguments: arguments [ 
 	(arguments size = selector numArgs) ifFalse: [ 
 		self error: 
@@ -14,22 +16,22 @@ TKeyworded classSide >> privateCheckSelector: selector arguments: arguments [
 				format: {selector. selector numArgs. arguments size }) ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TKeyworded >> arguments [
 	self explicitRequirement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TKeyworded >> keywords [
 	^ self selector keywords
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TKeyworded >> keywordsAndArgumentsDo: aBlock [
 	self keywordsAndArgumentsDo: aBlock separatedBy: nil
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TKeyworded >> keywordsAndArgumentsDo: aBlock separatedBy: aSeparatorBlock [
 	| firstIteration |
 	firstIteration := true.
@@ -40,7 +42,7 @@ TKeyworded >> keywordsAndArgumentsDo: aBlock separatedBy: aSeparatorBlock [
 		aBlock value: keyword value: argument ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TKeyworded >> printKeywordsAndArgumentsOn: aStream [
 	self arguments isEmpty ifTrue: [ ^ aStream << self selector ].
 	self 
@@ -53,7 +55,7 @@ TKeyworded >> printKeywordsAndArgumentsOn: aStream [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TKeyworded >> selector [
 	self explicitRequirement
 ]

@@ -2,17 +2,19 @@
 A BTNodeTable represents a list of AST nodes in a compacted format.
 "
 Class {
-	#name : #BTStorage,
-	#superclass : #Object,
-	#category : #'Blast-Storage'
+	#name : 'BTStorage',
+	#superclass : 'Object',
+	#category : 'Blast-Storage',
+	#package : 'Blast',
+	#tag : 'Storage'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 BTStorage class >> defaultStorageSize [
 	^ 1024
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 BTStorage class >> new: aCapacity [
 
 	^ self basicNew 
@@ -20,68 +22,68 @@ BTStorage class >> new: aCapacity [
 		yourself
 ]
 
-{ #category : #storing }
+{ #category : 'storing' }
 BTStorage >> addAll: aCollection [
 	^ aCollection do: [ :each | self store: each ]
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTStorage >> capacity [
 	self subclassResponsibility
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 BTStorage >> do: aBlock [
 	1 to: self lastIndex do: [ :index | aBlock value: (self objectAt: index) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTStorage >> includes: anObject [
 	^(self indexOf: anObject) ~= 0.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTStorage >> indexOf: anObject [
 	^ self indexOf: anObject ifAbsent: 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTStorage >> indexOf: anObject ifAbsent:aBlock [
 	self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 BTStorage >> initialize [
 	self initialize: self class defaultStorageSize
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTStorage >> lastIndex [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTStorage >> objectAt: anIndex [
 	self subclassResponsibility
 ]
 
-{ #category : #accesing }
+{ #category : 'accesing' }
 BTStorage >> objectsAt: anIndexList [
 	^ anIndexList collect: [ :index | self objectAt: index ] as: Array
 ]
 
-{ #category : #storing }
+{ #category : 'storing' }
 BTStorage >> store: anObject [
 	self subclassResponsibility
 ]
 
-{ #category : #storing }
+{ #category : 'storing' }
 BTStorage >> storeAll: aCollection [
 	^ aCollection collect: [ :each | self store: each ] as: Array
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 BTStorage >> withIndexDo: elementAndIndexBlock [ 
 	1 to: self lastIndex do: [:index |
 		elementAndIndexBlock	value: (self objectAt: index) value: index]

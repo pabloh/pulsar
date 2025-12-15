@@ -13,18 +13,20 @@ selector
 
 "
 Class {
-	#name : #BTCascadePartNode,
-	#superclass : #BTEncodedNode,
+	#name : 'BTCascadePartNode',
+	#superclass : 'BTEncodedNode',
 	#traits : 'TKeywordedNode',
 	#classTraits : 'TKeywordedNode classTrait',
 	#instVars : [
 		'selector',
 		'arguments'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTCascadePartNode class >> selector: aSelector arguments: anArgumentList [
 
 	self new
@@ -33,34 +35,34 @@ BTCascadePartNode class >> selector: aSelector arguments: anArgumentList [
 		yourself
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTCascadePartNode >> acceptVisitor: aBlastNodeVisitor [
 
 	^ aBlastNodeVisitor visitCascadePartNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTCascadePartNode >> arguments [
 	^ arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTCascadePartNode >> arguments: anObject [
 	arguments := anObject
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTCascadePartNode >> printOn: aStream [
 	self printKeywordsAndArgumentsOn: aStream.
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTCascadePartNode >> selector [
 	^ selector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTCascadePartNode >> selector: aSelector [
 	selector := aSelector
 ]

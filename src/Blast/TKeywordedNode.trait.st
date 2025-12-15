@@ -2,21 +2,23 @@
 A trait used to gather the common behavior of classes that have a selector and a list of arguments.
 "
 Trait {
-	#name : #TKeywordedNode,
-	#category : #'Blast-Nodes'
+	#name : 'TKeywordedNode',
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TKeywordedNode >> arguments [
 	self explicitRequirement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TKeywordedNode >> keywords [
 	^ self selector keywords
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 TKeywordedNode >> keywordsAndArgumentsDo: aBlock separatedBy: aSeparatorBlock [
 	| firstIteration |
 	firstIteration := true.
@@ -27,7 +29,7 @@ TKeywordedNode >> keywordsAndArgumentsDo: aBlock separatedBy: aSeparatorBlock [
 		aBlock value: keyword value: argument ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TKeywordedNode >> printKeywordsAndArgumentsOn: aStream [	
 	self arguments isEmpty ifTrue: [ ^ aStream << self selector ].
 	self 
@@ -41,7 +43,7 @@ TKeywordedNode >> printKeywordsAndArgumentsOn: aStream [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TKeywordedNode >> selector [
 	self explicitRequirement
 ]

@@ -7,41 +7,43 @@ Instance Variables
 
 "
 Class {
-	#name : #BSLiteralNode,
-	#superclass : #BSFlyweightNode,
+	#name : 'BSLiteralNode',
+	#superclass : 'BSFlyweightNode',
 	#instVars : [
 		'value'
 	],
-	#category : #'Bonsai-Expressions'
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSLiteralNode class >> value: aLiteral [
 	^  self privateLookup: { aLiteral }
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BSLiteralNode >> acceptVisitor: aBSNodeVisitor [
 
 	^ aBSNodeVisitor visitLiteralNode: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSLiteralNode >> isLiteralNode [
 	^ true
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSLiteralNode >> printOn: aStream [
 	self value printOn: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSLiteralNode >> value [
 	^ value
 ]
 
-{ #category : #transformations }
+{ #category : 'transformations' }
 BSLiteralNode >> value: aSymbol [
 	^ self class value: aSymbol
 ]

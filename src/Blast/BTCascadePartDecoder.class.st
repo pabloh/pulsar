@@ -2,12 +2,14 @@
 A BTCascadeMessageEncoder is an encoder for cascade messages parts.
 "
 Class {
-	#name : #BTCascadePartDecoder,
-	#superclass : #BTNodeDecoder,
-	#category : #'Blast-Decoders'
+	#name : 'BTCascadePartDecoder',
+	#superclass : 'BTNodeDecoder',
+	#category : 'Blast-Decoders',
+	#package : 'Blast',
+	#tag : 'Decoders'
 }
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTCascadePartDecoder >> decode: aBitList [
 	|  selectorPos   selector arguments |
 
@@ -25,7 +27,7 @@ BTCascadePartDecoder >> decode: aBitList [
 	^ BTCascadePartNode selector: selector arguments: arguments
 ]
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTCascadePartDecoder >> encode: aCascadePartNode [
 	| selectorBits |
 	selectorBits := self encodedMessageSelector: aCascadePartNode selector.
@@ -36,25 +38,25 @@ BTCascadePartDecoder >> encode: aCascadePartNode [
 					append: (self encodedArgumentExpression: argument) ]
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTCascadePartDecoder >> encodedArgumentExpression: anExpressionNode [
 	^ BTBitList fromInteger: 
 		((self storageFor: anExpressionNode) store: anExpressionNode)
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTCascadePartDecoder >> encodedMessageSelector: aSelector [
 
 	^ BTBitList fromInteger:
 		(self selectorStorage store:  aSelector)
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTCascadePartDecoder >> extractArgumentPositionFrom: aBitList [
 	^ aBitList removeFirstBits: self argumentSize
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTCascadePartDecoder >> extractSelectorPositionFrom: aBitList [
 	^ aBitList removeFirstBits: self selectorSize
 ]

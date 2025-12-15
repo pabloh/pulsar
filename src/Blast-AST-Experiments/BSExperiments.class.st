@@ -2,60 +2,65 @@
 A BonsaiExperiments is a class consisting of AST memory footpring making use of the Bonsai framework.
 "
 Class {
-	#name : #BSExperiments,
-	#superclass : #Object,
-	#category : #'Blast-AST-Experiments'
+	#name : 'BSExperiments',
+	#superclass : 'Object',
+	#category : 'Blast-AST-Experiments',
+	#package : 'Blast-AST-Experiments'
 }
 
-{ #category : #nodes }
+{ #category : 'nodes' }
 BSExperiments class >> allUniqueNodesByClass [
 	^ (BSFlyweightNode subclasses collect: [:class | class  -> class cache ] ) asDictionary
 ]
 
-{ #category : #nodes }
+{ #category : 'nodes' }
 BSExperiments class >> allUniqueNodesByClassCountAndPercentages [
 	^ AstMemoryExperiments countAndPercentangesFor: (self allUniqueNodesByClass collect: #size)
 ]
 
-{ #category : #'nodes iteration' }
+{ #category : 'nodes iteration' }
 BSExperiments class >> eachBSNodeThat: aCondition do: aBlock [
 	AstMemoryExperiments methodsBonsaiAsts do: [ :methodNode |
 		BSNodeProcessor forEachNodeThat: aCondition at: methodNode do: aBlock ]
 ]
 
-{ #category : #messages }
+{ #category : 'messages' }
 BSExperiments class >> messagesByArity [
-	^ BSMessageNode cache groupedBy: [ :node | node selector numArgs ]
+	^ (BSMessageNode cache groupedBy: [ :node | node selector numArgs ])
 ]
 
-{ #category : #messages }
+{ #category : 'messages' }
 BSExperiments class >> messagesByArityCountAndPercentanges [
-	^ AstMemoryExperiments countAndPercentangesFor: (self messagesByArity collect: #size)
+	^ ((AstMemoryExperiments countAndPercentangesFor: (self messagesByArity collect: #size))
+		associations
+		sorted: [ :a :b | 			
+			(a value at: 1) >= (b value at: 1)
+		]) asOrderedDictionary 
 	
 ]
 
-{ #category : #messages }
+{ #category : 'messages' }
 BSExperiments class >> messagesByArityCountAndPercentangesAcumulated [
 	^ AstMemoryExperiments countAndPercentangesAcumulatedFor: (self messagesByArity collect: #size)
 	
 ]
 
-{ #category : #selectors }
+{ #category : 'selectors' }
 BSExperiments class >> selectorsByArity [
 	^ (BSMessageNode cache collect: #selector) groupedBy: #numArgs
 ]
 
-{ #category : #selectors }
+{ #category : 'selectors' }
 BSExperiments class >> selectorsByArityCount [
 	^ self selectorsByArity collect: #size
 ]
 
-{ #category : #selectors }
+{ #category : 'selectors' }
 BSExperiments class >> selectorsByArityCountAndPercentages [
 	^ AstMemoryExperiments countAndPercentangesFor: (self selectorsByArityCount)
 ]
 
-{ #category : #variables }
+{ #category : 'variables' }
 BSExperiments class >> tempVariablesFrecuency [
 	| result addVars |
 	result := Dictionary new.
@@ -65,7 +70,7 @@ BSExperiments class >> tempVariablesFrecuency [
 	^ result
 ]
 
-{ #category : #variables }
+{ #category : 'variables' }
 BSExperiments class >> tempVariablesNames [
 
 	^ BSBlockNode cache 
@@ -73,7 +78,7 @@ BSExperiments class >> tempVariablesNames [
 		into: [ :result :block | result addAll: (block temporaries collect: #name) ; yourself ].
 ]
 
-{ #category : #variables }
+{ #category : 'variables' }
 BSExperiments class >> variablesFrecuency [
 	| result  |
 	result := Dictionary new.

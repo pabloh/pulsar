@@ -2,17 +2,19 @@
 Represents the pseudo-variable 'thisContext'
 "
 Class {
-	#name : #BSThisContextNode,
-	#superclass : #BSPseudoVariableNode,
-	#category : #'Bonsai-Expressions'
+	#name : 'BSThisContextNode',
+	#superclass : 'BSPseudoVariableNode',
+	#category : 'Bonsai-Expressions',
+	#package : 'Bonsai',
+	#tag : 'Expressions'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSThisContextNode >> isThisContextNode [
 	^ true 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSThisContextNode >> printOn: aStream [
 	aStream << 'thisContext'
 ]

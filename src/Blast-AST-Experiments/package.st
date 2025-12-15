@@ -1,1 +1,1 @@
-Package { #name : #'Blast-AST-Experiments' }
+Package { #name : 'Blast-AST-Experiments' }

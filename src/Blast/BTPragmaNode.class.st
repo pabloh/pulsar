@@ -13,24 +13,26 @@ selector
 
 "
 Class {
-	#name : #BTPragmaNode,
-	#superclass : #BTEncodedNode,
+	#name : 'BTPragmaNode',
+	#superclass : 'BTEncodedNode',
 	#traits : 'TKeywordedNode',
 	#classTraits : 'TKeywordedNode classTrait',
 	#instVars : [
 		'selector',
 		'arguments'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTPragmaNode class >> selector: aSelector [
 	
 	^ self selector: aSelector arguments: #()
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTPragmaNode class >> selector: aSelector arguments: aLiteralList [
 	
 	^self new
@@ -39,23 +41,23 @@ BTPragmaNode class >> selector: aSelector arguments: aLiteralList [
 		yourself 
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTPragmaNode >> acceptVisitor: aBTNodeVisitor [
 
 	^ aBTNodeVisitor visitPragmaNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTPragmaNode >> arguments [
 	^ arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTPragmaNode >> arguments: anArgumentList [
 	arguments := anArgumentList
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTPragmaNode >> printOn: aStream [
 
 	aStream << '<'.
@@ -63,12 +65,12 @@ BTPragmaNode >> printOn: aStream [
 	aStream << '>'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTPragmaNode >> selector [
 	^ selector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTPragmaNode >> selector: aSelector [
 	selector := aSelector
 ]

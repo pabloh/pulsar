@@ -3,25 +3,27 @@ A BlastNodeVisitor is base class for visitors over the Blast AST nodes class hie
 
 "
 Class {
-	#name : #BTNodeVisitor,
-	#superclass : #Object,
-	#category : #'Blast-Visitor'
+	#name : 'BTNodeVisitor',
+	#superclass : 'Object',
+	#category : 'Blast-Visitor',
+	#package : 'Blast',
+	#tag : 'Visitor'
 }
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitArrayNode: anArrayNode [
 
 	self visitNodeCollection: anArrayNode expressions
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitAssigmentNode: anAssignmentNode [
 
 	self visitNode: anAssignmentNode variable.
 	self visitNode: anAssignmentNode expression
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitBlockNode: aBlockNode [
 
 	self visitNodeCollection: aBlockNode arguments.
@@ -29,57 +31,57 @@ BTNodeVisitor >> visitBlockNode: aBlockNode [
 	self visitNodeCollection: aBlockNode statements
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitCascadeNode: aCascadeNode [
 
 	self visitNodeCollection: aCascadeNode parts
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitCascadePartNode: aCascadePartNode [
 
 	self visitNodeCollection: aCascadePartNode arguments
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitLiteralNode: aLiteralNode [
 
 	^ aLiteralNode value
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitMessageNode: aMessageNode [
 
 	self visitNode: aMessageNode receiver.
 	self visitNodeCollection: aMessageNode arguments
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitMethodNode: aMethodNode [
 
 	self visitNodeCollection: aMethodNode pragmas.
 	self visitNode: aMethodNode body  
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitNode: aNode [
 
 	^ aNode acceptVisitor: self
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitNodeCollection: aNodeCollection [
 
 	^ aNodeCollection collect: [ :aNode |  aNode acceptVisitor: self ]
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitPragmaNode: aPragmaNode [
 
 	self visitNodeCollection: aPragmaNode arguments
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTNodeVisitor >> visitVariablelNode: aVariableNode [
 
 	^ aVariableNode name

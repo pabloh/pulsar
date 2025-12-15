@@ -2,30 +2,32 @@
 A BTNode is the base class for AST nodes in Blast.
 "
 Class {
-	#name : #BTNode,
-	#superclass : #Object,
+	#name : 'BTNode',
+	#superclass : 'Object',
 	#classInstVars : [
 		'storage'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 BTNode >> isAssignmentNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BTNode >> isLiteralNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BTNode >> isMessageNode [
 	^ false
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BTNode >> isVariableNode [
 	^ false
 ]

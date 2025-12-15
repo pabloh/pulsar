@@ -2,39 +2,41 @@
 A visitor to convert RB ASTs to Bonsai ASTs.
 "
 Class {
-	#name : #BSEncoder,
-	#superclass : #RBProgramNodeVisitor,
-	#category : #'Bonsai-Conversion'
+	#name : 'BSEncoder',
+	#superclass : 'RBProgramNodeVisitor',
+	#category : 'Bonsai-Conversion',
+	#package : 'Bonsai',
+	#tag : 'Conversion'
 }
 
-{ #category : #converting }
+{ #category : 'converting' }
 BSEncoder class >> encode: aNode [
 	^ self new visitNode: aNode
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 BSEncoder class >> parseExpression: aString [
 	^ self encode: (RBParser parseExpression: aString) 
 ]
 
-{ #category : #parsing }
+{ #category : 'parsing' }
 BSEncoder class >> parseMethod: aString [
 	^ self encode: (RBParser parseMethod: aString) 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitArrayNode: anArrayNode [ 
 	^ BSArrayNode expressions: (anArrayNode children collect: [ :each | self visitNode: each ] as: Array)
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitAssignmentNode: anAssignmentNode [
 	^ BSAssignmentNode
 		variable: (self visitNode: anAssignmentNode variable)
 		expression: (self visitNode: anAssignmentNode value)
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitBlockNode: aBlockNode [ 
 	^ BSBlockNode
 		arguments: (aBlockNode arguments collect: [ :argument | self visitNode: argument ] as: Array) 
@@ -43,22 +45,22 @@ BSEncoder >> visitBlockNode: aBlockNode [
 		hasReturn: (aBlockNode statements size > 0 and: [ aBlockNode statements last isReturn  ])
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitCascadeNode: aCascadeNode [ 
 	^ BSCascadeNode messages: (aCascadeNode messages collect: [ :message | self visitNode: message ] as: Array)
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitLiteralArrayNode: aRBLiteralArrayNode [ 
 	^ self visitLiteralNode: aRBLiteralArrayNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitLiteralNode: aLiteralNode [
 	^ BSLiteralNode value: aLiteralNode value
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitMessageNode: aMessageNode [
 	^ BSMessageNode
 		receiver: (self visitNode: aMessageNode receiver)
@@ -66,7 +68,7 @@ BSEncoder >> visitMessageNode: aMessageNode [
 		arguments: (aMessageNode arguments collect: [ :argument | self visitNode: argument ] as: Array)
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitMethodNode: aMethodNode [
 	^ BSMethod
 		selector: aMethodNode selector
@@ -74,29 +76,29 @@ BSEncoder >> visitMethodNode: aMethodNode [
 		body: (self visitBlockNode: aMethodNode)
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitPragmaNode: aPragmaNode [
 	^ BSPragmaNode
 		selector: aPragmaNode selector
 		arguments: (aPragmaNode arguments collect: [ :argument | self visitNode: argument ] as: Array)
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitSelfNode: aSelfNode [
 	^ BSPseudoVariableNode self
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitSuperNode: aThisContextNode [
 	^ BSPseudoVariableNode super
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitThisContextNode: aThisContextNode [
 	^ BSPseudoVariableNode thisContext
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 BSEncoder >> visitVariableNode: aVariableNode [
 	^ BSVariableNode name: aVariableNode name asSymbol
 ]

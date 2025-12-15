@@ -8,8 +8,8 @@ Instance Variables
 	body:		  		<BSBlockNode>
 "
 Class {
-	#name : #BSMethod,
-	#superclass : #BSNode,
+	#name : 'BSMethod',
+	#superclass : 'BSNode',
 	#traits : 'TKeyworded',
 	#classTraits : 'TKeyworded classTrait',
 	#instVars : [
@@ -17,10 +17,12 @@ Class {
 		'pragmas',
 		'body'
 	],
-	#category : #'Bonsai-Method'
+	#category : 'Bonsai-Method',
+	#package : 'Bonsai',
+	#tag : 'Method'
 }
 
-{ #category : #'private-checking' }
+{ #category : 'private-checking' }
 BSMethod class >> privateCheckSelector: selector arguments: arguments [ 
 	(arguments size = selector numArgs) ifFalse: [ 
 		self error: 
@@ -28,7 +30,7 @@ BSMethod class >> privateCheckSelector: selector arguments: arguments [
 				format: {selector. selector numArgs. arguments size }) ].
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BSMethod class >> selector: aSymbol pragmas: pragmaCollection body: aBlockFlyweight [ 
 	self privateCheckSelector: aSymbol arguments: aBlockFlyweight arguments.
 	self assert: (pragmaCollection allSatisfy: #isPragmaNode).
@@ -40,43 +42,43 @@ BSMethod class >> selector: aSymbol pragmas: pragmaCollection body: aBlockFlywei
 		yourself
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BSMethod >> acceptVisitor: aBSNodeVisitor [
 
 	^ aBSNodeVisitor visitMethodNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> arguments [
 	^ self body arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> body [
 	^ body
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> body: aMethodFlyweight [
 	body := aMethodFlyweight
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 BSMethod >> isExpressionNode [ 
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> keywords [
 	^ self selector keywords
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 BSMethod >> keywordsAndArgumentsDo: aBlock [
 	self keywordsAndArgumentsDo: aBlock separatedBy: nil
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 BSMethod >> keywordsAndArgumentsDo: aBlock separatedBy: aSeparatorBlock [
 	| firstIteration |
 	firstIteration := true.
@@ -87,17 +89,17 @@ BSMethod >> keywordsAndArgumentsDo: aBlock separatedBy: aSeparatorBlock [
 		aBlock value: keyword value: argument ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> pragmas [
 	^ pragmas
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> pragmas: anObject [
 	pragmas := anObject
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSMethod >> printKeywordsAndArgumentsOn: aStream [
 	self arguments isEmpty ifTrue: [ ^ aStream << self selector ].
 	self 
@@ -110,7 +112,7 @@ BSMethod >> printKeywordsAndArgumentsOn: aStream [
 
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BSMethod >> printOn: aStream [
 	self printKeywordsAndArgumentsOn: aStream.
 	aStream space.
@@ -123,22 +125,22 @@ BSMethod >> printOn: aStream [
 		printStatementsOn: aStream.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> properties [
 	^ properties ifNil: [ properties := Dictionary new ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> properties: aDictionary [
 	^ properties := aDictionary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> selector [
 	^ selector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BSMethod >> selector: anObject [
 	selector := anObject
 ]

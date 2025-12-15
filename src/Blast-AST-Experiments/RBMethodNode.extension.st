@@ -1,6 +1,6 @@
-Extension { #name : #RBMethodNode }
+Extension { #name : 'RBMethodNode' }
 
-{ #category : #'*Blast-AST-Experiments' }
+{ #category : '*Blast-AST-Experiments' }
 RBMethodNode >> clearNodeReplacements [
 	nodeReplacements := nil.
 ]

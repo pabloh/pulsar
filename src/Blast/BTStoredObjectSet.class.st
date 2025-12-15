@@ -9,29 +9,31 @@ indexedTable
 
 "
 Class {
-	#name : #BTStoredObjectSet,
-	#superclass : #HashedCollection,
+	#name : 'BTStoredObjectSet',
+	#superclass : 'HashedCollection',
 	#instVars : [
 		'storage'
 	],
-	#category : #'Blast-Storage'
+	#category : 'Blast-Storage',
+	#package : 'Blast',
+	#tag : 'Storage'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTStoredObjectSet class >> for: anStorage [
 	^ self basicNew
 		initializeFor: anStorage;
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTStoredObjectSet class >> new: aCapacity for: anStorage [
 	^ self basicNew
 		initializeWith: aCapacity for: anStorage;
 		yourself
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 BTStoredObjectSet >> add: anObject [
 	| index |
 	index := self scanFor: anObject.
@@ -44,22 +46,22 @@ BTStoredObjectSet >> add: anObject [
 		ifNotNil: [ :storageIndex | ^ storageIndex ]
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 BTStoredObjectSet >> add: newObject withOccurrences: anInteger [
 	^ self add: newObject
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTStoredObjectSet >> addAllFromStorage [
 	storage withIndexDo: [ :each :storageIndex | self atNewIndex: (self scanForEmptySlotFor: each) put: storageIndex ]
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 BTStoredObjectSet >> do: aBlock [
 	storage do: [ :each | aBlock value: each ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTStoredObjectSet >> fixCollisionsFrom: start [
 	"The element at start has been removed and replaced by nil.
 	This method moves forward from there, relocating any entries
@@ -73,12 +75,12 @@ BTStoredObjectSet >> fixCollisionsFrom: start [
 			array swap: index with: newIndex ] ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTStoredObjectSet >> grow [
 	self growTo: (HashTableSizes atLeast: array size * 2).
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTStoredObjectSet >> growTo: anInteger [
 	"Grow the elements array and reinsert the old elements"
 	
@@ -86,69 +88,69 @@ BTStoredObjectSet >> growTo: anInteger [
 	self addAllFromStorage
 ]
 
-{ #category : #indexes }
+{ #category : 'indexes' }
 BTStoredObjectSet >> indexFor: anObject [
 	^ self indexFor: anObject ifAbsent: [ KeyNotFound signalFor: anObject ].
 ]
 
-{ #category : #indexes }
+{ #category : 'indexes' }
 BTStoredObjectSet >> indexFor: anObject ifAbsent: aBlock [
 	^ (array at: (self scanFor: anObject))
 		ifNil: aBlock
 		ifNotNil: [ :index | index ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 BTStoredObjectSet >> initialize: n [
 	self error: 'Must provide a storage'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 BTStoredObjectSet >> initializeFor: aStorage [
 	self initializeWith: (HashTableSizes atLeast: aStorage capacity) for: aStorage.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 BTStoredObjectSet >> initializeWith: aCapacity for: anStorage [
 	super initialize: aCapacity.
 	storage := anStorage.
 	self addAllFromStorage
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTStoredObjectSet >> noCheckAdd: anObject [
 	self shouldBeImplemented
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTStoredObjectSet >> noCheckNoGrowFillFrom: anArray [
 	self shouldBeImplemented
 ]
 
-{ #category : #copying }
+{ #category : 'copying' }
 BTStoredObjectSet >> postCopy [
 	super postCopy.
 	storage := storage copy
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTStoredObjectSet >> rehash [
 	self growTo: self capacity
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 BTStoredObjectSet >> remove: anObject ifAbsent: exceptionBlock [
 
 	self shouldNotImplement
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 BTStoredObjectSet >> removeAll [
 
 	self shouldNotImplement
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTStoredObjectSet >> scanFor: anObject [
 	"Scan the key array for the first slot containing either a nil (indicating an empty slot) or an element that matches anObject. Answer the index of that slot or raise an error if no slot is found. This method will be overridden in various subclasses that have different interpretations for matching elements."
 	
@@ -162,7 +164,7 @@ BTStoredObjectSet >> scanFor: anObject [
 	self errorNoFreeSpace
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTStoredObjectSet >> storage [
 	^storage
 ]

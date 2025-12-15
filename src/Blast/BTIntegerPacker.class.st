@@ -13,37 +13,39 @@ ranges
 
 "
 Class {
-	#name : #BTIntegerPacker,
-	#superclass : #Object,
+	#name : 'BTIntegerPacker',
+	#superclass : 'Object',
 	#instVars : [
 		'rangesToHeaders'
 	],
-	#category : #'Blast-Misc'
+	#category : 'Blast-Misc',
+	#package : 'Blast',
+	#tag : 'Misc'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> cannotPackNumber [
 	^ self error: 'Imposible to pack number'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> checkDoesNotBreakPrefixCode: aHeader [
 	(self headers allSatisfy: [ :each | each isPrefixCodeCompatible: aHeader ])
 		ifFalse: [ self error: 'Overlaping with existing range' ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> checkRangesNotOverlap: aRange [
 	(self ranges allSatisfy: [ :each | (each intersection: aRange) isEmpty ])
 		ifFalse: [ self error: 'Overlaping with existing range' ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> detectHeaderAt: aBitList [
 	^ self headers detect: [ :each | aBitList beginsWith: each ]
 ]
 
-{ #category : #'packing - unpacking' }
+{ #category : 'packing - unpacking' }
 BTIntegerPacker >> extractThenUnpackFrom: aBitList [
 	| header range |
 	header := self detectHeaderAt: aBitList.
@@ -54,7 +56,7 @@ BTIntegerPacker >> extractThenUnpackFrom: aBitList [
 	
 ]
 
-{ #category : #setup }
+{ #category : 'setup' }
 BTIntegerPacker >> for: aRange use: aHeader [
 	self checkRangesNotOverlap: aRange.
 	self checkDoesNotBreakPrefixCode: aHeader.
@@ -62,33 +64,33 @@ BTIntegerPacker >> for: aRange use: aHeader [
 	rangesToHeaders at: aRange put: aHeader.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> headerFor: anInteger [
 	^ rangesToHeaders at: (self rangeFor: anInteger)
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> headers [
 	 ^ rangesToHeaders values
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 BTIntegerPacker >> initialize [
 	rangesToHeaders := SmallDictionary new.
 ]
 
-{ #category : #'packing - unpacking' }
+{ #category : 'packing - unpacking' }
 BTIntegerPacker >> pack: anInteger [
 	^ self pack: anInteger into: BTBitList new
 ]
 
-{ #category : #'packing - unpacking' }
+{ #category : 'packing - unpacking' }
 BTIntegerPacker >> pack: anInteger into: aBitList [
 	^ aBitList append: (self headerFor: anInteger);
 				  appendBits: (self valueWidthFor: anInteger) from: anInteger
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> rangeFor: anInteger [
 	| higherBit |
 	higherBit := anInteger highBitOfPositiveReceiver.
@@ -98,17 +100,17 @@ BTIntegerPacker >> rangeFor: anInteger [
 		ifNone: [ self cannotPackNumber ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> rangeForHeader: aBitList [
 	^ rangesToHeaders keyAtValue: aBitList.
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> ranges [
 	^ rangesToHeaders keys
 ]
 
-{ #category : #'packing - unpacking' }
+{ #category : 'packing - unpacking' }
 BTIntegerPacker >> unpack: aBitList [
 	| header range |
 	header := self detectHeaderAt: aBitList.
@@ -117,7 +119,7 @@ BTIntegerPacker >> unpack: aBitList [
 	^ aBitList bitsFrom: header width + 1 to: header width + range last
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 BTIntegerPacker >> valueWidthFor: anInteger [
 	^ (self rangeFor: anInteger) last
 	

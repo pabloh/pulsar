@@ -2,17 +2,19 @@
 A BTMessageEncoder is BTArrayNode to binary encoder.
 "
 Class {
-	#name : #BTArrayDecoder,
-	#superclass : #BTNodeDecoder,
-	#category : #'Blast-Decoders'
+	#name : 'BTArrayDecoder',
+	#superclass : 'BTNodeDecoder',
+	#category : 'Blast-Decoders',
+	#package : 'Blast',
+	#tag : 'Decoders'
 }
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTArrayDecoder >> arrayLengthSize [
 	^self wordBitsSize
 ]
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTArrayDecoder >> decode: aBitList [
 	| expressions arraySize |
 	arraySize := self extractArrayLengthFrom: aBitList.
@@ -26,7 +28,7 @@ BTArrayDecoder >> decode: aBitList [
 	^ BTArrayNode expressions: expressions
 ]
 
-{ #category : #'encoding - decoding' }
+{ #category : 'encoding - decoding' }
 BTArrayDecoder >> encode: anArrayNode [
 	| arrayLengthBits |
 	arrayLengthBits := self encodedArrayLengthFor:  anArrayNode.
@@ -38,19 +40,19 @@ BTArrayDecoder >> encode: anArrayNode [
 					append: (self encodedArrayItemExpression: expression) ]
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTArrayDecoder >> encodedArrayItemExpression: anExpressionNode [
 	^ BTBitList fromInteger: 
 		((self storageFor: anExpressionNode) store: anExpressionNode)
 ]
 
-{ #category : #'private - encoding' }
+{ #category : 'private - encoding' }
 BTArrayDecoder >> encodedArrayLengthFor: anArrayNode [
 	^ BTBitList fromInteger:
 		anArrayNode statements size
 ]
 
-{ #category : #'private - decoding' }
+{ #category : 'private - decoding' }
 BTArrayDecoder >> extractArrayLengthFrom: aBitList [
 	^ aBitList removeFirstBits: self arrayLengthSize
 ]

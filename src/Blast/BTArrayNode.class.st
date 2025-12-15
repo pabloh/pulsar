@@ -9,15 +9,17 @@ expressions
 
 "
 Class {
-	#name : #BTArrayNode,
-	#superclass : #BTEncodedNode,
+	#name : 'BTArrayNode',
+	#superclass : 'BTEncodedNode',
 	#instVars : [
 		'expressions'
 	],
-	#category : #'Blast-Nodes'
+	#category : 'Blast-Nodes',
+	#package : 'Blast',
+	#tag : 'Nodes'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTArrayNode class >> expressions: anExpressionList [
 
 	^self new
@@ -25,28 +27,28 @@ BTArrayNode class >> expressions: anExpressionList [
 		yourself
 ]
 
-{ #category : #storages }
+{ #category : 'storages' }
 BTArrayNode class >> storageAt: aStorageDirectory [
 	^ aStorageDirectory arrayNodeStorage
 ]
 
-{ #category : #visitor }
+{ #category : 'visitor' }
 BTArrayNode >> acceptVisitor: aBTNodeVisitor [
 
 	^ aBTNodeVisitor visitArrayNode: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTArrayNode >> expressions [
 	^ expressions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTArrayNode >> expressions: anExpressionList [
 	expressions := anExpressionList
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 BTArrayNode >> printOn: aStream [
 	aStream << '{ '.
 	self expressions

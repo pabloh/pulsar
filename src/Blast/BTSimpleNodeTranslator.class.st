@@ -2,16 +2,18 @@
 A BTSimpleNodeTranslator is an object capable of encoding/decoding by the use of code blocks.
 "
 Class {
-	#name : #BTSimpleNodeTranslator,
-	#superclass : #BTNodeTranslator,
+	#name : 'BTSimpleNodeTranslator',
+	#superclass : 'BTNodeTranslator',
 	#instVars : [
 		'decoderBlock',
 		'encoderBlock'
 	],
-	#category : #'Blast-Core'
+	#category : 'Blast-Core',
+	#package : 'Blast',
+	#tag : 'Core'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BTSimpleNodeTranslator class >> encoderBlock: encoderBlock decoderBlock: decoderBlock [
 	^ self new
 		encoderBlock: encoderBlock;
@@ -19,32 +21,32 @@ BTSimpleNodeTranslator class >> encoderBlock: encoderBlock decoderBlock: decoder
 		yourself
 ]
 
-{ #category : #transcoding }
+{ #category : 'transcoding' }
 BTSimpleNodeTranslator >> decode: aValue [
 	^ decoderBlock value: aValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTSimpleNodeTranslator >> decoderBlock [
 	^ decoderBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTSimpleNodeTranslator >> decoderBlock: anObject [
 	decoderBlock := anObject
 ]
 
-{ #category : #transcoding }
+{ #category : 'transcoding' }
 BTSimpleNodeTranslator >> encode: aNode [
 	^ encoderBlock value: aNode
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTSimpleNodeTranslator >> encoderBlock [
 	^ encoderBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BTSimpleNodeTranslator >> encoderBlock: anObject [
 	encoderBlock := anObject
 ]
