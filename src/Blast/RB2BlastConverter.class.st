@@ -4,7 +4,7 @@ A RB2BlastConverter allows you to create Blast AST nodes from RBParser nodes as 
 "
 Class {
 	#name : 'RB2BlastConverter',
-	#superclass : 'RBProgramNodeVisitor',
+	#superclass : 'OCProgramNodeVisitor',
 	#instVars : [
 		'literalsCache'
 	],

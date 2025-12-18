@@ -1,71 +1,73 @@
 Class {
-	#name : #PLMemorySizeVisitor,
-	#superclass : #RBProgramNodeVisitor,
+	#name : 'PLMemorySizeVisitor',
+	#superclass : 'OCProgramNodeVisitor',
 	#instVars : [
 		'measuredSize',
 		'includeWhitespace'
 	],
-	#category : #'Pulsar-Experiments-Visitors'
+	#category : 'Pulsar-Experiments-Visitors',
+	#package : 'Pulsar-Experiments',
+	#tag : 'Visitors'
 }
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemorySizeVisitor class >> measureCode: aString [
 	^ self measureNode: (RBParser parseExpression: aString)
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemorySizeVisitor class >> measureCodeInQuadWords: aString [
 	^ (self measureCode: aString)/8
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemorySizeVisitor class >> measureMethod: aCompiledMethod [
 	^ self measureNode: aCompiledMethod ast
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemorySizeVisitor class >> measureMethodSource: aString [
 	^ self measureNode: (RBParser parseMethod: aString)
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemorySizeVisitor class >> measureNode: aNode [
 	^ self new
 		visitNode: aNode;
 		measuredSize
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemorySizeVisitor class >> measureNodeInQuadWords: aNode [
 	^ (self measureNode: aNode)/8
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PLMemorySizeVisitor class >> newWithWhitespace [
 	^ self new
 		includeWhitespace: true;
 		yourself
 ]
 
-{ #category : #controlling }
+{ #category : 'controlling' }
 PLMemorySizeVisitor >> ifWhitespaceIncluded: aBlock [
 
 	 includeWhitespace ifTrue: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PLMemorySizeVisitor >> includeWhitespace [
 
 	^ includeWhitespace
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PLMemorySizeVisitor >> includeWhitespace: anBoolean [
 
 	includeWhitespace := anBoolean
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 PLMemorySizeVisitor >> initialize [ 
 	"comment stating purpose of instance-side method"
 	"scope: class-variables  &  instance-variables"	
@@ -74,7 +76,7 @@ PLMemorySizeVisitor >> initialize [
 	includeWhitespace := false.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PLMemorySizeVisitor >> isImmediateOrSingletonObject: anObject [
 
 	^ anObject isImmediateObject or: [ 
@@ -82,7 +84,7 @@ PLMemorySizeVisitor >> isImmediateOrSingletonObject: anObject [
 			  (anObject isKindOf: Boolean) or: [ anObject isNil ] ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PLMemorySizeVisitor >> isNonRecursiveObject: anObject [
 
 	^ ((anObject isKindOf: String ) and: [ (anObject isKindOf: Symbol) not ]) 
@@ -92,7 +94,7 @@ PLMemorySizeVisitor >> isNonRecursiveObject: anObject [
 					or: [ (anObject isKindOf: IntegerArray ) ] ] ] ] .
 ]
 
-{ #category : #measuring }
+{ #category : 'measuring' }
 PLMemorySizeVisitor >> measureCollectionWithoutItsChilds: aCollectionOfNodes [
 	"Measure the size of the collecion ignoring the space taken by its child objects"
 
@@ -106,14 +108,14 @@ PLMemorySizeVisitor >> measureCollectionWithoutItsChilds: aCollectionOfNodes [
 			ifFalse: 0)
 ]
 
-{ #category : #measuring }
+{ #category : 'measuring' }
 PLMemorySizeVisitor >> measureComment: aCommentNode [
 
 	measuredSize := measuredSize + aCommentNode sizeInMemory + aCommentNode contents sizeInMemory.
 	
 ]
 
-{ #category : #measuring }
+{ #category : 'measuring' }
 PLMemorySizeVisitor >> measureComments: aNode [
 
 	aNode propertyAt: #comments
@@ -124,19 +126,19 @@ PLMemorySizeVisitor >> measureComments: aNode [
 		ifAbsent: [ ].
 ]
 
-{ #category : #measuring }
+{ #category : 'measuring' }
 PLMemorySizeVisitor >> measureMemoryLayout:  aNode [
 
 	measuredSize := measuredSize + aNode sizeInMemory
 ]
 
-{ #category : #measuring }
+{ #category : 'measuring' }
 PLMemorySizeVisitor >> measureMethod: aCompiledMethod [
 
 	self visitNode: aCompiledMethod ast
 ]
 
-{ #category : #measuring }
+{ #category : 'measuring' }
 PLMemorySizeVisitor >> measureParentheses: aNode [
 
 	"'aNode parentheses' returns a structure even when the instance variable in the object is actually 'nil'"
@@ -144,14 +146,14 @@ PLMemorySizeVisitor >> measureParentheses: aNode [
 
 ]
 
-{ #category : #measuring }
+{ #category : 'measuring' }
 PLMemorySizeVisitor >> measureRecursiveStructure: anObject [
 
 	measuredSize := measuredSize + (self sizeForRecursiveStructure: anObject)
 
 ]
 
-{ #category : #measuring }
+{ #category : 'measuring' }
 PLMemorySizeVisitor >> measuredAttachedWhitespaceElements: aNode [
 
 	aNode isValue ifTrue: [ self measureParentheses: aNode ].
@@ -159,13 +161,13 @@ PLMemorySizeVisitor >> measuredAttachedWhitespaceElements: aNode [
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PLMemorySizeVisitor >> measuredSize [
 
 	^ measuredSize
 ]
 
-{ #category : #'size-calculation' }
+{ #category : 'size-calculation' }
 PLMemorySizeVisitor >> sizeForRecursiveStructure: anObject [
 
 	(self isImmediateOrSingletonObject: anObject)
@@ -180,7 +182,7 @@ PLMemorySizeVisitor >> sizeForRecursiveStructure: anObject [
 	self error: 'Unexpected Type: ', anObject className
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitArrayNode: anArrayNode [
 
 	self ifWhitespaceIncluded: [ self measureRecursiveStructure: anArrayNode periods ].
@@ -192,7 +194,7 @@ PLMemorySizeVisitor >> visitArrayNode: anArrayNode [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitAssignmentNode:  anAssignmentNode [
 
 	self measureMemoryLayout: anAssignmentNode.	
@@ -200,7 +202,7 @@ PLMemorySizeVisitor >> visitAssignmentNode:  anAssignmentNode [
 	super visitAssignmentNode: anAssignmentNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitBlockNode:  aBlockNode [
 
 	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aBlockNode colons ].
@@ -211,7 +213,7 @@ PLMemorySizeVisitor >> visitBlockNode:  aBlockNode [
 	super visitBlockNode:  aBlockNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitCascadeNode: aCascadeNode [
 
 	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aCascadeNode semicolons ].
@@ -222,7 +224,7 @@ PLMemorySizeVisitor >> visitCascadeNode: aCascadeNode [
 	super visitCascadeNode: aCascadeNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 	
 	measuredSize := measuredSize 
@@ -234,7 +236,7 @@ PLMemorySizeVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 	super visitLiteralArrayNode: aLiteralArrayNode 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
 	| value |
 	value := aLiteralNode value.
@@ -247,7 +249,7 @@ PLMemorySizeVisitor >> visitLiteralValueNode: aLiteralNode [
 		       ifTrue: 0  ifFalse: [ value sizeInMemory ])
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitMessageNode: aMessageNode [
 
 	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aMessageNode keywordsPositions  ].
@@ -259,7 +261,7 @@ PLMemorySizeVisitor >> visitMessageNode: aMessageNode [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitMethodNode: aMethodNode [
 	"Ignore measuring: 
 		- scope: specific for semantic analisys	
@@ -278,7 +280,7 @@ PLMemorySizeVisitor >> visitMethodNode: aMethodNode [
 	super visitMethodNode:  aMethodNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitNode:  aNode [
 
 	self ifWhitespaceIncluded: [ self measuredAttachedWhitespaceElements: aNode ].
@@ -286,7 +288,7 @@ PLMemorySizeVisitor >> visitNode:  aNode [
 	super visitNode: aNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
 
 	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aPragmaNode keywordsPositions  ].
@@ -299,7 +301,7 @@ PLMemorySizeVisitor >> visitPragmaNode:  aPragmaNode [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitReturnNode:  aReturnNode [
 
 	self measureMemoryLayout: aReturnNode.
@@ -307,7 +309,7 @@ PLMemorySizeVisitor >> visitReturnNode:  aReturnNode [
 	super visitReturnNode: aReturnNode
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitSelectorNode: aSelectorNode [
 
 	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aSelectorNode keywordPositions  ].
@@ -317,7 +319,7 @@ PLMemorySizeVisitor >> visitSelectorNode: aSelectorNode [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitSequenceNode: aSequenceNode [
 
 	self ifWhitespaceIncluded: [ self measureRecursiveStructure: aSequenceNode periods   ].
@@ -330,7 +332,7 @@ PLMemorySizeVisitor >> visitSequenceNode: aSequenceNode [
 
 ]
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 PLMemorySizeVisitor >> visitVariableNode:  aVariableNode [
 
 	"Ignore Symbol at 'aVariableNode name' because it should be already at 'Symbol>>SymbolTable'"

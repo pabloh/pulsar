@@ -35,7 +35,7 @@ HashExperiments class >> meassureFor: aSample [
 
 { #category : 'as yet unclassified' }
 HashExperiments class >> sample [
-	sample ifNil: [ sample := (BSMessageNode select: [ :n | n selector numArgs == 0 ] thenCollect: #selector) shuffled first: 10240 ].
+	sample ifNil: [ sample := (FWMessageNode select: [ :n | n selector numArgs == 0 ] thenCollect: #selector) shuffled first: 10240 ].
 	^ sample
 ]
 

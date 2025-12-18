@@ -19,6 +19,13 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+AstNodeProcessor class >> cleanUpComments: astTree [
+
+self forEachNodeAt: astTree do: [ :node | node comments: nil ].
+^astTree 
+]
+
+{ #category : 'as yet unclassified' }
 AstNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := IdentitySet new.

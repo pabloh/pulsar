@@ -125,21 +125,13 @@ AstMemoryExperiments class >> blockNodesByReturn [
 	^ blocks groupedBy: [ :m| m lastIsReturn ]
 ]
 
-{ #category : 'helper methods' }
-AstMemoryExperiments class >> browserEnvironment [
-	browserEnvironment 
-		ifNil: [ browserEnvironment := RBNotEnvironment onEnvironment: (RBCategoryEnvironment category: self category) ].
-	
-		^ browserEnvironment
-]
-
 { #category : 'souce code space' }
 AstMemoryExperiments class >> clearMethodsStructures [
 	methodsSource := nil.
 	methodsAsts := nil.
 	methodsBonsaiAsts := nil.
 	
-	BSFlyweightNode resetAllCaches.
+	FWFlyweightNode resetAllCaches.
 ]
 
 { #category : 'literals' }
@@ -328,6 +320,23 @@ AstMemoryExperiments class >> literalsPercentagesAtMethodsFor: aLiteralKind [
 	^ (self countLiteralsAtMethodsFor: aLiteralKind) collect: [:count | (100 * count / total) printShowingDecimalPlaces: 5 ]
 ]
 
+{ #category : 'nodes' }
+AstMemoryExperiments class >> medianNodesPerMethod [	
+	|counters|	
+		
+	counters := self allMethods collect: [ :aMethod | |count|
+		count := 0.
+		AstNodeProcessor forEachNodeAt: aMethod ast do: [ 	count := count + 1 ].
+		count.
+	].	
+	counters sort.
+	
+	^counters at: (counters size //2)
+	
+
+
+]
+
 { #category : 'messages' }
 AstMemoryExperiments class >> messagesByArity [
 	| messages |
@@ -461,20 +470,12 @@ AstMemoryExperiments class >> removeMethodsSourceAtTheImage [
 
 { #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsAstsAtTheImage [
-	methodsAsts  := OrderedCollection new: self allMethodsCount.
-	
-	self allMethods do: [ :method | 
+	methodsAsts := OrderedCollection new: self allMethodsCount.
+	methodsAsts addAll: (self allMethods collect: [ :method |
 		|ast|
-		ast := RBParser parseMethod: method sourceCode.
-		ast
-			source: nil;
-			scope: nil;
-			clearReplacements;
-			clearNodeReplacements;
-			compilationContext: nil.
-		AstNodeProcessor forEachNodeAt: ast do: [ :node| node comments: nil ].
-			
-		methodsAsts add: ast ]
+		ast := (RBParser parseMethod: method sourceCode) cleanUp.
+		AstNodeProcessor cleanUpComments: ast
+	])
 ]
 
 { #category : 'souce code space' }
@@ -484,7 +485,7 @@ AstMemoryExperiments class >> saveMethodsBonsaiAstsAtTheImage [
 
 	methodsBonsaiAsts addAll: (self allMethods collect: [ :method |				
 					
-				 BSEncoder new visitNode: method ast ])
+				 FWEncoder new visitNode: method ast ])
 ]
 
 { #category : 'souce code space' }

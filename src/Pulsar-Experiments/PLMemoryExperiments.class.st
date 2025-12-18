@@ -1,25 +1,27 @@
 Class {
-	#name : #PLMemoryExperiments,
-	#superclass : #Object,
+	#name : 'PLMemoryExperiments',
+	#superclass : 'Object',
 	#classVars : [
 		'navigation'
 	],
-	#category : #'Pulsar-Experiments-Measurements'
+	#category : 'Pulsar-Experiments-Measurements',
+	#package : 'Pulsar-Experiments',
+	#tag : 'Measurements'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PLMemoryExperiments class >> allBehaviors [
 
 	^ self navigation allBehaviors
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PLMemoryExperiments class >> allBehaviorsDo:  aBlock [
 
 	self navigation allBehaviorsDo: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PLMemoryExperiments class >> allMethodsDo: aBlock [
 
 	self allBehaviorsDo: [ :aBehavior | 
@@ -27,7 +29,7 @@ PLMemoryExperiments class >> allMethodsDo: aBlock [
 			aMethod isFromTrait ifFalse: [ aBlock value: aMethod ] ] ]
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemoryExperiments class >> countAllRBParserASTMethods [
 	| number |
 	
@@ -36,7 +38,7 @@ PLMemoryExperiments class >> countAllRBParserASTMethods [
 	^ number
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemoryExperiments class >> countAllRBParserASTNodes [
 	| visitor |
 	
@@ -51,7 +53,7 @@ PLMemoryExperiments class >> countAllRBParserASTNodes [
 
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemoryExperiments class >> measureAllRBParserASTMethods [
 	| visitor |
 	
@@ -66,7 +68,7 @@ PLMemoryExperiments class >> measureAllRBParserASTMethods [
 
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemoryExperiments class >> measureAllRBParserASTMethodsWithWhitespace [
 	| visitor |
 	
@@ -81,7 +83,7 @@ PLMemoryExperiments class >> measureAllRBParserASTMethodsWithWhitespace [
 
 ]
 
-{ #category : #measure }
+{ #category : 'measure' }
 PLMemoryExperiments class >> measureSymbolTable [	
 	
 	Symbol cleanUp .
@@ -91,7 +93,7 @@ PLMemoryExperiments class >> measureSymbolTable [
 			((Symbol classVarNamed: #SymbolTable) sumNumbers: #sizeInMemory)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PLMemoryExperiments class >> navigation [
 
 	^ navigation ifNil: [ navigation := SystemNavigation new ]

@@ -9,8 +9,8 @@ block
 
 "
 Class {
-	#name : 'BSNodeProcessor',
-	#superclass : 'BSNodeVisitor',
+	#name : 'FWNodeProcessor',
+	#superclass : 'FWNodeVisitor',
 	#instVars : [
 		'block'
 	],
@@ -19,7 +19,7 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-BSNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
+FWNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := IdentitySet new.
 	
@@ -29,7 +29,7 @@ BSNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 ]
 
 { #category : 'as yet unclassified' }
-BSNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
+FWNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := 0.
 	
@@ -39,7 +39,7 @@ BSNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
 ]
 
 { #category : 'accessing' }
-BSNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
+FWNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 
 	self new
 		block: aBlock;
@@ -47,90 +47,90 @@ BSNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 ]
 
 { #category : 'accessing' }
-BSNodeProcessor class >> forEachNodeThat: aCondition at: aNodeTree do: aBlock [
+FWNodeProcessor class >> forEachNodeThat: aCondition at: aNodeTree do: aBlock [
 
 	self forEachNodeAt: aNodeTree do: [:aNode | (aCondition value: aNode) ifTrue:  [ aBlock cull: aNode ] ].
 ]
 
 { #category : 'accessing' }
-BSNodeProcessor class >> iterateOver: aNodeTree with: aBlock [
+FWNodeProcessor class >> iterateOver: aNodeTree with: aBlock [
 
 	self forEachNodeAt: aNodeTree do: aBlock
 ]
 
 { #category : 'accessing' }
-BSNodeProcessor >> block [
+FWNodeProcessor >> block [
 	^ block
 ]
 
 { #category : 'accessing' }
-BSNodeProcessor >> block: anObject [
+FWNodeProcessor >> block: anObject [
 	block := anObject
 ]
 
 { #category : 'processing' }
-BSNodeProcessor >> process: aNode [
+FWNodeProcessor >> process: aNode [
 	block cull: aNode
 ]
 
 { #category : 'visiting' }
-BSNodeProcessor >> visitArrayNode: anArrayNode [
+FWNodeProcessor >> visitArrayNode: anArrayNode [
 
 	self process: anArrayNode.
 	super visitArrayNode: anArrayNode.
 ]
 
 { #category : 'visiting' }
-BSNodeProcessor >> visitAssignmentNode: anAssignmentNode [
+FWNodeProcessor >> visitAssignmentNode: anAssignmentNode [
 
 	self process: anAssignmentNode.
 	super visitAssignmentNode: anAssignmentNode.
 ]
 
 { #category : 'visiting' }
-BSNodeProcessor >> visitBlockNode: aBlockNode [ 
+FWNodeProcessor >> visitBlockNode: aBlockNode [ 
 
 	self process: aBlockNode.
 	super visitBlockNode: aBlockNode 
 ]
 
 { #category : 'visiting' }
-BSNodeProcessor >> visitCascadeNode: aCascadeNode [
+FWNodeProcessor >> visitCascadeNode: aCascadeNode [
 
 	self process: aCascadeNode.
 	super visitCascadeNode: aCascadeNode 
 ]
 
 { #category : 'visiting' }
-BSNodeProcessor >> visitLiteralNode: aLiteralNode [
+FWNodeProcessor >> visitLiteralNode: aLiteralNode [
 
 	self process: aLiteralNode.
 
 ]
 
 { #category : 'visiting' }
-BSNodeProcessor >> visitMessageNode: aMessageNode [
+FWNodeProcessor >> visitMessageNode: aMessageNode [
 
 	self process: aMessageNode.
 	super visitMessageNode: aMessageNode 
 ]
 
 { #category : 'visiting' }
-BSNodeProcessor >> visitMethodNode: aMethodNode [
+FWNodeProcessor >> visitMethodNode: aMethodNode [
 
 	self process: aMethodNode.
 	super visitMethodNode: aMethodNode 
 ]
 
 { #category : 'visiting' }
-BSNodeProcessor >> visitPragmaNode: aPragmaNode [
+FWNodeProcessor >> visitPragmaNode: aPragmaNode [
 
 	self process: aPragmaNode.
 	super visitPragmaNode: aPragmaNode
 ]
 
 { #category : 'visiting' }
-BSNodeProcessor >> visitVariablelNode: aVariableNode [
+FWNodeProcessor >> visitVariablelNode: aVariableNode [
 
 	self process: aVariableNode.
 
