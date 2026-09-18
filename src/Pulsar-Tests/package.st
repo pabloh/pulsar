@@ -1,1 +1,1 @@
-Package { #name : #'Pulsar-Tests' }
+Package { #name : 'Pulsar-Tests' }

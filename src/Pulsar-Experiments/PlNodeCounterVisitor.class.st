@@ -1,5 +1,5 @@
 Class {
-	#name : 'PLNodeCounterVisitor',
+	#name : 'PlNodeCounterVisitor',
 	#superclass : 'OCProgramNodeVisitor',
 	#instVars : [
 		'nodeCount'
@@ -10,46 +10,46 @@ Class {
 }
 
 { #category : 'measure' }
-PLNodeCounterVisitor class >> measureCode: aString [
+PlNodeCounterVisitor class >> measureCode: aString [
 	^ self measureNode: (RBParser parseExpression: aString)
 ]
 
 { #category : 'measure' }
-PLNodeCounterVisitor class >> measureMethod: aCompiledMethod [
+PlNodeCounterVisitor class >> measureMethod: aCompiledMethod [
 	^ self measureNode: aCompiledMethod ast
 ]
 
 { #category : 'measure' }
-PLNodeCounterVisitor class >> measureMethodSource: aString [
+PlNodeCounterVisitor class >> measureMethodSource: aString [
 	^ self measureNode: (RBParser parseMethod: aString)
 ]
 
 { #category : 'measure' }
-PLNodeCounterVisitor class >> measureNode: aNode [
+PlNodeCounterVisitor class >> measureNode: aNode [
 	^ self new
 		visitNode: aNode;
 		nodeCount 
 ]
 
 { #category : 'initialization' }
-PLNodeCounterVisitor >> initialize [ 
+PlNodeCounterVisitor >> initialize [ 
 	nodeCount := 0
 ]
 
 { #category : 'measuring' }
-PLNodeCounterVisitor >> measureMethod: aCompiledMethod [
+PlNodeCounterVisitor >> measureMethod: aCompiledMethod [
 
 	self visitNode: aCompiledMethod ast
 ]
 
 { #category : 'accessing' }
-PLNodeCounterVisitor >> nodeCount [
+PlNodeCounterVisitor >> nodeCount [
 
 	^ nodeCount
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitArrayNode: anArrayNode [
+PlNodeCounterVisitor >> visitArrayNode: anArrayNode [
 	
 	nodeCount  := nodeCount + 1.	
 	super visitArrayNode: anArrayNode
@@ -57,28 +57,28 @@ PLNodeCounterVisitor >> visitArrayNode: anArrayNode [
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitAssignmentNode:  anAssignmentNode [
+PlNodeCounterVisitor >> visitAssignmentNode:  anAssignmentNode [
 
 	nodeCount  := nodeCount + 1.
 	super visitAssignmentNode: anAssignmentNode
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitBlockNode:  aBlockNode [
+PlNodeCounterVisitor >> visitBlockNode:  aBlockNode [
 
 	nodeCount  := nodeCount + 1.	
 	super visitBlockNode:  aBlockNode
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitCascadeNode: aCascadeNode [
+PlNodeCounterVisitor >> visitCascadeNode: aCascadeNode [
 
 	nodeCount  := nodeCount + 1.
 	super visitCascadeNode: aCascadeNode 
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
+PlNodeCounterVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 	
 	nodeCount  := nodeCount +1.
 	
@@ -86,13 +86,13 @@ PLNodeCounterVisitor >> visitLiteralArrayNode:  aLiteralArrayNode [
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitLiteralValueNode: aLiteralNode [
+PlNodeCounterVisitor >> visitLiteralValueNode: aLiteralNode [
 		
 	nodeCount  := nodeCount + 1.
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitMessageNode: aMessageNode [
+PlNodeCounterVisitor >> visitMessageNode: aMessageNode [
 
 	nodeCount  := nodeCount + 1.			
 	super visitMessageNode: aMessageNode
@@ -100,13 +100,13 @@ PLNodeCounterVisitor >> visitMessageNode: aMessageNode [
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitMethodNode: aMethodNode [
+PlNodeCounterVisitor >> visitMethodNode: aMethodNode [
 	nodeCount  := nodeCount + 1.
 	super visitMethodNode:  aMethodNode
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitPragmaNode:  aPragmaNode [
+PlNodeCounterVisitor >> visitPragmaNode:  aPragmaNode [
 	
 	nodeCount  := nodeCount + 1.	
 	super visitPragmaNode: aPragmaNode
@@ -115,21 +115,21 @@ PLNodeCounterVisitor >> visitPragmaNode:  aPragmaNode [
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitReturnNode:  aReturnNode [
+PlNodeCounterVisitor >> visitReturnNode:  aReturnNode [
 
 	nodeCount  := nodeCount + 1.
 	super visitReturnNode: aReturnNode
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitSelectorNode: aSelectorNode [
+PlNodeCounterVisitor >> visitSelectorNode: aSelectorNode [
 
 	nodeCount  := nodeCount + 1.
 
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitSequenceNode: aSequenceNode [
+PlNodeCounterVisitor >> visitSequenceNode: aSequenceNode [
 
 	nodeCount  := nodeCount + 1.
 	super visitSequenceNode: aSequenceNode.
@@ -137,7 +137,7 @@ PLNodeCounterVisitor >> visitSequenceNode: aSequenceNode [
 ]
 
 { #category : 'visiting' }
-PLNodeCounterVisitor >> visitVariableNode:  aVariableNode [
+PlNodeCounterVisitor >> visitVariableNode:  aVariableNode [
 
 	nodeCount  := nodeCount + 1.
 ]

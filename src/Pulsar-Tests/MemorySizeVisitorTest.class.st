@@ -1,23 +1,25 @@
 Class {
-	#name : #MemorySizeVisitorTest,
-	#superclass : #TestCase,
+	#name : 'MemorySizeVisitorTest',
+	#superclass : 'TestCase',
 	#instVars : [
 		'visitor',
 		'minimalArraySize',
 		'orderedCollectionSize',
 		'visitorWithWhitespace'
 	],
-	#category : #'Pulsar-Tests-Tests'
+	#category : 'Pulsar-Tests-Tests',
+	#package : 'Pulsar-Tests',
+	#tag : 'Tests'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 MemorySizeVisitorTest >> setUp [
 
-	visitor := PLMemorySizeVisitor new.	
-	visitorWithWhitespace := PLMemorySizeVisitor newWithWhitespace 
+	visitor := PlMemorySizeVisitor new.	
+	visitorWithWhitespace := PlMemorySizeVisitor newWithWhitespace 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testArrayNode [
 	| ast measuredMemory |
 	
@@ -31,7 +33,7 @@ MemorySizeVisitorTest >> testArrayNode [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testAssignmentNode [
 	| ast measuredMemory |
 	
@@ -44,7 +46,7 @@ MemorySizeVisitorTest >> testAssignmentNode [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testBlockNode [
 	| ast measuredMemory |
 	
@@ -58,7 +60,7 @@ MemorySizeVisitorTest >> testBlockNode [
 		)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testBlockNodeWithArguments [
 	| ast measuredMemory |
 	
@@ -73,7 +75,7 @@ MemorySizeVisitorTest >> testBlockNodeWithArguments [
 		)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testCascadeNode [
 	| ast measuredMemory |
 	
@@ -95,7 +97,7 @@ MemorySizeVisitorTest >> testCascadeNode [
 		)
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testComentNode [
 	| ast measuredMemory |
 	
@@ -106,7 +108,7 @@ MemorySizeVisitorTest >> testComentNode [
 		+ 2 quadWords "content"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testComentedVariableNode [
 	| ast measuredMemory |
 	
@@ -117,7 +119,7 @@ MemorySizeVisitorTest >> testComentedVariableNode [
 		+ (2 * (8 quadWords)) "2 coments node"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedArrayNode [
 	| ast measuredMemory |
 	
@@ -131,7 +133,7 @@ MemorySizeVisitorTest >> testFormatedArrayNode [
 		+ (15 quadWords) "1 OrderedCollection for 2 periods"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedBlockNodeWithArguments [
 	| ast measuredMemory |
 	
@@ -148,7 +150,7 @@ MemorySizeVisitorTest >> testFormatedBlockNodeWithArguments [
 		+ (4 + 11) quadWords "1 OrderCollections with no periods"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedCascadeNode [
 	| ast measuredMemory |
 	
@@ -177,7 +179,7 @@ MemorySizeVisitorTest >> testFormatedCascadeNode [
 	 	+ (8 quadWords) "1 Ordered collection for 2 cascade semicolons"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAFloat [
 	| ast measuredMemory |
 	
@@ -191,7 +193,7 @@ MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAFloat [
 		
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAHexadecimalInteger [
 	| ast measuredMemory |
 	
@@ -208,7 +210,7 @@ MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAHexadecimalInteger [
 
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAInteger [
 	| ast measuredMemory |
 	
@@ -219,7 +221,7 @@ MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAInteger [
 		+ 2 quadWords "sourceText"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAScaledDecimal [
 	| ast measuredMemory |
 	
@@ -231,7 +233,7 @@ MemorySizeVisitorTest >> testFormatedLiteralValueNodeForAScaledDecimal [
 		+ 2 quadWords "sourceText"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedMessageNode [
 	| ast measuredMemory |
 	
@@ -246,7 +248,7 @@ MemorySizeVisitorTest >> testFormatedMessageNode [
 		+ 2 quadWords  "1 IntegerArray for keywordPositions"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedMethodNode [
 	| ast measuredMemory |
 	
@@ -268,7 +270,7 @@ MemorySizeVisitorTest >> testFormatedMethodNode [
 	
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedMethodNodeWithPragma [
 	| ast measuredMemory |
 	
@@ -290,7 +292,7 @@ MemorySizeVisitorTest >> testFormatedMethodNodeWithPragma [
 	
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedNodeWithParens [
 	| ast measuredMemory |
 	
@@ -301,7 +303,7 @@ MemorySizeVisitorTest >> testFormatedNodeWithParens [
 		+ (3 * 4 quadWords) "3 Intervals"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedSelectorNodeForBinary [
 	| ast measuredMemory |
 	
@@ -313,7 +315,7 @@ MemorySizeVisitorTest >> testFormatedSelectorNodeForBinary [
 	
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedSelectorNodeForKeywordSelector [
 	| ast measuredMemory |
 	
@@ -325,7 +327,7 @@ MemorySizeVisitorTest >> testFormatedSelectorNodeForKeywordSelector [
 	
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedSelectorNodeForUnary [
 	| ast measuredMemory |
 	
@@ -336,7 +338,7 @@ MemorySizeVisitorTest >> testFormatedSelectorNodeForUnary [
 		+ 2 quadWords  "1 IntegerArray for keywordPositions"	
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedSequenceNode [
 	| ast measuredMemory |
 	
@@ -349,7 +351,7 @@ MemorySizeVisitorTest >> testFormatedSequenceNode [
 		+ (4 + 11) quadWords "2 periods"
 ]
 
-{ #category : #'tests - whitespace' }
+{ #category : 'tests - whitespace' }
 MemorySizeVisitorTest >> testFormatedVariableNode [
 	| ast measuredMemory |
 	
@@ -362,7 +364,7 @@ MemorySizeVisitorTest >> testFormatedVariableNode [
 		+ (3 * 4) quadWords "3 Intervals for parens"
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralArrayNode [
 	| ast measuredMemory |
 	
@@ -375,7 +377,7 @@ MemorySizeVisitorTest >> testLiteralArrayNode [
 		+ (10 quadWords) "1 String Node"
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralArrayNodeForByteArray [
 	| ast measuredMemory |
 	
@@ -387,7 +389,7 @@ MemorySizeVisitorTest >> testLiteralArrayNodeForByteArray [
 		+ (8 * 3) quadWords  "3 Integer Nodes"
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralValueNodeForABoolean [
 	| ast measuredMemory |
 	
@@ -403,7 +405,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForABoolean [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralValueNodeForAFloat [
 	| ast measuredMemory |
 	
@@ -419,7 +421,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAFloat [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralValueNodeForAHexadecimalInteger [
 	| ast measuredMemory |
 	
@@ -435,7 +437,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAHexadecimalInteger [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralValueNodeForAInteger [
 	| ast measuredMemory |
 	
@@ -445,7 +447,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAInteger [
 	self assert: measuredMemory  equals: 8 quadWords "Layout"
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralValueNodeForAScaledDecimal [
 	| ast measuredMemory |
 	
@@ -456,7 +458,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAScaledDecimal [
 		+ 4 quadWords  "3.2s ScaledDecimal"
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralValueNodeForAString [
 	| ast measuredMemory |
 	
@@ -468,7 +470,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForAString [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralValueNodeForASymbol [
 	| ast measuredMemory |
 	
@@ -482,7 +484,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForASymbol [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testLiteralValueNodeForNil [
 	| ast measuredMemory |
 	
@@ -498,7 +500,7 @@ MemorySizeVisitorTest >> testLiteralValueNodeForNil [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testMessageNode [
 	| ast measuredMemory |
 	
@@ -512,7 +514,7 @@ MemorySizeVisitorTest >> testMessageNode [
 		+ 8 quadWords "Arguments: 1 Integer Node"
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testMethodNode [
 	| ast measuredMemory |
 	
@@ -532,7 +534,7 @@ MemorySizeVisitorTest >> testMethodNode [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testMethodNodeWithArguments [
 	| ast measuredMemory |
 	
@@ -553,7 +555,7 @@ MemorySizeVisitorTest >> testMethodNodeWithArguments [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testMethodNodeWithPragma [
 	| ast measuredMemory |
 	
@@ -572,7 +574,7 @@ MemorySizeVisitorTest >> testMethodNodeWithPragma [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testReturnNode [
 	| ast measuredMemory |
 	
@@ -584,7 +586,7 @@ MemorySizeVisitorTest >> testReturnNode [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testSelectorNodeForBinary [
 	| ast measuredMemory |
 	
@@ -595,7 +597,7 @@ MemorySizeVisitorTest >> testSelectorNodeForBinary [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testSelectorNodeForKeywordSelector [
 	| ast measuredMemory |
 	
@@ -606,7 +608,7 @@ MemorySizeVisitorTest >> testSelectorNodeForKeywordSelector [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testSelectorNodeForUnary [
 	| ast measuredMemory |
 	
@@ -617,7 +619,7 @@ MemorySizeVisitorTest >> testSelectorNodeForUnary [
 	
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testSequenceNode [
 	| ast measuredMemory |
 	
@@ -629,7 +631,7 @@ MemorySizeVisitorTest >> testSequenceNode [
 		+ (3 * 8) quadWords "3 Integers Nodes"
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testSequenceNodeWithTemporaries [
 	| ast measuredMemory |
 	
@@ -643,7 +645,7 @@ MemorySizeVisitorTest >> testSequenceNodeWithTemporaries [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 MemorySizeVisitorTest >> testVariableNode [
 	| ast measuredMemory |
 	

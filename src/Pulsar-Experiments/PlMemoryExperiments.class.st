@@ -1,5 +1,5 @@
 Class {
-	#name : 'PLMemoryExperiments',
+	#name : 'PlMemoryExperiments',
 	#superclass : 'Object',
 	#classVars : [
 		'navigation'
@@ -10,19 +10,19 @@ Class {
 }
 
 { #category : 'accessing' }
-PLMemoryExperiments class >> allBehaviors [
+PlMemoryExperiments class >> allBehaviors [
 
 	^ self navigation allBehaviors
 ]
 
 { #category : 'accessing' }
-PLMemoryExperiments class >> allBehaviorsDo:  aBlock [
+PlMemoryExperiments class >> allBehaviorsDo:  aBlock [
 
 	self navigation allBehaviorsDo: aBlock
 ]
 
 { #category : 'accessing' }
-PLMemoryExperiments class >> allMethodsDo: aBlock [
+PlMemoryExperiments class >> allMethodsDo: aBlock [
 
 	self allBehaviorsDo: [ :aBehavior | 
 		aBehavior methodDictionary do: [ :aMethod |
@@ -30,7 +30,7 @@ PLMemoryExperiments class >> allMethodsDo: aBlock [
 ]
 
 { #category : 'measure' }
-PLMemoryExperiments class >> countAllRBParserASTMethods [
+PlMemoryExperiments class >> countAllRBParserASTMethods [
 	| number |
 	
 	number := 0.
@@ -39,10 +39,10 @@ PLMemoryExperiments class >> countAllRBParserASTMethods [
 ]
 
 { #category : 'measure' }
-PLMemoryExperiments class >> countAllRBParserASTNodes [
+PlMemoryExperiments class >> countAllRBParserASTNodes [
 	| visitor |
 	
-	visitor := PLNodeCounterVisitor new.
+	visitor := PlNodeCounterVisitor new.
 	
 	"TODO Add Symbols and variable names"
 	self allMethodsDo: [ :each | visitor measureMethod: each ] .
@@ -54,10 +54,10 @@ PLMemoryExperiments class >> countAllRBParserASTNodes [
 ]
 
 { #category : 'measure' }
-PLMemoryExperiments class >> measureAllRBParserASTMethods [
+PlMemoryExperiments class >> measureAllRBParserASTMethods [
 	| visitor |
 	
-	visitor := PLMemorySizeVisitor new.
+	visitor := PlMemorySizeVisitor new.
 	
 	"TODO Add Symbols and variable names"
 	self allMethodsDo: [ :each | visitor measureMethod: each ] .
@@ -69,10 +69,10 @@ PLMemoryExperiments class >> measureAllRBParserASTMethods [
 ]
 
 { #category : 'measure' }
-PLMemoryExperiments class >> measureAllRBParserASTMethodsWithWhitespace [
+PlMemoryExperiments class >> measureAllRBParserASTMethodsWithWhitespace [
 	| visitor |
 	
-	visitor := PLMemorySizeVisitor newWithWhitespace.
+	visitor := PlMemorySizeVisitor newWithWhitespace.
 	
 	"TODO Add Symbols and variable names"
 	self allMethodsDo: [ :each | visitor measureMethod: each ] .
@@ -84,7 +84,7 @@ PLMemoryExperiments class >> measureAllRBParserASTMethodsWithWhitespace [
 ]
 
 { #category : 'measure' }
-PLMemoryExperiments class >> measureSymbolTable [	
+PlMemoryExperiments class >> measureSymbolTable [	
 	
 	Symbol cleanUp .
 	
@@ -94,7 +94,7 @@ PLMemoryExperiments class >> measureSymbolTable [
 ]
 
 { #category : 'accessing' }
-PLMemoryExperiments class >> navigation [
+PlMemoryExperiments class >> navigation [
 
 	^ navigation ifNil: [ navigation := SystemNavigation new ]
 ]
