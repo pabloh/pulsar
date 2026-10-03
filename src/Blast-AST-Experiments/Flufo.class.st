@@ -39,7 +39,7 @@ Flufo >> foo [
 	|var bir|
 	
 	bir := 'asdas'.
-	var := 3 + 24 + 1.0 + 322s4.
+	var := [ 3 + 24 + 1.0 + 322s4 ] value.
 
 	^ foo +  var "comentario".
 ]

@@ -75,6 +75,11 @@ AstMemoryExperiments class >> allMethods [
 ]
 
 { #category : 'classes and traits' }
+AstMemoryExperiments class >> allMethodsAstsDo: aBlock [
+	self allMethods do: [ :aMethod |  aBlock cull: (OCParser parseMethod: aMethod  sourceCode)  ]
+]
+
+{ #category : 'classes and traits' }
 AstMemoryExperiments class >> allMethodsCount [
 	^ self allClassesTraitsAndMetaClasses 
 		inject: 0 into: [ :counter :class | counter + class methodDict size ]
@@ -86,15 +91,26 @@ AstMemoryExperiments class >> allMethodsIncluding: aLiteralKind [
 ]
 
 { #category : 'nodes' }
-AstMemoryExperiments class >> allNodesCount [
+AstMemoryExperiments class >> allMethodsNodeCount [
 	|count|	
 	count := 0.
 
-	self allMethods do: [ :aMethod |
-		AstNodeProcessor forEachNodeAt: aMethod ast do: [
+	self allMethodsAstsDo: [ :ast |
+		AstNodeProcessor forEachNodeAt: ast do: [
 			count := count + 1 ] ].
 	
 	^ count
+]
+
+{ #category : 'souce code space' }
+AstMemoryExperiments class >> allMethodsSizeInMemory [
+	|res|
+	res :=0.
+	
+	self allMethodsAstsDo: [ :ast |  	res := res + (AstSizeInMemoryVisitor sizeInMemoryFor: ast)	].
+			
+	^res
+	
 ]
 
 { #category : 'assignments' }
@@ -111,7 +127,7 @@ AstMemoryExperiments class >> assignmentsCount [
 { #category : 'nodes' }
 AstMemoryExperiments class >> avgNodesPerMethod [
 	
-	^(self allNodesCount / self allMethodsCount) printShowingDecimalPlaces: 5 
+	^(self allMethodsNodeCount / self allMethodsCount) printShowingDecimalPlaces: 5 
 ]
 
 { #category : 'sequences' }
@@ -321,20 +337,10 @@ AstMemoryExperiments class >> literalsPercentagesAtMethodsFor: aLiteralKind [
 ]
 
 { #category : 'nodes' }
-AstMemoryExperiments class >> medianNodesPerMethod [	
-	|counters|	
-		
-	counters := self allMethods collect: [ :aMethod | |count|
-		count := 0.
-		AstNodeProcessor forEachNodeAt: aMethod ast do: [ 	count := count + 1 ].
-		count.
-	].	
-	counters sort.
+AstMemoryExperiments class >> medianNodesPerMethod [
+	|nodeCounts|
 	
-	^counters at: (counters size //2)
-	
-
-
+	^  nodeCounts at: (nodeCounts size) / 2 "TODO"
 ]
 
 { #category : 'messages' }
@@ -342,8 +348,13 @@ AstMemoryExperiments class >> messagesByArity [
 	| messages |
 	messages := Dictionary new.
 	
-	self allMethods do: [ :method |  
+	"self allMethods do: [ :method |  
 		AstNodeProcessor forEachNodeThat: #isMessage at: method ast do: [ :each |
+			(messages at: each numArgs ifAbsentPut: [ OrderedCollection new ])
+				addLast: each ] ]."
+		
+	self allMethodsAstsDo: [ :ast |  
+		AstNodeProcessor forEachNodeThat: #isMessage at: ast do: [ :each |
 			(messages at: each numArgs ifAbsentPut: [ OrderedCollection new ])
 				addLast: each ] ].
 
@@ -352,7 +363,7 @@ AstMemoryExperiments class >> messagesByArity [
 
 { #category : 'messages' }
 AstMemoryExperiments class >> messagesByArityCount [
-	^ self messagesByArity collect: #size
+	^ (self messagesByArity collect: #size) associations sorted: [ :a1 :a2 | a1 key <= a2 key ]
 
 ]
 
@@ -460,22 +471,26 @@ AstMemoryExperiments class >> pragmasUsageByArityCountAndPercentanges [
 
 { #category : 'souce code space' }
 AstMemoryExperiments class >> removeMethodsAstsAtTheImage [
-	methodsAsts  := OrderedCollection new: self allMethodsCount.
+	methodsAsts  := OrderedCollection new.
 ]
 
 { #category : 'souce code space' }
 AstMemoryExperiments class >> removeMethodsSourceAtTheImage [
-	methodsSource := OrderedCollection new: self allMethodsCount
+	methodsSource := OrderedCollection new.
 ]
 
 { #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsAstsAtTheImage [
+	|temp |
 	methodsAsts := OrderedCollection new: self allMethodsCount.
-	methodsAsts addAll: (self allMethods collect: [ :method |
+	
+	temp := (self allMethods collect: [ :method |
 		|ast|
-		ast := (RBParser parseMethod: method sourceCode) cleanUp.
+		ast := OCParser parseMethod: method sourceCode.
 		AstNodeProcessor cleanUpComments: ast
-	])
+	]).
+	
+	methodsAsts addAll: temp
 ]
 
 { #category : 'souce code space' }
@@ -490,7 +505,7 @@ AstMemoryExperiments class >> saveMethodsBonsaiAstsAtTheImage [
 
 { #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsSourceAtTheImage [
-	methodsSource := OrderedCollection new: self allMethodsCount.
+	methodsSource := OrderedCollection new: self allMethodsCount .
 	
 	self allMethods do: [ :method | methodsSource add: method sourceCode ]
 ]

@@ -19,13 +19,6 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-AstNodeProcessor class >> cleanUpComments: astTree [
-
-self forEachNodeAt: astTree do: [ :node | node comments: nil ].
-^astTree 
-]
-
-{ #category : 'as yet unclassified' }
 AstNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := IdentitySet new.
@@ -81,6 +74,12 @@ AstNodeProcessor >> process: aNode [
 ]
 
 { #category : 'visiting' }
+AstNodeProcessor >> visitAnnotationMarkNode: aAnnotationValueNode [
+	self process: aAnnotationValueNode.
+	super visitAnnotationMarkNode: aAnnotationValueNode.
+]
+
+{ #category : 'visiting' }
 AstNodeProcessor >> visitArrayNode: anArrayNode [
 	self process: anArrayNode.
 	super visitArrayNode: anArrayNode.
@@ -113,8 +112,8 @@ AstNodeProcessor >> visitLiteralArrayNode: aRBLiteralArrayNode [
 ]
 
 { #category : 'visiting' }
-AstNodeProcessor >> visitLiteralNode: aLiteralNode [
-	self process: aLiteralNode.
+AstNodeProcessor >> visitLiteralValueNode: aLiteralValueNode [
+	self process: aLiteralValueNode.
 
 ]
 
