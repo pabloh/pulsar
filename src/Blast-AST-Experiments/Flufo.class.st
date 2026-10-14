@@ -56,6 +56,17 @@ Flufo >> foo: arg1 bar: arg2 [
 ]
 
 { #category : 'as yet unclassified' }
+Flufo >> foo: arg1 bar: arg2 qux: arg3 [
+	"esto es un comentario en un metodo"
+
+	|temp|
+	
+	temp := 1.
+
+	^ temp + 3 + 4 + 1.0 "comentario".
+]
+
+{ #category : 'as yet unclassified' }
 Flufo >> initialize [
 	foo := 1.
 	
