@@ -49,7 +49,9 @@ AstNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 { #category : 'as yet unclassified' }
 AstNodeProcessor class >> forEachNodeThat: aCondition at: aNodeTree do: aBlock [
 
-	self forEachNodeAt: aNodeTree do: [:aNode | (aCondition value: aNode) ifTrue:  [ aBlock cull: aNode ] ].
+	self forEachNodeAt: aNodeTree do: [:aNode | 
+		(aCondition value: aNode) ifTrue:  [ aBlock cull: aNode ]
+	].
 ]
 
 { #category : 'as yet unclassified' }

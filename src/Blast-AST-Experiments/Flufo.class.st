@@ -63,7 +63,7 @@ Flufo >> foo: arg1 bar: arg2 qux: arg3 [
 	
 	temp := 1.
 
-	^ temp + 3 + 4 + 1.0 "comentario".
+	^ [ temp + 3 + 4 + 1.0 "comentario" ] value.
 ]
 
 { #category : 'as yet unclassified' }

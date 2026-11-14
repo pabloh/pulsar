@@ -13,7 +13,7 @@ ByteCodeMemoryExperiments class >> allCompiledMethodsSizeInMemory [
 	|res|
 	res :=0.
 	
-	AstMemoryExperiments allMethods do: [ :aMethod |  res := res + 	aMethod sizeInMemory ].
+	AstMemoryExperiments allDefinedMethods do: [ :aMethod |  res := res + 	aMethod sizeInMemory ].
 			
 	^res
 ]

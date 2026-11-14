@@ -56,6 +56,33 @@ AstMemoryExperiments class >> allCommentsLength [
 	^length.
 ]
 
+{ #category : 'classes and traits' }
+AstMemoryExperiments class >> allDefinedMethods [
+	|res|
+	res := OrderedCollection new: self allDefinedMethodsCount .
+	self allDefinedMethodsDo: [ :aMethod | res add: aMethod ].
+	^ res
+	
+	"^ self allClassesTraitsAndMetaClasses flatCollect: [ :class | class methodDict ] as: OrderedCollection"
+]
+
+{ #category : 'classes and traits' }
+AstMemoryExperiments class >> allDefinedMethodsCount [
+	|result|
+	result := 0.	
+	self allDefinedMethodsDo: [ result := result + 1 ].
+	^ result
+]
+
+{ #category : 'classes and traits' }
+AstMemoryExperiments class >> allDefinedMethodsDo: aBlock [
+	self allClassesTraitsAndMetaClasesDo: [ :aBehavior | 
+		aBehavior methodDictionary do: [ :aMethod |
+			aMethod isFromTrait ifFalse: [ aBlock cull: aMethod ]
+	]
+]
+]
+
 { #category : 'identifiers' }
 AstMemoryExperiments class >> allIdentifiersNames [
 	"Instance variables, local variables and selectors names"
@@ -70,13 +97,10 @@ AstMemoryExperiments class >> allIdentifiersNames [
 ]
 
 { #category : 'classes and traits' }
-AstMemoryExperiments class >> allMethods [
-	^ self allClassesTraitsAndMetaClasses flatCollect: [ :class | class methodDict ] as: OrderedCollection
-]
-
-{ #category : 'classes and traits' }
 AstMemoryExperiments class >> allMethodsAstsDo: aBlock [
-	self allMethods do: [ :aMethod |  aBlock cull: (OCParser parseMethod: aMethod  sourceCode)  ]
+	self allDefinedMethods do: [ :aMethod |  
+		aBlock cull: (OCParser parseMethod: aMethod  sourceCode)
+	]
 ]
 
 { #category : 'classes and traits' }
@@ -115,7 +139,7 @@ AstMemoryExperiments class >> allMethodsSizeInMemory [
 
 { #category : 'assignments' }
 AstMemoryExperiments class >> assignments [	
-	^ self allMethods flatCollect: [ :method |  
+	^ self allDefinedMethods flatCollect: [ :method |  
 		AstNodeProcessor collectNodesThat: #isAssignment at: method ast ]
 ]
 
@@ -135,7 +159,7 @@ AstMemoryExperiments class >> blockNodesByReturn [
 	| blocks |
 	blocks := OrderedCollection new.
 	
-	self allMethods do: [ :method |
+	self allDefinedMethods do: [ :method |
 		blocks addAll: (AstNodeProcessor collectNodesThat: #isBlock at: method ast) ].
 
 	^ blocks groupedBy: [ :m| m lastIsReturn ]
@@ -226,7 +250,7 @@ AstMemoryExperiments class >> countLiteralsByValueFor: aLiteralKind [
 { #category : 'literals' }
 AstMemoryExperiments class >> countMethodsMatching: aSourcePattern [
 	| counter |
-	^ self allMethods
+	^ self allDefinedMethods
 		groupedBy: [ :method | 
 			counter := 0.
 			RBParseTreeSearcher new
@@ -246,7 +270,7 @@ AstMemoryExperiments class >> countNodesMatching: aSourcePattern [
 	|result|
 	result := 0.
 
-	self allMethods do: [ :method | 
+	self allDefinedMethods do: [ :method | 
 			RBParseTreeSearcher new
 				matches: aSourcePattern do: [ :node :owner | result := result + 1 ];
 				executeTree: method ast ].
@@ -369,7 +393,7 @@ AstMemoryExperiments class >> messagesByArityCount [
 
 { #category : 'sequences' }
 AstMemoryExperiments class >> methodBodiesByReturn [
-	^ self allMethods groupedBy: [ :m| m ast lastIsReturn ]
+	^ self allDefinedMethods groupedBy: [ :m| m ast lastIsReturn ]
 ]
 
 { #category : 'souce code space' }
@@ -390,13 +414,13 @@ AstMemoryExperiments class >> methodsSource [
 { #category : 'comments' }
 AstMemoryExperiments class >> methodsWithComments [
 
-	^ self allMethods
+	^ self allDefinedMethods
 		groupedBy: [ :aMethod | AstNodeProcessor countNodesThat: [:aNode| aNode comments isNotEmpty ] at: aMethod ast ]
 ]
 
 { #category : 'nodes' }
 AstMemoryExperiments class >> nodesAtMethodsMatching: aSourcePattern [
-	^ self allMethods
+	^ self allDefinedMethods
 		collect: [ :method | 
 			|nodes|
 			nodes := OrderedCollection new.
@@ -410,7 +434,7 @@ AstMemoryExperiments class >> nodesAtMethodsMatching: aSourcePattern [
 
 { #category : 'nodes' }
 AstMemoryExperiments class >> nodesMatching: aSourcePattern [
-	^ self allMethods 
+	^ self allDefinedMethods 
 		flatCollect: [ :method | 
 			|result|
 			result := OrderedCollection new.
@@ -423,7 +447,7 @@ AstMemoryExperiments class >> nodesMatching: aSourcePattern [
 { #category : 'comments' }
 AstMemoryExperiments class >> nodesWithComments [
 
-	^ self allMethods
+	^ self allDefinedMethods
 		collect: [ :aMethod | AstNodeProcessor collectNodesThat: [:aNode| aNode comments isNotEmpty ] at: aMethod ast ]
 		thenReject: [: nodes| nodes isEmpty ]
 ]
@@ -484,7 +508,7 @@ AstMemoryExperiments class >> saveMethodsAstsAtTheImage [
 	|temp |
 	methodsAsts := OrderedCollection new: self allMethodsCount.
 	
-	temp := (self allMethods collect: [ :method |
+	temp := (self allDefinedMethods collect: [ :method |
 		|ast|
 		ast := OCParser parseMethod: method sourceCode.
 		AstNodeProcessor cleanUpComments: ast
@@ -498,7 +522,7 @@ AstMemoryExperiments class >> saveMethodsBonsaiAstsAtTheImage [
 
 	methodsBonsaiAsts := OrderedCollection new: self allMethodsCount.
 
-	methodsBonsaiAsts addAll: (self allMethods collect: [ :method |				
+	methodsBonsaiAsts addAll: (self allDefinedMethods collect: [ :method |				
 					
 				 FWEncoder new visitNode: method ast ])
 ]
@@ -507,7 +531,7 @@ AstMemoryExperiments class >> saveMethodsBonsaiAstsAtTheImage [
 AstMemoryExperiments class >> saveMethodsSourceAtTheImage [
 	methodsSource := OrderedCollection new: self allMethodsCount .
 	
-	self allMethods do: [ :method | methodsSource add: method sourceCode ]
+	self allDefinedMethods do: [ :method | methodsSource add: method sourceCode ]
 ]
 
 { #category : 'selectors' }
@@ -539,7 +563,7 @@ AstMemoryExperiments class >> selectorsByUsage [
 	| selectors |
 	selectors := Dictionary new.
 	
-	self allMethods do: [ :method |  
+	self allDefinedMethods do: [ :method |  
 		AstNodeProcessor forEachNodeThat: #isMessage at: method ast do: [ :aMessageNode |
 			selectors 	at: aMessageNode selector
 						put: (selectors at: aMessageNode selector ifPresent: [ :value | value + 1 ] ifAbsent: [ 1 ] ) ] ].
@@ -557,7 +581,7 @@ AstMemoryExperiments class >> sequencesByLength [
 	| sequences |
 	sequences := Dictionary new.
 	
-	self allMethods do: [ :method |  
+	self allDefinedMethods do: [ :method |  
 		AstNodeProcessor forEachNodeThat: #isSequence at: method ast do: [ :each |
 			(sequences at: each statements size ifAbsentPut: [ OrderedCollection new ])
 				addLast: each ] ].
@@ -595,7 +619,7 @@ AstMemoryExperiments class >> uniqTempVariables [
 	|tempVars|
 	tempVars := OrderedCollection new.
 	
-	AstMemoryExperiments allMethods do: [:aCompiledMethod|
+	AstMemoryExperiments allDefinedMethods do: [:aCompiledMethod|
 		|aMethod|
 		aMethod := aCompiledMethod ast.
 		tempVars addAll: aMethod argumentNames;
