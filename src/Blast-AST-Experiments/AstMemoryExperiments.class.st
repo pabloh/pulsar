@@ -104,12 +104,6 @@ AstMemoryExperiments class >> allMethodsAstsDo: aBlock [
 ]
 
 { #category : 'classes and traits' }
-AstMemoryExperiments class >> allMethodsCount [
-	^ self allClassesTraitsAndMetaClasses 
-		inject: 0 into: [ :counter :class | counter + class methodDict size ]
-]
-
-{ #category : 'classes and traits' }
 AstMemoryExperiments class >> allMethodsIncluding: aLiteralKind [
 	^ self countMethodsMatching: (self literalsPatterns at: aLiteralKind)
 ]
@@ -135,6 +129,26 @@ AstMemoryExperiments class >> allMethodsSizeInMemory [
 			
 	^res
 	
+]
+
+{ #category : 'classes and traits' }
+AstMemoryExperiments class >> allSourceCodeSizeInMemory [
+	|result|
+	result := 0.	
+	self allDefinedMethodsDo: [ :aMethod  |
+		result := result + aMethod sourceCode sizeInMemory 
+	].
+	^ result
+]
+
+{ #category : 'classes and traits' }
+AstMemoryExperiments class >> allSourceCodeZippedSizeInMemory [
+	|result|
+	result := 0.	
+	self allDefinedMethodsDo: [ :aMethod  |
+		result := result + aMethod sourceCode zipped sizeInMemory 
+	].
+	^ result
 ]
 
 { #category : 'assignments' }
