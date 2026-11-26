@@ -97,6 +97,14 @@ AstMemoryExperiments class >> allIdentifiersNames [
 ]
 
 { #category : 'classes and traits' }
+AstMemoryExperiments class >> allMethodsAsts [
+	|res|
+	res := OrderedCollection new: self allDefinedMethodsCount .
+	self allMethodsAstsDo: [ :aMethod | res add: aMethod ].
+	^ res
+]
+
+{ #category : 'classes and traits' }
 AstMemoryExperiments class >> allMethodsAstsDo: aBlock [
 	self allDefinedMethods do: [ :aMethod |  
 		aBlock cull: (OCParser parseMethod: aMethod  sourceCode)
@@ -521,8 +529,17 @@ AstMemoryExperiments class >> removeMethodsSourceAtTheImage [
 AstMemoryExperiments class >> saveMethodsAstsAtTheImage [
 	methodsAsts := OrderedCollection new: self allDefinedMethodsCount.
 	
+	self allMethodsAstsDo: [ :ast | methodsAsts add: ast  ]
+	
+	
+]
+
+{ #category : 'souce code space' }
+AstMemoryExperiments class >> saveMethodsAstsAtTheImageWithNoComments [
+	methodsAsts := OrderedCollection new: self allDefinedMethodsCount.
+	
 	self allMethodsAstsDo: [ :ast |		
-		"AstNodeProcessor cleanUpComments: ast."
+		AstNodeProcessor  clearComments: ast.
 		methodsAsts add: ast 
 	]
 	
@@ -533,16 +550,16 @@ AstMemoryExperiments class >> saveMethodsAstsAtTheImage [
 AstMemoryExperiments class >> saveMethodsBonsaiAstsAtTheImage [
 	methodsBonsaiAsts := OrderedCollection new: self allDefinedMethodsCount.
 
-	methodsBonsaiAsts addAll: (self allDefinedMethods collect: [ :method |				
-					
-				 FWEncoder new visitNode: method ast ])
+	methodsBonsaiAsts addAll: (self allDefinedMethods collect: [ :aMethod |	
+		FWEncoder new visitNode: aMethod ast
+	])
 ]
 
 { #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsSourceAtTheImage [
 	methodsSource := OrderedCollection new: self allDefinedMethodsCount .
 	
-	self allDefinedMethods do: [ :aMethod | methodsSource add: aMethod sourceCode ]
+	self allDefinedMethodsDo: [ :aMethod | methodsSource add: aMethod sourceCode ]
 ]
 
 { #category : 'selectors' }

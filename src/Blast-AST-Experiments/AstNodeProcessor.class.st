@@ -18,7 +18,13 @@ Class {
 	#package : 'Blast-AST-Experiments'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'transform' }
+AstNodeProcessor class >> clearComments: aNodeTree [ 
+
+	self forEachNodeAt: aNodeTree do: [ :aNode | aNode comments: nil ] .
+]
+
+{ #category : 'iterating' }
 AstNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := IdentitySet new.
@@ -28,7 +34,7 @@ AstNodeProcessor class >> collectNodesThat: aCondition at: aNodeTree [
 	^ result
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'iterating' }
 AstNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
 	| result |
 	result := 0.
@@ -38,7 +44,7 @@ AstNodeProcessor class >> countNodesThat: aCondition at: aNodeTree [
 	^ result
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'iterating' }
 AstNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 
 	self new
@@ -46,7 +52,7 @@ AstNodeProcessor class >> forEachNodeAt: aNodeTree do: aBlock [
 		visitNode: aNodeTree.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'iterating' }
 AstNodeProcessor class >> forEachNodeThat: aCondition at: aNodeTree do: aBlock [
 
 	self forEachNodeAt: aNodeTree do: [:aNode | 
@@ -54,7 +60,7 @@ AstNodeProcessor class >> forEachNodeThat: aCondition at: aNodeTree do: aBlock [
 	].
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'iterating' }
 AstNodeProcessor class >> iterateOver: aNodeTree with: aBlock [
 
 	self forEachNodeAt: aNodeTree do: aBlock.
