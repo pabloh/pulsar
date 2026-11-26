@@ -519,22 +519,19 @@ AstMemoryExperiments class >> removeMethodsSourceAtTheImage [
 
 { #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsAstsAtTheImage [
-	|temp |
-	methodsAsts := OrderedCollection new: self allMethodsCount.
+	methodsAsts := OrderedCollection new: self allDefinedMethodsCount.
 	
-	temp := (self allDefinedMethods collect: [ :method |
-		|ast|
-		ast := OCParser parseMethod: method sourceCode.
-		AstNodeProcessor cleanUpComments: ast
-	]).
+	self allMethodsAstsDo: [ :ast |		
+		"AstNodeProcessor cleanUpComments: ast."
+		methodsAsts add: ast 
+	]
 	
-	methodsAsts addAll: temp
+	
 ]
 
 { #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsBonsaiAstsAtTheImage [
-
-	methodsBonsaiAsts := OrderedCollection new: self allMethodsCount.
+	methodsBonsaiAsts := OrderedCollection new: self allDefinedMethodsCount.
 
 	methodsBonsaiAsts addAll: (self allDefinedMethods collect: [ :method |				
 					
@@ -543,9 +540,9 @@ AstMemoryExperiments class >> saveMethodsBonsaiAstsAtTheImage [
 
 { #category : 'souce code space' }
 AstMemoryExperiments class >> saveMethodsSourceAtTheImage [
-	methodsSource := OrderedCollection new: self allMethodsCount .
+	methodsSource := OrderedCollection new: self allDefinedMethodsCount .
 	
-	self allDefinedMethods do: [ :method | methodsSource add: method sourceCode ]
+	self allDefinedMethods do: [ :aMethod | methodsSource add: aMethod sourceCode ]
 ]
 
 { #category : 'selectors' }
