@@ -540,6 +540,8 @@ AstMemoryExperiments class >> saveMethodsAstsAtTheImageWithNoComments [
 	
 	self allMethodsAstsDo: [ :ast |		
 		AstNodeProcessor  clearComments: ast.
+		ast source: nil.
+		ast  clearReplacements. 
 		methodsAsts add: ast 
 	]
 	
@@ -560,6 +562,15 @@ AstMemoryExperiments class >> saveMethodsSourceAtTheImage [
 	methodsSource := OrderedCollection new: self allDefinedMethodsCount .
 	
 	self allDefinedMethodsDo: [ :aMethod | methodsSource add: aMethod sourceCode ]
+]
+
+{ #category : 'souce code space' }
+AstMemoryExperiments class >> saveNothing [
+	methodsAsts := nil.
+	methodsSource := nil.
+	methodsBonsaiAsts := nil.
+	
+	
 ]
 
 { #category : 'selectors' }
